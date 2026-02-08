@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PubMed AI Research Finder – Diagnis Research Labs</title>
+    <meta name="description" content="Find recent AI and machine learning research articles in your medical field. Search PubMed for the latest AI-powered studies.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg: #000000;
+            --bg-card: #0a0a0a;
+            --bg-elevated: #111111;
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.15);
+            --text: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #71717a;
+            --accent: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+        }
+
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        ::selection { background: var(--accent); color: white; }
+        a { color: inherit; text-decoration: none; }
+
+        /* Animated Grid */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 80px 80px;
+            mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Animated Gradient Mesh Background */
+        .gradient-mesh {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .gradient-mesh::before,
+        .gradient-mesh::after {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            top: -25%;
+            left: -25%;
+        }
+        .gradient-mesh::before {
+            background: 
+                radial-gradient(ellipse 80% 50% at 20% 40%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 80% at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 60% at 40% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+            animation: meshMove1 25s ease-in-out infinite;
+        }
+        .gradient-mesh::after {
+            background: 
+                radial-gradient(ellipse 70% 60% at 70% 60%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 70% at 30% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 50% at 60% 70%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+            animation: meshMove2 30s ease-in-out infinite;
+        }
+        @keyframes meshMove1 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            25% { transform: translate(5%, -5%) rotate(2deg) scale(1.05); }
+            50% { transform: translate(-3%, 5%) rotate(-1deg) scale(0.98); }
+            75% { transform: translate(3%, 3%) rotate(1deg) scale(1.02); }
+        }
+        @keyframes meshMove2 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            33% { transform: translate(-5%, 3%) rotate(-2deg) scale(1.03); }
+            66% { transform: translate(4%, -4%) rotate(2deg) scale(0.97); }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 0 2rem;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: -0.01em;
+        }
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-mark svg { width: 18px; height: 18px; color: white; }
+        
+        nav { display: flex; align-items: center; gap: 32px; }
+        .nav-link {
+            font-size: 14px;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+        .nav-link:hover { color: var(--text); }
+        .nav-link.active { color: var(--text); }
+        .nav-cta {
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            background: var(--text);
+            color: var(--bg);
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .nav-cta:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* Main Content */
+        main { position: relative; z-index: 1; padding-top: 64px; }
+
+        /* Hero Section */
+        .page-hero {
+            padding: 80px 2rem 60px;
+            text-align: center;
+        }
+        .page-hero h1 {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        .page-hero h1 .gradient-text {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .page-hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* Search Section */
+        .search-section {
+            padding: 0 2rem 60px;
+        }
+        .search-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .search-box {
+            display: flex;
+            gap: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 8px;
+            transition: all 0.3s;
+        }
+        .search-box:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+        .search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 12px 16px;
+            font-size: 16px;
+            color: var(--text);
+            font-family: inherit;
+            outline: none;
+        }
+        .search-input::placeholder {
+            color: var(--text-tertiary);
+        }
+        .search-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--gradient);
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .search-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.3);
+        }
+        .search-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .search-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* AI Badge */
+        .ai-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 16px;
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+        .ai-badge svg {
+            width: 16px;
+            height: 16px;
+            color: var(--accent);
+        }
+
+        /* Results Section */
+        .results-section {
+            padding: 0 2rem 80px;
+        }
+        .results-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Result Count */
+        .result-count {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .result-count-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+        .result-count-text strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* Loading State */
+        .loading-state {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px;
+            text-align: center;
+        }
+        .loading-state.active {
+            display: flex;
+        }
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .loading-state p {
+            margin-top: 16px;
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px;
+            text-align: center;
+        }
+        .empty-state.active {
+            display: flex;
+        }
+        .empty-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .empty-icon svg {
+            width: 32px;
+            height: 32px;
+            color: var(--accent);
+        }
+        .empty-state h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .empty-state p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            max-width: 400px;
+        }
+
+        /* Error State */
+        .error-state {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px;
+            text-align: center;
+        }
+        .error-state.active {
+            display: flex;
+        }
+        .error-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .error-icon svg {
+            width: 32px;
+            height: 32px;
+            color: #ef4444;
+        }
+        .error-state h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .error-state p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            max-width: 400px;
+        }
+
+        /* Results List */
+        .results-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Article Card */
+        .article-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: fadeInUp 0.4s ease forwards;
+            opacity: 0;
+        }
+        .article-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.1);
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .article-title {
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 1.4;
+            margin-bottom: 12px;
+            color: var(--text);
+            transition: color 0.2s;
+        }
+        .article-title:hover {
+            color: var(--accent);
+        }
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+        .article-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .article-meta-item svg {
+            width: 14px;
+            height: 14px;
+            color: var(--text-tertiary);
+        }
+        .article-authors {
+            font-size: 14px;
+            color: var(--text-tertiary);
+            line-height: 1.5;
+        }
+        .article-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+        .article-pmid {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            font-family: 'SF Mono', Monaco, monospace;
+        }
+        .article-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--accent);
+            transition: all 0.2s;
+        }
+        .article-link:hover {
+            gap: 10px;
+        }
+        .article-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 60px 2rem 80px;
+            border-top: 1px solid var(--border);
+        }
+        .cta-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .cta-section h2 {
+            font-size: clamp(24px, 4vw, 32px);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+        }
+        .cta-section p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            background: var(--gradient);
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.3);
+        }
+        .cta-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 32px 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+        .footer-text {
+            font-size: 14px;
+            color: var(--text-tertiary);
+        }
+        .footer-text a {
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+        .footer-text a:hover { color: var(--text); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav { display: none; }
+            .page-hero { padding: 60px 1.5rem 40px; }
+            .search-section { padding: 0 1.5rem 40px; }
+            .results-section { padding: 0 1.5rem 60px; }
+            .search-box {
+                flex-direction: column;
+            }
+            .search-btn {
+                justify-content: center;
+            }
+            .article-card { padding: 20px; }
+            .article-meta { gap: 12px; }
+            .article-footer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="gradient-mesh"></div>
+
+    <header>
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <div class="logo-mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <span>Diagnis Research Labs</span>
+            </a>
+            <nav>
+                <a href="why-ai.html" class="nav-link">Why AI?</a>
+                <a href="index.html#features" class="nav-link">Features</a>
+                <a href="index.html#process" class="nav-link">Process</a>
+                <a href="team.html" class="nav-link">Team</a>
+                <a href="guide.html" class="nav-link">📚 AI Guide</a>
+                <a href="quiz.html" class="nav-link">AI Finder</a>
+                <a href="research-finder.html" class="nav-link active">🔍 Research Finder</a>
+                <a href="mailto:research@diagnis.ai" class="nav-cta">Get Started</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-hero">
+            <h1>PubMed <span class="gradient-text">AI Research</span> Finder</h1>
+            <p>Alanınızdaki güncel yapay zeka ve makine öğrenmesi araştırmalarını keşfedin. Son 1 yılda yayınlanan orijinal makaleleri anında bulun.</p>
+        </section>
+
+        <section class="search-section">
+            <div class="search-container">
+                <div class="search-box">
+                    <input 
+                        type="text" 
+                        class="search-input" 
+                        id="searchInput"
+                        placeholder="Araştırma konunuzu girin (örn: gastric cancer, diabetic retinopathy)"
+                        autocomplete="off"
+                    >
+                    <button class="search-btn" id="searchBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        Araştırmaları Bul
+                    </button>
+                </div>
+                <div class="ai-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/>
+                        <circle cx="7.5" cy="14.5" r="1.5"/>
+                        <circle cx="16.5" cy="14.5" r="1.5"/>
+                    </svg>
+                    AI/ML anahtar kelimeleri otomatik eklenir
+                </div>
+            </div>
+        </section>
+
+        <section class="results-section">
+            <div class="results-container">
+                <!-- Loading State -->
+                <div class="loading-state" id="loadingState">
+                    <div class="spinner"></div>
+                    <p>PubMed'de aranıyor...</p>
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                    </div>
+                    <h3>Sonuç bulunamadı</h3>
+                    <p>Bu konuda son 1 yılda yayınlanan AI/ML araştırması bulunamadı. Farklı anahtar kelimeler deneyebilirsiniz.</p>
+                </div>
+
+                <!-- Error State -->
+                <div class="error-state" id="errorState">
+                    <div class="error-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                    </div>
+                    <h3>Bir hata oluştu</h3>
+                    <p>PubMed'e bağlanırken bir sorun oluştu. Lütfen birkaç saniye bekleyip tekrar deneyin.</p>
+                </div>
+
+                <!-- Results -->
+                <div id="resultsWrapper" style="display: none;">
+                    <div class="result-count">
+                        <span class="result-count-text"><strong id="resultCount">0</strong> çalışma bulundu</span>
+                    </div>
+                    <div class="results-list" id="resultsList"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="cta-container">
+                <h2>Bu alanda AI projesi mi düşünüyorsunuz?</h2>
+                <p>Araştırmanız için özel bir AI modeli geliştirmek istiyorsanız, ücretsiz fizibilite görüşmesi yapabiliriz.</p>
+                <a href="mailto:research@diagnis.ai?subject=AI Projesi Fizibilite Görüşmesi" class="cta-btn">
+                    Ücretsiz Fizibilite Görüşmesi
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p class="footer-text">
+            <strong>Diagnis Research Labs</strong> · A division of <a href="https://diagnis.ai">Diagnis Medical AI</a><br>
+            © 2026 Diagnis. All rights reserved.
+        </p>
+    </footer>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const loadingState = document.getElementById('loadingState');
+        const emptyState = document.getElementById('emptyState');
+        const errorState = document.getElementById('errorState');
+        const resultsWrapper = document.getElementById('resultsWrapper');
+        const resultsList = document.getElementById('resultsList');
+        const resultCount = document.getElementById('resultCount');
+
+        const PUBMED_BASE = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
+        const MAX_RESULTS = 25;
+
+        // Build search query with AI/ML keywords
+        function buildQuery(topic) {
+            const aiKeywords = '(artificial intelligence OR machine learning OR deep learning OR neural network OR convolutional neural network OR transformer OR natural language processing)';
+            const articleTypes = '("journal article"[pt])';
+            const dateRange = '("last 1 year"[dp])';
+            
+            return `(${topic}) AND ${aiKeywords} AND ${articleTypes} AND ${dateRange}`;
+        }
+
+        // Format authors (first 3 + et al)
+        function formatAuthors(authors) {
+            if (!authors || authors.length === 0) return 'Authors not available';
+            
+            const authorNames = authors.map(a => a.name);
+            if (authorNames.length <= 3) {
+                return authorNames.join(', ');
+            }
+            return authorNames.slice(0, 3).join(', ') + ' et al.';
+        }
+
+        // Format date
+        function formatDate(pubdate) {
+            if (!pubdate) return 'Date not available';
+            return pubdate;
+        }
+
+        // Show state
+        function showState(state) {
+            loadingState.classList.remove('active');
+            emptyState.classList.remove('active');
+            errorState.classList.remove('active');
+            resultsWrapper.style.display = 'none';
+
+            if (state === 'loading') {
+                loadingState.classList.add('active');
+            } else if (state === 'empty') {
+                emptyState.classList.add('active');
+            } else if (state === 'error') {
+                errorState.classList.add('active');
+            } else if (state === 'results') {
+                resultsWrapper.style.display = 'block';
+            }
+        }
+
+        // Create article card HTML
+        function createArticleCard(article, index) {
+            const pubmedUrl = `https://pubmed.ncbi.nlm.nih.gov/${article.uid}/`;
+            const authors = formatAuthors(article.authors);
+            const journal = article.source || 'Journal not available';
+            const pubdate = formatDate(article.pubdate);
+            const title = article.title || 'Title not available';
+
+            return `
+                <div class="article-card" style="animation-delay: ${index * 0.05}s">
+                    <a href="${pubmedUrl}" target="_blank" rel="noopener noreferrer" class="article-title">${title}</a>
+                    <div class="article-meta">
+                        <span class="article-meta-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                            </svg>
+                            ${journal}
+                        </span>
+                        <span class="article-meta-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                            ${pubdate}
+                        </span>
+                    </div>
+                    <div class="article-authors">${authors}</div>
+                    <div class="article-footer">
+                        <span class="article-pmid">PMID: ${article.uid}</span>
+                        <a href="${pubmedUrl}" target="_blank" rel="noopener noreferrer" class="article-link">
+                            PubMed'de Görüntüle
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Search PubMed
+        async function searchPubMed(topic) {
+            showState('loading');
+            searchBtn.disabled = true;
+
+            try {
+                const query = buildQuery(topic);
+                
+                // Step 1: Search for article IDs
+                const searchUrl = `${PUBMED_BASE}esearch.fcgi?db=pubmed&term=${encodeURIComponent(query)}&retmax=${MAX_RESULTS}&sort=date&retmode=json`;
+                const searchResponse = await fetch(searchUrl);
+                
+                if (!searchResponse.ok) throw new Error('Search failed');
+                
+                const searchData = await searchResponse.json();
+                const ids = searchData.esearchresult?.idlist || [];
+
+                if (ids.length === 0) {
+                    showState('empty');
+                    searchBtn.disabled = false;
+                    return;
+                }
+
+                // Step 2: Get article details
+                const summaryUrl = `${PUBMED_BASE}esummary.fcgi?db=pubmed&id=${ids.join(',')}&retmode=json`;
+                const summaryResponse = await fetch(summaryUrl);
+                
+                if (!summaryResponse.ok) throw new Error('Summary failed');
+                
+                const summaryData = await summaryResponse.json();
+                const articles = ids.map(id => summaryData.result[id]).filter(Boolean);
+
+                // Display results
+                resultCount.textContent = articles.length;
+                resultsList.innerHTML = articles.map((article, index) => createArticleCard(article, index)).join('');
+                showState('results');
+
+            } catch (error) {
+                console.error('PubMed search error:', error);
+                showState('error');
+            }
+
+            searchBtn.disabled = false;
+        }
+
+        // Event listeners
+        searchBtn.addEventListener('click', () => {
+            const topic = searchInput.value.trim();
+            if (topic) {
+                searchPubMed(topic);
+            }
+        });
+
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const topic = searchInput.value.trim();
+                if (topic) {
+                    searchPubMed(topic);
+                }
+            }
+        });
+
+        // Focus input on load
+        searchInput.focus();
+    </script>
+</body>
+</html>
