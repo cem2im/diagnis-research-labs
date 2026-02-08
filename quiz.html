@@ -681,17 +681,18 @@
                 </div>
             </div>
 
-            <!-- Question 4: Description -->
+            <!-- Question 4: Description (Optional) -->
             <div class="question" data-question="4">
-                <h2 class="question-title">Describe your project</h2>
-                <p class="question-subtitle">Tell us about your research goals (max 300 words)</p>
+                <h2 class="question-title">Describe your project <span style="font-size: 0.7em; color: var(--text-dim); font-weight: 400;">(optional)</span></h2>
+                <p class="question-subtitle">Add details for a more personalized recommendation, or skip to see results</p>
                 <div class="textarea-container">
                     <textarea class="textarea" id="projectDescription" placeholder="Example: We are developing an AI system to detect early-stage gastric cancer from endoscopy images. Our dataset contains 2,000 annotated images from our hospital. We need a model that can highlight suspicious regions and provide confidence scores for clinical decision support..." oninput="updateWordCount()"></textarea>
                     <div class="word-count"><span id="wordCount">0</span>/300</div>
                 </div>
                 <div class="btn-group">
                     <button class="btn btn-secondary" onclick="prevQuestion()">← Back</button>
-                    <button class="btn btn-primary" id="analyzeBtn" onclick="analyze()" disabled>Analyze Project →</button>
+                    <button class="btn btn-secondary" onclick="analyze()" style="border-color: var(--accent); color: var(--accent);">Skip & See Results</button>
+                    <button class="btn btn-primary" id="analyzeBtn" onclick="analyze()">Analyze with Details →</button>
                 </div>
             </div>
 
@@ -793,11 +794,13 @@
             containerEl.classList.remove('warning', 'error');
             if (words > 300) {
                 containerEl.classList.add('error');
+                document.getElementById('analyzeBtn').disabled = true;
             } else if (words > 250) {
                 containerEl.classList.add('warning');
+                document.getElementById('analyzeBtn').disabled = false;
+            } else {
+                document.getElementById('analyzeBtn').disabled = false;
             }
-            
-            document.getElementById('analyzeBtn').disabled = words < 10 || words > 300;
         }
 
         function analyze() {
