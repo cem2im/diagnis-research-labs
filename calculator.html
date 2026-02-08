@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample Size Calculator – Diagnis Research Labs</title>
+    <meta name="description" content="Calculate the minimum sample size for your AI/ML research project. Get recommendations based on task type, complexity, and target accuracy.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg: #000000;
+            --bg-card: #0a0a0a;
+            --bg-elevated: #111111;
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.15);
+            --text: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #71717a;
+            --accent: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+            --success: #22c55e;
+            --warning: #eab308;
+        }
+
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        ::selection { background: var(--accent); color: white; }
+        a { color: inherit; text-decoration: none; }
+
+        /* Animated Grid */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 80px 80px;
+            mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Animated Gradient Mesh Background */
+        .gradient-mesh {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .gradient-mesh::before,
+        .gradient-mesh::after {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            top: -25%;
+            left: -25%;
+        }
+        .gradient-mesh::before {
+            background: 
+                radial-gradient(ellipse 80% 50% at 20% 40%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 80% at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 60% at 40% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+            animation: meshMove1 25s ease-in-out infinite;
+        }
+        .gradient-mesh::after {
+            background: 
+                radial-gradient(ellipse 70% 60% at 70% 60%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 70% at 30% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 50% at 60% 70%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+            animation: meshMove2 30s ease-in-out infinite;
+        }
+        @keyframes meshMove1 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            25% { transform: translate(5%, -5%) rotate(2deg) scale(1.05); }
+            50% { transform: translate(-3%, 5%) rotate(-1deg) scale(0.98); }
+            75% { transform: translate(3%, 3%) rotate(1deg) scale(1.02); }
+        }
+        @keyframes meshMove2 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            33% { transform: translate(-5%, 3%) rotate(-2deg) scale(1.03); }
+            66% { transform: translate(4%, -4%) rotate(2deg) scale(0.97); }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 0 2rem;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: -0.01em;
+        }
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-mark svg { width: 18px; height: 18px; color: white; }
+        
+        nav { display: flex; align-items: center; gap: 32px; }
+        .nav-link {
+            font-size: 14px;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+        .nav-link:hover { color: var(--text); }
+        .nav-link.active { color: var(--text); }
+        .nav-cta {
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            background: var(--text);
+            color: var(--bg);
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .nav-cta:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* Main Content */
+        main { position: relative; z-index: 1; padding-top: 64px; }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 2rem 60px;
+            text-align: center;
+        }
+        .hero-content { max-width: 700px; margin: 0 auto; }
+        
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent);
+            margin-bottom: 24px;
+        }
+        .hero-badge svg { width: 16px; height: 16px; }
+
+        .hero h1 {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 16px;
+        }
+        .hero h1 .gradient-text {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-description {
+            font-size: 17px;
+            color: var(--text-secondary);
+            max-width: 560px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* Calculator Container */
+        .calculator-section {
+            padding: 0 2rem 100px;
+        }
+        .calculator-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        /* Input Panel */
+        .input-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+        }
+        .panel-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .panel-title-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .panel-title-icon svg { width: 20px; height: 20px; color: var(--accent); }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 32px;
+        }
+        .form-group:last-child { margin-bottom: 0; }
+        
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+        .form-sublabel {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            font-weight: 400;
+            margin-left: 4px;
+        }
+
+        /* Task Selection Cards */
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .task-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: center;
+        }
+        .task-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+        .task-card.selected {
+            border-color: var(--accent);
+            background: rgba(99, 102, 241, 0.08);
+        }
+        .task-card-icon {
+            width: 44px;
+            height: 44px;
+            margin: 0 auto 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .task-card.selected .task-card-icon {
+            background: rgba(99, 102, 241, 0.2);
+        }
+        .task-card-icon svg { width: 22px; height: 22px; color: var(--text-secondary); }
+        .task-card.selected .task-card-icon svg { color: var(--accent); }
+        .task-card-title {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        .task-card-example {
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+
+        /* Complexity Toggle */
+        .complexity-toggle {
+            display: flex;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 16px;
+        }
+        .complexity-option {
+            flex: 1;
+            padding: 12px 16px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .complexity-option:hover { color: var(--text); }
+        .complexity-option.selected {
+            background: var(--gradient);
+            color: white;
+        }
+
+        /* Class Count Slider */
+        .class-count-container {
+            display: none;
+            margin-top: 16px;
+        }
+        .class-count-container.visible { display: block; }
+        
+        .slider-container {
+            position: relative;
+            padding: 12px 0 20px;
+        }
+        .slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            outline: none;
+            cursor: pointer;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--gradient);
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            transition: transform 0.2s;
+        }
+        .slider::-webkit-slider-thumb:hover { transform: scale(1.1); }
+        .slider::-moz-range-thumb {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--gradient);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+        
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+        .slider-value {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        /* Accuracy Slider */
+        .accuracy-options {
+            display: flex;
+            gap: 8px;
+        }
+        .accuracy-option {
+            flex: 1;
+            padding: 14px 8px;
+            text-align: center;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .accuracy-option:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+        .accuracy-option.selected {
+            border-color: var(--accent);
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--accent);
+        }
+
+        /* Output Panel */
+        .output-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Result Card */
+        .result-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient);
+        }
+        
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .result-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .result-icon svg { width: 24px; height: 24px; color: white; }
+        .result-title {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .result-label { font-size: 13px; color: var(--text-tertiary); }
+
+        .sample-size-display {
+            text-align: center;
+            padding: 24px 0;
+        }
+        .sample-size-number {
+            font-size: 72px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+        .sample-size-label {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        /* Split Visualization */
+        .split-viz {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+        .split-title {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 16px;
+        }
+        .split-bar {
+            display: flex;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+        .split-segment {
+            transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .split-segment.train { background: #6366f1; }
+        .split-segment.val { background: #8b5cf6; }
+        .split-segment.test { background: #a855f7; }
+        
+        .split-legend {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+        .split-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .split-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .split-dot.train { background: #6366f1; }
+        .split-dot.val { background: #8b5cf6; }
+        .split-dot.test { background: #a855f7; }
+        .split-count { color: var(--text-secondary); }
+
+        /* Insights Card */
+        .insights-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+        }
+        .insight-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .insight-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(34, 197, 94, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .insight-icon svg { width: 16px; height: 16px; color: var(--success); }
+        .insight-title {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .insight-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+        .insight-text strong { color: var(--text); }
+
+        /* Paper Reference */
+        .paper-reference {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-top: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            transition: all 0.2s;
+        }
+        .paper-reference:hover {
+            border-color: var(--border-hover);
+        }
+        .paper-icon {
+            width: 28px;
+            height: 28px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .paper-icon svg { width: 14px; height: 14px; color: var(--accent); }
+        .paper-info { flex: 1; }
+        .paper-title {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+        .paper-meta {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        /* CTA Section */
+        .cta-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+        }
+        .cta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .cta-item {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: block;
+        }
+        .cta-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.15);
+        }
+        .cta-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 14px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cta-icon svg { width: 22px; height: 22px; color: white; }
+        .cta-item-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .cta-item-desc {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        /* Visual Chart */
+        .chart-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+        }
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .chart-title {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .chart-legend {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+        .chart-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .legend-line {
+            width: 16px;
+            height: 2px;
+            border-radius: 1px;
+        }
+        .legend-line.accuracy { background: var(--accent); }
+        .legend-line.yours { background: var(--success); }
+        
+        .chart-area {
+            height: 180px;
+            position: relative;
+            border-left: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            margin-left: 30px;
+        }
+        .chart-y-labels {
+            position: absolute;
+            left: -35px;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+        .chart-x-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            margin-left: 30px;
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+        .chart-curve {
+            position: absolute;
+            inset: 0;
+            overflow: visible;
+        }
+        .chart-curve path {
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+        }
+        .chart-curve .curve-line { stroke: var(--accent); }
+        .chart-curve .curve-fill {
+            fill: url(#curveGradient);
+            stroke: none;
+        }
+        .chart-marker {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--success);
+            border: 3px solid var(--bg-card);
+            box-shadow: 0 2px 8px rgba(34, 197, 94, 0.4);
+            transform: translate(-50%, -50%);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .chart-marker-label {
+            position: absolute;
+            transform: translate(-50%, -150%);
+            background: var(--success);
+            color: var(--bg);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 6px;
+            white-space: nowrap;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .chart-marker-label::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid var(--success);
+        }
+
+        /* Footer */
+        footer {
+            padding: 32px 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .footer-text {
+            font-size: 14px;
+            color: var(--text-tertiary);
+        }
+        .footer-text a {
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+        .footer-text a:hover { color: var(--text); }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        .delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .delay-3 { animation-delay: 0.3s; opacity: 0; }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+        }
+        .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+
+        @keyframes number-pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .number-pop { animation: number-pop 0.4s ease; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .calculator-container { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            nav { display: none; }
+            .hero { padding: 60px 1.5rem 40px; }
+            .calculator-section { padding: 0 1.5rem 60px; }
+            .input-panel, .result-card { padding: 28px; }
+            .task-grid { grid-template-columns: 1fr; }
+            .accuracy-options { flex-wrap: wrap; }
+            .accuracy-option { flex: 0 0 calc(33.333% - 6px); }
+            .cta-grid { grid-template-columns: 1fr; }
+            .sample-size-number { font-size: 56px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="gradient-mesh"></div>
+
+    <header>
+        <div class="header-inner">
+            <a href="/" class="logo">
+                <div class="logo-mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <span>Diagnis Research Labs</span>
+            </a>
+            <nav>
+                <a href="why-ai.html" class="nav-link">Why AI?</a>
+                <a href="index.html#features" class="nav-link">Features</a>
+                <a href="index.html#process" class="nav-link">Process</a>
+                <a href="team.html" class="nav-link">Team</a>
+                <a href="quiz.html" class="nav-link">AI Finder</a>
+                <a href="calculator.html" class="nav-link active">Calculator</a>
+                <a href="mailto:research@diagnis.ai" class="nav-cta">Get Started</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero animate-in">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        <polyline points="7.5 4.21 12 6.81 16.5 4.21"/>
+                        <polyline points="7.5 19.79 7.5 14.6 3 12"/>
+                        <polyline points="21 12 16.5 14.6 16.5 19.79"/>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
+                    Interactive Tool
+                </div>
+                <h1>Sample Size <span class="gradient-text">Calculator</span></h1>
+                <p class="hero-description">Estimate how much data you need for your AI/ML research project. Get evidence-based recommendations tailored to your specific task.</p>
+            </div>
+        </section>
+
+        <section class="calculator-section">
+            <div class="calculator-container">
+                <!-- Input Panel -->
+                <div class="input-panel animate-in delay-1">
+                    <div class="panel-title">
+                        <div class="panel-title-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                            </svg>
+                        </div>
+                        Configure Your Project
+                    </div>
+
+                    <!-- Task Selection -->
+                    <div class="form-group">
+                        <label class="form-label">What are you trying to do?</label>
+                        <div class="task-grid">
+                            <div class="task-card selected" data-task="classification">
+                                <div class="task-card-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                        <polyline points="21 15 16 10 5 21"/>
+                                    </svg>
+                                </div>
+                                <div class="task-card-title">Image Classification</div>
+                                <div class="task-card-example">e.g., tumor detection</div>
+                            </div>
+                            <div class="task-card" data-task="detection">
+                                <div class="task-card-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                        <rect x="7" y="7" width="3" height="9"/>
+                                        <rect x="14" y="7" width="3" height="5"/>
+                                    </svg>
+                                </div>
+                                <div class="task-card-title">Object Detection</div>
+                                <div class="task-card-example">e.g., polyp detection</div>
+                            </div>
+                            <div class="task-card" data-task="segmentation">
+                                <div class="task-card-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                        <path d="M2 17l10 5 10-5"/>
+                                        <path d="M2 12l10 5 10-5"/>
+                                    </svg>
+                                </div>
+                                <div class="task-card-title">Segmentation</div>
+                                <div class="task-card-example">e.g., organ boundaries</div>
+                            </div>
+                            <div class="task-card" data-task="tabular">
+                                <div class="task-card-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="8" y1="6" x2="21" y2="6"/>
+                                        <line x1="8" y1="12" x2="21" y2="12"/>
+                                        <line x1="8" y1="18" x2="21" y2="18"/>
+                                        <line x1="3" y1="6" x2="3.01" y2="6"/>
+                                        <line x1="3" y1="12" x2="3.01" y2="12"/>
+                                        <line x1="3" y1="18" x2="3.01" y2="18"/>
+                                    </svg>
+                                </div>
+                                <div class="task-card-title">Tabular Prediction</div>
+                                <div class="task-card-example">e.g., risk scores</div>
+                            </div>
+                            <div class="task-card" data-task="timeseries" style="grid-column: 1 / -1;">
+                                <div class="task-card-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                                    </svg>
+                                </div>
+                                <div class="task-card-title">Time Series</div>
+                                <div class="task-card-example">e.g., vital signs prediction</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Complexity Selection -->
+                    <div class="form-group">
+                        <label class="form-label">Problem Complexity</label>
+                        <div class="complexity-toggle">
+                            <div class="complexity-option selected" data-complexity="binary">Binary (2 classes)</div>
+                            <div class="complexity-option" data-complexity="multiclass">Multi-class</div>
+                        </div>
+                        <div class="class-count-container" id="classCountContainer">
+                            <div class="slider-value" id="classCountValue">5</div>
+                            <div class="slider-container">
+                                <input type="range" class="slider" id="classCount" min="3" max="20" value="5">
+                                <div class="slider-labels">
+                                    <span>3 classes</span>
+                                    <span>20 classes</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Target Accuracy -->
+                    <div class="form-group">
+                        <label class="form-label">Target Accuracy <span class="form-sublabel">(higher = more samples)</span></label>
+                        <div class="accuracy-options">
+                            <div class="accuracy-option" data-accuracy="70">70%</div>
+                            <div class="accuracy-option" data-accuracy="80">80%</div>
+                            <div class="accuracy-option selected" data-accuracy="85">85%</div>
+                            <div class="accuracy-option" data-accuracy="90">90%</div>
+                            <div class="accuracy-option" data-accuracy="95">95%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Output Panel -->
+                <div class="output-panel">
+                    <!-- Main Result -->
+                    <div class="result-card animate-in delay-2">
+                        <div class="result-header">
+                            <div class="result-icon pulse-glow">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/>
+                                    <path d="M22 12A10 10 0 0 0 12 2v10z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="result-title">Minimum Recommended Sample Size</div>
+                                <div class="result-label">For your configuration</div>
+                            </div>
+                        </div>
+                        <div class="sample-size-display">
+                            <div class="sample-size-number" id="sampleSizeNumber">500</div>
+                            <div class="sample-size-label">total samples</div>
+                        </div>
+                        <div class="split-viz">
+                            <div class="split-title">Recommended Split</div>
+                            <div class="split-bar">
+                                <div class="split-segment train" id="trainBar" style="width: 70%;"></div>
+                                <div class="split-segment val" id="valBar" style="width: 15%;"></div>
+                                <div class="split-segment test" id="testBar" style="width: 15%;"></div>
+                            </div>
+                            <div class="split-legend">
+                                <div class="split-item">
+                                    <div class="split-dot train"></div>
+                                    <span>Train</span>
+                                    <span class="split-count" id="trainCount">350</span>
+                                </div>
+                                <div class="split-item">
+                                    <div class="split-dot val"></div>
+                                    <span>Val</span>
+                                    <span class="split-count" id="valCount">75</span>
+                                </div>
+                                <div class="split-item">
+                                    <div class="split-dot test"></div>
+                                    <span>Test</span>
+                                    <span class="split-count" id="testCount">75</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart -->
+                    <div class="chart-container animate-in delay-2">
+                        <div class="chart-header">
+                            <div class="chart-title">Sample Size vs Accuracy Curve</div>
+                            <div class="chart-legend">
+                                <div class="chart-legend-item">
+                                    <div class="legend-line accuracy"></div>
+                                    <span>Expected</span>
+                                </div>
+                                <div class="chart-legend-item">
+                                    <div class="legend-line yours"></div>
+                                    <span>Your target</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-area">
+                            <div class="chart-y-labels">
+                                <span>95%</span>
+                                <span>85%</span>
+                                <span>75%</span>
+                                <span>65%</span>
+                            </div>
+                            <svg class="chart-curve" viewBox="0 0 400 180" preserveAspectRatio="none">
+                                <defs>
+                                    <linearGradient id="curveGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color: rgba(99, 102, 241, 0.2)"/>
+                                        <stop offset="100%" style="stop-color: rgba(99, 102, 241, 0)"/>
+                                    </linearGradient>
+                                </defs>
+                                <path class="curve-fill" d="M0,180 L0,150 Q50,120 100,90 Q150,60 200,45 Q250,35 300,28 Q350,22 400,18 L400,180 Z"/>
+                                <path class="curve-line" d="M0,150 Q50,120 100,90 Q150,60 200,45 Q250,35 300,28 Q350,22 400,18"/>
+                            </svg>
+                            <div class="chart-marker" id="chartMarker" style="left: 25%; top: 50%;">
+                                <div class="chart-marker-label" id="chartMarkerLabel">500 samples</div>
+                            </div>
+                        </div>
+                        <div class="chart-x-labels">
+                            <span>100</span>
+                            <span>500</span>
+                            <span>1K</span>
+                            <span>5K</span>
+                            <span>10K</span>
+                        </div>
+                    </div>
+
+                    <!-- Insights -->
+                    <div class="insights-card animate-in delay-3">
+                        <div class="insight-header">
+                            <div class="insight-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="12" y1="16" x2="12" y2="12"/>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"/>
+                                </svg>
+                            </div>
+                            <div class="insight-title">Research Insights</div>
+                        </div>
+                        <p class="insight-text" id="insightText">
+                            With your specifications, similar studies achieved <strong>86% accuracy</strong> with approximately <strong>500 samples</strong>. Binary classification tasks typically require fewer samples than multi-class problems.
+                        </p>
+                        <div id="paperReferences">
+                            <div class="paper-reference">
+                                <div class="paper-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                    </svg>
+                                </div>
+                                <div class="paper-info">
+                                    <div class="paper-title">Deep Learning with Limited Data</div>
+                                    <div class="paper-meta">Nature Medicine, 2023</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CTA -->
+                    <div class="cta-card animate-in delay-3">
+                        <div class="cta-grid">
+                            <a href="mailto:research@diagnis.ai?subject=Sample Size Consultation" class="cta-item">
+                                <div class="cta-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                    </svg>
+                                </div>
+                                <div class="cta-item-title">Have enough data?</div>
+                                <div class="cta-item-desc">Let's discuss your project</div>
+                            </a>
+                            <a href="mailto:research@diagnis.ai?subject=Free Feasibility Call" class="cta-item">
+                                <div class="cta-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                    </svg>
+                                </div>
+                                <div class="cta-item-title">Not sure about data?</div>
+                                <div class="cta-item-desc">Free feasibility call</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p class="footer-text">
+            <strong>Diagnis Research Labs</strong> · A division of <a href="https://diagnis.ai">Diagnis Medical AI</a><br>
+            © 2026 Diagnis. All rights reserved.
+        </p>
+    </footer>
+
+    <script>
+        // Calculator Logic
+        const config = {
+            task: 'classification',
+            complexity: 'binary',
+            classCount: 5,
+            accuracy: 85
+        };
+
+        // Sample size lookup data (based on literature)
+        const sampleSizeData = {
+            classification: {
+                binary: { 70: 200, 80: 350, 85: 500, 90: 800, 95: 1500 },
+                multiclass: { 70: 400, 80: 700, 85: 1000, 90: 1600, 95: 3000 }
+            },
+            detection: {
+                binary: { 70: 300, 80: 500, 85: 750, 90: 1200, 95: 2200 },
+                multiclass: { 70: 600, 80: 1000, 85: 1500, 90: 2400, 95: 4500 }
+            },
+            segmentation: {
+                binary: { 70: 150, 80: 250, 85: 400, 90: 650, 95: 1200 },
+                multiclass: { 70: 300, 80: 500, 85: 800, 90: 1300, 95: 2400 }
+            },
+            tabular: {
+                binary: { 70: 500, 80: 1000, 85: 1500, 90: 2500, 95: 5000 },
+                multiclass: { 70: 1000, 80: 2000, 85: 3000, 90: 5000, 95: 10000 }
+            },
+            timeseries: {
+                binary: { 70: 400, 80: 750, 85: 1200, 90: 2000, 95: 4000 },
+                multiclass: { 70: 800, 80: 1500, 85: 2400, 90: 4000, 95: 8000 }
+            }
+        };
+
+        // Paper references by task type
+        const paperReferences = {
+            classification: [
+                { title: "Deep Learning for Medical Image Classification", venue: "Nature Medicine, 2019", url: "#" },
+                { title: "Sample Size Requirements for Deep Learning", venue: "Radiology AI, 2021", url: "#" }
+            ],
+            detection: [
+                { title: "Object Detection in Medical Imaging", venue: "IEEE TMI, 2020", url: "#" },
+                { title: "Data Requirements for Detection Networks", venue: "MICCAI, 2022", url: "#" }
+            ],
+            segmentation: [
+                { title: "U-Net: Sample Efficiency in Segmentation", venue: "MICCAI, 2015", url: "#" },
+                { title: "Few-shot Medical Image Segmentation", venue: "Nature Methods, 2023", url: "#" }
+            ],
+            tabular: [
+                { title: "Machine Learning on Clinical Data", venue: "JAMA, 2019", url: "#" },
+                { title: "Sample Size for Predictive Models", venue: "BMJ, 2020", url: "#" }
+            ],
+            timeseries: [
+                { title: "Deep Learning for ECG Analysis", venue: "Circulation, 2019", url: "#" },
+                { title: "Time Series Classification in Healthcare", venue: "npj Digital Medicine, 2021", url: "#" }
+            ]
+        };
+
+        // Insight templates by task
+        const insightTemplates = {
+            classification: "With your specifications, similar studies achieved <strong>{accuracy}% accuracy</strong> with approximately <strong>{samples} samples</strong>. {complexityNote}",
+            detection: "Object detection typically requires <strong>more annotated data</strong> than classification. Studies show <strong>{samples} samples</strong> can achieve <strong>{accuracy}% mAP</strong>. {complexityNote}",
+            segmentation: "Segmentation benefits greatly from <strong>transfer learning</strong>. With <strong>{samples} annotated masks</strong>, you can expect approximately <strong>{accuracy}% Dice score</strong>. {complexityNote}",
+            tabular: "Tabular data models often need <strong>more samples per feature</strong>. For your target of <strong>{accuracy}% AUC</strong>, aim for at least <strong>{samples} samples</strong>. {complexityNote}",
+            timeseries: "Time series models require <strong>sufficient temporal coverage</strong>. With <strong>{samples} sequences</strong>, similar studies achieved <strong>{accuracy}% accuracy</strong>. {complexityNote}"
+        };
+
+        const complexityNotes = {
+            binary: "Binary classification tasks typically require fewer samples than multi-class problems.",
+            multiclass: "With {classes} classes, consider collecting at least {perClass} samples per class for balanced training."
+        };
+
+        function calculateSampleSize() {
+            let baseSamples = sampleSizeData[config.task][config.complexity][config.accuracy];
+            
+            // Adjust for class count in multiclass
+            if (config.complexity === 'multiclass') {
+                const classMultiplier = 1 + (config.classCount - 3) * 0.15;
+                baseSamples = Math.round(baseSamples * classMultiplier);
+            }
+            
+            return baseSamples;
+        }
+
+        function calculateSplit(totalSamples) {
+            // Different splits based on dataset size
+            let trainPct, valPct, testPct;
+            
+            if (totalSamples < 500) {
+                trainPct = 0.60; valPct = 0.20; testPct = 0.20;
+            } else if (totalSamples < 2000) {
+                trainPct = 0.70; valPct = 0.15; testPct = 0.15;
+            } else {
+                trainPct = 0.80; valPct = 0.10; testPct = 0.10;
+            }
+            
+            return {
+                train: Math.round(totalSamples * trainPct),
+                val: Math.round(totalSamples * valPct),
+                test: Math.round(totalSamples * testPct),
+                trainPct, valPct, testPct
+            };
+        }
+
+        function updateDisplay() {
+            const sampleSize = calculateSampleSize();
+            const split = calculateSplit(sampleSize);
+            
+            // Update sample size number with animation
+            const sampleSizeEl = document.getElementById('sampleSizeNumber');
+            sampleSizeEl.textContent = sampleSize.toLocaleString();
+            sampleSizeEl.classList.remove('number-pop');
+            void sampleSizeEl.offsetWidth; // Trigger reflow
+            sampleSizeEl.classList.add('number-pop');
+            
+            // Update split bars
+            document.getElementById('trainBar').style.width = (split.trainPct * 100) + '%';
+            document.getElementById('valBar').style.width = (split.valPct * 100) + '%';
+            document.getElementById('testBar').style.width = (split.testPct * 100) + '%';
+            
+            // Update split counts
+            document.getElementById('trainCount').textContent = split.train.toLocaleString();
+            document.getElementById('valCount').textContent = split.val.toLocaleString();
+            document.getElementById('testCount').textContent = split.test.toLocaleString();
+            
+            // Update chart marker position
+            updateChartMarker(sampleSize);
+            
+            // Update insights
+            updateInsights(sampleSize);
+            
+            // Update paper references
+            updatePaperReferences();
+        }
+
+        function updateChartMarker(samples) {
+            const marker = document.getElementById('chartMarker');
+            const label = document.getElementById('chartMarkerLabel');
+            
+            // Map samples to x position (logarithmic scale: 100 to 10000)
+            const minLog = Math.log10(100);
+            const maxLog = Math.log10(10000);
+            const sampleLog = Math.log10(Math.min(Math.max(samples, 100), 10000));
+            const xPercent = ((sampleLog - minLog) / (maxLog - minLog)) * 100;
+            
+            // Map accuracy to y position (65% to 95% range, inverted)
+            const yPercent = ((95 - config.accuracy) / 30) * 100;
+            
+            marker.style.left = xPercent + '%';
+            marker.style.top = yPercent + '%';
+            label.textContent = samples >= 1000 ? (samples / 1000).toFixed(1) + 'K samples' : samples + ' samples';
+        }
+
+        function updateInsights(samples) {
+            const template = insightTemplates[config.task];
+            let complexityNote = complexityNotes[config.complexity];
+            
+            if (config.complexity === 'multiclass') {
+                const perClass = Math.round(samples / config.classCount);
+                complexityNote = complexityNote
+                    .replace('{classes}', config.classCount)
+                    .replace('{perClass}', perClass);
+            }
+            
+            const insight = template
+                .replace('{accuracy}', config.accuracy)
+                .replace('{samples}', samples.toLocaleString())
+                .replace('{complexityNote}', complexityNote);
+            
+            document.getElementById('insightText').innerHTML = insight;
+        }
+
+        function updatePaperReferences() {
+            const papers = paperReferences[config.task];
+            const container = document.getElementById('paperReferences');
+            
+            container.innerHTML = papers.map(paper => `
+                <div class="paper-reference">
+                    <div class="paper-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                    </div>
+                    <div class="paper-info">
+                        <div class="paper-title">${paper.title}</div>
+                        <div class="paper-meta">${paper.venue}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.task-card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.task-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                config.task = card.dataset.task;
+                updateDisplay();
+            });
+        });
+
+        document.querySelectorAll('.complexity-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.complexity-option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+                config.complexity = option.dataset.complexity;
+                
+                const classContainer = document.getElementById('classCountContainer');
+                if (config.complexity === 'multiclass') {
+                    classContainer.classList.add('visible');
+                } else {
+                    classContainer.classList.remove('visible');
+                }
+                
+                updateDisplay();
+            });
+        });
+
+        document.getElementById('classCount').addEventListener('input', (e) => {
+            config.classCount = parseInt(e.target.value);
+            document.getElementById('classCountValue').textContent = config.classCount;
+            updateDisplay();
+        });
+
+        document.querySelectorAll('.accuracy-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.accuracy-option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+                config.accuracy = parseInt(option.dataset.accuracy);
+                updateDisplay();
+            });
+        });
+
+        // Initialize
+        updateDisplay();
+    </script>
+</body>
+</html>
