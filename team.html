@@ -7,46 +7,169 @@
     <meta name="description" content="Meet the team behind Diagnis Research Labs. Our researchers have published extensively in medical AI, endoscopy, and clinical decision support.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         :root {
-            --primary: #1e40af;
-            --primary-light: #3b82f6;
-            --primary-dark: #1e3a8a;
-            --accent: #10b981;
-            --accent-hover: #059669;
-            --bg-white: #FFFFFF;
-            --bg-cream: #f8fafc;
-            --bg-light: #F1F5F9;
-            --text-dark: #0f172a;
-            --text-medium: #475569;
-            --text-light: #64748b;
-            --border: #e2e8f0;
+            --bg: #000000;
+            --bg-card: #0a0a0a;
+            --bg-elevated: #111111;
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.15);
+            --text: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #71717a;
+            --accent: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
         }
+
         html { scroll-behavior: smooth; }
+        
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-white);
-            color: var(--text-dark);
+            background: var(--bg);
+            color: var(--text);
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        ::selection { background: var(--accent); color: white; }
+        a { color: inherit; text-decoration: none; }
+
+        /* Animated Grid */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 80px 80px;
+            mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Animated Gradient Mesh Background */
+        .gradient-mesh {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .gradient-mesh::before,
+        .gradient-mesh::after {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            top: -25%;
+            left: -25%;
+        }
+        .gradient-mesh::before {
+            background: 
+                radial-gradient(ellipse 80% 50% at 20% 40%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 80% at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 60% at 40% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+            animation: meshMove1 25s ease-in-out infinite;
+        }
+        .gradient-mesh::after {
+            background: 
+                radial-gradient(ellipse 70% 60% at 70% 60%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 70% at 30% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 50% at 60% 70%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+            animation: meshMove2 30s ease-in-out infinite;
+        }
+        @keyframes meshMove1 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            25% { transform: translate(5%, -5%) rotate(2deg) scale(1.05); }
+            50% { transform: translate(-3%, 5%) rotate(-1deg) scale(0.98); }
+            75% { transform: translate(3%, 3%) rotate(1deg) scale(1.02); }
+        }
+        @keyframes meshMove2 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            33% { transform: translate(-5%, 3%) rotate(-2deg) scale(1.03); }
+            66% { transform: translate(4%, -4%) rotate(2deg) scale(0.97); }
+        }
+        
+        /* Aurora overlay */
+        .aurora {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+        .aurora-beam {
+            position: absolute;
+            width: 200%;
+            height: 300px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(99, 102, 241, 0.05) 20%, 
+                rgba(139, 92, 246, 0.08) 40%, 
+                rgba(168, 85, 247, 0.05) 60%, 
+                rgba(59, 130, 246, 0.06) 80%, 
+                transparent 100%
+            );
+            filter: blur(60px);
+            animation: auroraWave 20s ease-in-out infinite;
+        }
+        .aurora-beam:nth-child(1) {
+            top: 10%;
+            animation-delay: 0s;
+        }
+        .aurora-beam:nth-child(2) {
+            top: 40%;
+            animation-delay: -7s;
+            opacity: 0.6;
+        }
+        .aurora-beam:nth-child(3) {
+            top: 70%;
+            animation-delay: -14s;
+            opacity: 0.4;
+        }
+        @keyframes auroraWave {
+            0%, 100% { transform: translateX(-30%) skewX(-5deg); }
+            50% { transform: translateX(-10%) skewX(5deg); }
+        }
+
+        /* Cursor Glow */
+        .cursor-glow {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease;
+            opacity: 0;
         }
 
         /* Header */
-        .header {
+        header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            z-index: 1000;
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
+            z-index: 100;
+            padding: 0 2rem;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
         }
         .header-inner {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0.875rem 2rem;
+            height: 64px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -54,420 +177,629 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            text-decoration: none;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: -0.01em;
         }
-        .logo-icon {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            border-radius: 12px;
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .logo-icon svg { width: 24px; height: 24px; color: white; }
-        .logo-text { font-size: 1.25rem; font-weight: 700; color: var(--text-dark); }
-        .logo-text span { color: var(--primary); }
-        .nav { display: flex; align-items: center; gap: 2rem; }
+        .logo-mark svg { width: 18px; height: 18px; color: white; }
+        
+        nav { display: flex; align-items: center; gap: 32px; }
         .nav-link {
-            color: var(--text-medium);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-secondary);
             transition: color 0.2s;
         }
-        .nav-link:hover { color: var(--primary); }
-        .lang-switch { display: flex; align-items: center; gap: 0.5rem; color: var(--text-light); font-size: 0.85rem; }
-        .lang-switch a { color: var(--text-light); text-decoration: none; }
-        .lang-switch a:hover, .lang-switch a.active { color: var(--primary); }
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
+        .nav-link:hover { color: var(--text); }
+        .nav-link.active { color: var(--text); }
+        .nav-cta {
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            background: var(--text);
+            color: var(--bg);
+            border-radius: 8px;
+            transition: all 0.2s;
         }
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-        }
-        .btn-primary:hover { transform: translateY(-2px); }
+        .nav-cta:hover { opacity: 0.9; transform: translateY(-1px); }
 
-        /* Hero */
-        .page-hero {
-            padding: 10rem 2rem 5rem;
-            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
-            text-align: center;
-            color: white;
+        /* Sections */
+        main { position: relative; z-index: 1; }
+        
+        section {
+            padding: 120px 2rem;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .section-inner { max-width: 1200px; margin: 0 auto; }
+
+        /* Page Hero */
+        .page-hero {
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 120px;
+            padding-bottom: 60px;
+        }
+        .page-hero-content { max-width: 700px; }
+        
         .page-hero h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 4vw, 3rem);
-            margin-bottom: 1rem;
+            font-size: clamp(36px, 6vw, 56px);
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+        .page-hero h1 .gradient-text {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         .page-hero p {
-            font-size: 1.15rem;
-            opacity: 0.8;
-            max-width: 600px;
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 500px;
             margin: 0 auto;
+            line-height: 1.7;
         }
 
         /* Team Section */
         .team-section {
-            padding: 5rem 2rem;
-            background: var(--bg-cream);
+            padding: 60px 2rem 120px;
         }
         .team-inner {
-            max-width: 1200px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
-        /* Team Member */
+        /* Team Member Card with 3D Tilt */
         .team-member {
-            background: white;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
             border-radius: 24px;
-            padding: 3rem;
-            margin-bottom: 3rem;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+            padding: 48px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-style: preserve-3d;
+            perspective: 1000px;
         }
+        .team-member::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient);
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+        .team-member:hover::before { transform: scaleX(1); }
+        .team-member:hover {
+            border-color: var(--border-hover);
+            box-shadow: 0 24px 80px rgba(99, 102, 241, 0.1);
+        }
+        
         .member-header {
             display: flex;
             align-items: center;
-            gap: 2rem;
-            margin-bottom: 2rem;
-            padding-bottom: 2rem;
+            gap: 24px;
+            margin-bottom: 32px;
+            padding-bottom: 32px;
             border-bottom: 1px solid var(--border);
         }
         .member-avatar {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            border-radius: 20px;
+            width: 80px;
+            height: 80px;
+            background: var(--gradient);
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
+            font-size: 1.75rem;
+            font-weight: 600;
             color: white;
             flex-shrink: 0;
         }
         .member-info h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            letter-spacing: -0.02em;
         }
         .member-title {
-            color: var(--text-medium);
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: 12px;
+            line-height: 1.5;
         }
         .member-expertise {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 8px;
         }
         .expertise-tag {
-            background: var(--bg-light);
-            color: var(--primary);
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            color: var(--accent);
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 12px;
             font-weight: 500;
         }
 
         /* Publications */
         .publications-title {
-            font-size: 1.1rem;
+            font-size: 16px;
             font-weight: 600;
-            margin-bottom: 1.5rem;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 10px;
+            color: var(--text);
         }
         .publications-title svg {
             width: 20px;
             height: 20px;
-            color: var(--primary);
+            color: var(--accent);
         }
         .publication-list {
             display: grid;
-            gap: 1rem;
+            gap: 12px;
         }
         .publication-card {
-            background: var(--bg-cream);
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 1.25rem 1.5rem;
-            border-left: 3px solid var(--primary);
-            transition: all 0.3s;
+            padding: 20px 24px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .publication-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--gradient);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
         .publication-card:hover {
-            background: var(--bg-light);
+            border-color: var(--border-hover);
             transform: translateX(4px);
+            background: rgba(99, 102, 241, 0.03);
+        }
+        .publication-card:hover::before {
+            opacity: 1;
         }
         .publication-card h4 {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
-            line-height: 1.4;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 10px;
+            line-height: 1.5;
         }
         .publication-meta {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
-            font-size: 0.85rem;
-            color: var(--text-light);
+            gap: 16px;
+            font-size: 13px;
+            color: var(--text-tertiary);
         }
         .publication-meta span {
             display: flex;
             align-items: center;
-            gap: 0.25rem;
+            gap: 4px;
         }
         .publication-link {
-            color: var(--primary);
+            color: var(--accent);
             text-decoration: none;
             font-weight: 500;
-            font-size: 0.85rem;
+            font-size: 13px;
             display: inline-flex;
             align-items: center;
-            gap: 0.25rem;
-            margin-top: 0.5rem;
+            gap: 4px;
+            margin-top: 12px;
+            transition: all 0.2s;
         }
         .publication-link:hover {
-            text-decoration: underline;
+            color: var(--accent-secondary);
+        }
+        .publication-link svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* GitHub Link */
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .github-link:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: var(--border-hover);
+            color: var(--text);
+        }
+        .github-link svg {
+            width: 18px;
+            height: 18px;
         }
 
         /* Footer */
         footer {
-            padding: 3rem 2rem;
-            background: var(--text-dark);
+            padding: 32px 2rem;
+            border-top: 1px solid var(--border);
             text-align: center;
-            color: rgba(255,255,255,0.7);
+            position: relative;
+            z-index: 1;
         }
-        footer a { color: var(--primary-light); text-decoration: none; }
+        .footer-text {
+            font-size: 14px;
+            color: var(--text-tertiary);
+        }
+        .footer-text a {
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+        .footer-text a:hover { color: var(--text); }
 
+        /* Responsive */
         @media (max-width: 768px) {
-            .member-header { flex-direction: column; text-align: center; }
+            nav { display: none; }
+            section { padding: 80px 1.5rem; }
+            .team-member { padding: 32px 24px; }
+            .member-header { 
+                flex-direction: column; 
+                text-align: center; 
+            }
             .member-expertise { justify-content: center; }
-            .nav { display: none; }
+            .page-hero { padding-top: 100px; }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
+    <div class="grid-bg"></div>
+    <div class="gradient-mesh"></div>
+    <div class="aurora">
+        <div class="aurora-beam"></div>
+        <div class="aurora-beam"></div>
+        <div class="aurora-beam"></div>
+    </div>
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <header>
         <div class="header-inner">
             <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
-                        <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
+                <div class="logo-mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
                     </svg>
                 </div>
-                <div class="logo-text">Diagnis <span>Research Labs</span></div>
+                <span>Diagnis Research Labs</span>
             </a>
-            <nav class="nav">
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="team.html" class="nav-link" style="color: var(--primary);">Team</a>
-                <span class="lang-switch"><a href="team.html" class="active">EN</a> | <a href="team-tr.html">TR</a></span>
-                <a href="mailto:research@diagnis.ai" class="btn btn-primary">Contact</a>
+            <nav>
+                <a href="why-ai.html" class="nav-link">Why AI?</a>
+                <a href="index.html#features" class="nav-link">Features</a>
+                <a href="index.html#process" class="nav-link">Process</a>
+                <a href="team.html" class="nav-link active">Team</a>
+                <a href="quiz.html" class="nav-link">AI Finder</a>
+                <a href="mailto:research@diagnis.ai" class="nav-cta">Get Started</a>
             </nav>
         </div>
     </header>
 
-    <!-- Page Hero -->
-    <section class="page-hero">
-        <h1>Our Team & Research</h1>
-        <p>Meet the researchers behind Diagnis Research Labs. Combined 30+ peer-reviewed publications in medical AI.</p>
-    </section>
-
-    <!-- Team Section -->
-    <section class="team-section">
-        <div class="team-inner">
-
-            <!-- Cem Simsek -->
-            <div class="team-member">
-                <div class="member-header">
-                    <div class="member-avatar">CS</div>
-                    <div class="member-info">
-                        <h2>Cem Şimşek, MD</h2>
-                        <p class="member-title">Founder & Principal Investigator</p>
-                        <p class="member-title">Associate Professor of Gastroenterology, Hacettepe University<br>Harvard Medical School / BWH Fellowship</p>
-                        <div class="member-expertise">
-                            <span class="expertise-tag">Medical AI</span>
-                            <span class="expertise-tag">Endoscopy AI</span>
-                            <span class="expertise-tag">Clinical LLMs</span>
-                            <span class="expertise-tag">Computer Vision</span>
-                            <span class="expertise-tag">Predictive Models</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="publications-title">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                    Selected AI Publications (8 of 31+)
-                </div>
-                <div class="publication-list">
-                    <div class="publication-card">
-                        <h4>GastroGPT: Development and controlled testing of a proof-of-concept customized clinical language model</h4>
-                        <div class="publication-meta">
-                            <span>Endosc Int Open, 2025</span>
-                            <span>First Author</span>
-                        </div>
-                        <a href="https://pubmed.ncbi.nlm.nih.gov/40860687/" target="_blank" class="publication-link">View on PubMed →</a>
-                    </div>
-                    <div class="publication-card">
-                        <h4>QUAIDE - Quality assessment of AI preclinical studies in diagnostic endoscopy</h4>
-                        <div class="publication-meta">
-                            <span>Gut, 2024</span>
-                            <span>Co-Author</span>
-                        </div>
-                        <a href="https://pubmed.ncbi.nlm.nih.gov/39406471/" target="_blank" class="publication-link">View on PubMed →</a>
-                    </div>
-                    <div class="publication-card">
-                        <h4>Evaluating the Role of Artificial Intelligence in Making Clinical Decisions for Treating Acute Pancreatitis</h4>
-                        <div class="publication-meta">
-                            <span>J Clin Med, 2025</span>
-                            <span>Senior Author</span>
-                        </div>
-                        <a href="https://pubmed.ncbi.nlm.nih.gov/40566092/" target="_blank" class="publication-link">View on PubMed →</a>
-                    </div>
-                    <div class="publication-card">
-                        <h4>Virtual Reality and Augmented Reality Use Cases in Gastroenterology</h4>
-                        <div class="publication-meta">
-                            <span>Curr Gastroenterol Rep, 2025</span>
-                            <span>Co-Author</span>
-                        </div>
-                        <a href="https://pubmed.ncbi.nlm.nih.gov/39976780/" target="_blank" class="publication-link">View on PubMed →</a>
-                    </div>
-                    <div class="publication-card">
-                        <h4>Artificial intelligence method to predict overall survival of hepatocellular carcinoma</h4>
-                        <div class="publication-meta">
-                            <span>Hepatol Forum, 2021</span>
-                            <span>First Author</span>
-                        </div>
-                        <a href="https://pubmed.ncbi.nlm.nih.gov/35783900/" target="_blank" class="publication-link">View on PubMed →</a>
-                    </div>
-                    <div class="publication-card">
-                        <h4>Artificial intelligence to predict overall survivals of patients with cirrhosis and outcomes of variceal bleeding</h4>
-                        <div class="publication-meta">
-                            <span>Hepatol Forum, 2021</span>
-                            <span>First Author</span>
-                        </div>
-                        <a href="https://pubmed.ncbi.nlm.nih.gov/35783899/" target="_blank" class="publication-link">View on PubMed →</a>
-                    </div>
-                    <div class="publication-card">
-                        <h4>Training in Endoscopic Submucosal Dissection in the United States</h4>
-                        <div class="publication-meta">
-                            <span>Gastrointest Endosc Clin N Am, 2023</span>
-                            <span>First Author</span>
-                        </div>
-                        <a href="https://pubmed.ncbi.nlm.nih.gov/36375885/" target="_blank" class="publication-link">View on PubMed →</a>
-                    </div>
-                    <div class="publication-card">
-                        <h4>Novel articulating through-the-scope traction device</h4>
-                        <div class="publication-meta">
-                            <span>VideoGIE, 2022</span>
-                            <span>First Author</span>
-                        </div>
-                        <a href="https://pubmed.ncbi.nlm.nih.gov/36238810/" target="_blank" class="publication-link">View on PubMed →</a>
-                    </div>
-                </div>
+    <main>
+        <!-- Page Hero -->
+        <section class="page-hero visible">
+            <div class="page-hero-content">
+                <h1>Our <span class="gradient-text">Team</span> & Research</h1>
+                <p>Meet the researchers behind Diagnis Research Labs. Combined 30+ peer-reviewed publications in medical AI.</p>
             </div>
+        </section>
 
-            <!-- Ataberk Urfali -->
-            <div class="team-member">
-                <div class="member-header">
-                    <div class="member-avatar">AU</div>
-                    <div class="member-info">
-                        <h2>Ataberk Urfalı</h2>
-                        <p class="member-title">AI Research Engineer</p>
-                        <div class="member-expertise">
-                            <span class="expertise-tag">Deep Learning</span>
-                            <span class="expertise-tag">Medical Imaging</span>
-                            <span class="expertise-tag">Federated Learning</span>
-                            <span class="expertise-tag">LLMs & RAG</span>
-                            <span class="expertise-tag">PyTorch</span>
-                            <span class="expertise-tag">MONAI</span>
+        <!-- Team Section -->
+        <section class="team-section visible">
+            <div class="team-inner">
+
+                <!-- Cem Simsek -->
+                <div class="team-member" data-tilt>
+                    <div class="member-header">
+                        <div class="member-avatar">CS</div>
+                        <div class="member-info">
+                            <h2>Cem Şimşek, MD</h2>
+                            <p class="member-title">Founder & Principal Investigator<br>Associate Professor of Gastroenterology, Hacettepe University<br>Harvard Medical School / BWH Fellowship</p>
+                            <div class="member-expertise">
+                                <span class="expertise-tag">Medical AI</span>
+                                <span class="expertise-tag">Endoscopy AI</span>
+                                <span class="expertise-tag">Clinical LLMs</span>
+                                <span class="expertise-tag">Computer Vision</span>
+                                <span class="expertise-tag">Predictive Models</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="publications-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                        Selected AI Publications (8 of 31+)
+                    </div>
+                    <div class="publication-list">
+                        <div class="publication-card">
+                            <h4>GastroGPT: Development and controlled testing of a proof-of-concept customized clinical language model</h4>
+                            <div class="publication-meta">
+                                <span>Endosc Int Open, 2025</span>
+                                <span>First Author</span>
+                            </div>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/40860687/" target="_blank" class="publication-link">
+                                View on PubMed
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            </a>
+                        </div>
+                        <div class="publication-card">
+                            <h4>QUAIDE - Quality assessment of AI preclinical studies in diagnostic endoscopy</h4>
+                            <div class="publication-meta">
+                                <span>Gut, 2024</span>
+                                <span>Co-Author</span>
+                            </div>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/39406471/" target="_blank" class="publication-link">
+                                View on PubMed
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            </a>
+                        </div>
+                        <div class="publication-card">
+                            <h4>Evaluating the Role of Artificial Intelligence in Making Clinical Decisions for Treating Acute Pancreatitis</h4>
+                            <div class="publication-meta">
+                                <span>J Clin Med, 2025</span>
+                                <span>Senior Author</span>
+                            </div>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/40566092/" target="_blank" class="publication-link">
+                                View on PubMed
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            </a>
+                        </div>
+                        <div class="publication-card">
+                            <h4>Virtual Reality and Augmented Reality Use Cases in Gastroenterology</h4>
+                            <div class="publication-meta">
+                                <span>Curr Gastroenterol Rep, 2025</span>
+                                <span>Co-Author</span>
+                            </div>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/39976780/" target="_blank" class="publication-link">
+                                View on PubMed
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            </a>
+                        </div>
+                        <div class="publication-card">
+                            <h4>Artificial intelligence method to predict overall survival of hepatocellular carcinoma</h4>
+                            <div class="publication-meta">
+                                <span>Hepatol Forum, 2021</span>
+                                <span>First Author</span>
+                            </div>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/35783900/" target="_blank" class="publication-link">
+                                View on PubMed
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            </a>
+                        </div>
+                        <div class="publication-card">
+                            <h4>Artificial intelligence to predict overall survivals of patients with cirrhosis and outcomes of variceal bleeding</h4>
+                            <div class="publication-meta">
+                                <span>Hepatol Forum, 2021</span>
+                                <span>First Author</span>
+                            </div>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/35783899/" target="_blank" class="publication-link">
+                                View on PubMed
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            </a>
+                        </div>
+                        <div class="publication-card">
+                            <h4>Training in Endoscopic Submucosal Dissection in the United States</h4>
+                            <div class="publication-meta">
+                                <span>Gastrointest Endosc Clin N Am, 2023</span>
+                                <span>First Author</span>
+                            </div>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/36375885/" target="_blank" class="publication-link">
+                                View on PubMed
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            </a>
+                        </div>
+                        <div class="publication-card">
+                            <h4>Novel articulating through-the-scope traction device</h4>
+                            <div class="publication-meta">
+                                <span>VideoGIE, 2022</span>
+                                <span>First Author</span>
+                            </div>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/36238810/" target="_blank" class="publication-link">
+                                View on PubMed
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            </a>
                         </div>
                     </div>
                 </div>
-                <div class="publications-title">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></svg>
-                    Technical Expertise
+
+                <!-- Ataberk Urfali -->
+                <div class="team-member" data-tilt>
+                    <div class="member-header">
+                        <div class="member-avatar">AU</div>
+                        <div class="member-info">
+                            <h2>Ataberk Urfalı</h2>
+                            <p class="member-title">AI Research Engineer</p>
+                            <div class="member-expertise">
+                                <span class="expertise-tag">Deep Learning</span>
+                                <span class="expertise-tag">Medical Imaging</span>
+                                <span class="expertise-tag">Federated Learning</span>
+                                <span class="expertise-tag">LLMs & RAG</span>
+                                <span class="expertise-tag">PyTorch</span>
+                                <span class="expertise-tag">MONAI</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="publications-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></svg>
+                        Technical Expertise
+                    </div>
+                    <div class="publication-list">
+                        <div class="publication-card">
+                            <h4>Medical Image Segmentation & Classification</h4>
+                            <div class="publication-meta">
+                                <span>MONAI Framework</span>
+                                <span>PyTorch</span>
+                            </div>
+                        </div>
+                        <div class="publication-card">
+                            <h4>Federated Learning for Healthcare</h4>
+                            <div class="publication-meta">
+                                <span>Privacy-Preserving ML</span>
+                                <span>Distributed Training</span>
+                            </div>
+                        </div>
+                        <div class="publication-card">
+                            <h4>LLM Fine-tuning & RAG Systems</h4>
+                            <div class="publication-meta">
+                                <span>Clinical NLP</span>
+                                <span>Knowledge Retrieval</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://github.com/ataberkurfali" target="_blank" class="github-link">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        View GitHub Profile
+                    </a>
                 </div>
-                <div class="publication-list">
-                    <div class="publication-card">
-                        <h4>Medical Image Segmentation & Classification</h4>
-                        <div class="publication-meta">
-                            <span>MONAI Framework</span>
-                            <span>PyTorch</span>
+
+                <!-- Ahmet Enes Kilic -->
+                <div class="team-member" data-tilt>
+                    <div class="member-header">
+                        <div class="member-avatar">AK</div>
+                        <div class="member-info">
+                            <h2>Ahmet Enes Kılıç</h2>
+                            <p class="member-title">AI Research Engineer</p>
+                            <div class="member-expertise">
+                                <span class="expertise-tag">Deep Learning</span>
+                                <span class="expertise-tag">Medical Imaging</span>
+                                <span class="expertise-tag">MRI Analysis</span>
+                                <span class="expertise-tag">Computer Vision</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="publication-card">
-                        <h4>Federated Learning for Healthcare</h4>
-                        <div class="publication-meta">
-                            <span>Privacy-Preserving ML</span>
-                            <span>Distributed Training</span>
-                        </div>
+                    <div class="publications-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                        Publications
                     </div>
-                    <div class="publication-card">
-                        <h4>LLM Fine-tuning & RAG Systems</h4>
-                        <div class="publication-meta">
-                            <span>Clinical NLP</span>
-                            <span>Knowledge Retrieval</span>
+                    <div class="publication-list">
+                        <div class="publication-card">
+                            <h4>Evaluating artificial intelligence for a focal nodular hyperplasia diagnosis using magnetic resonance imaging: preliminary findings</h4>
+                            <div class="publication-meta">
+                                <span>Diagn Interv Radiol, 2025</span>
+                                <span>Co-Author</span>
+                            </div>
+                            <a href="https://pubmed.ncbi.nlm.nih.gov/40134285/" target="_blank" class="publication-link">
+                                View on PubMed
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            </a>
                         </div>
                     </div>
                 </div>
-                <a href="https://github.com/ataberkurfali" target="_blank" class="publication-link" style="margin-top: 1rem; display: inline-flex;">
-                    <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style="margin-right: 0.5rem;"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                    View GitHub Profile →
-                </a>
+
             </div>
-
-            <!-- Ahmet Enes Kilic -->
-            <div class="team-member">
-                <div class="member-header">
-                    <div class="member-avatar">AK</div>
-                    <div class="member-info">
-                        <h2>Ahmet Enes Kılıç</h2>
-                        <p class="member-title">AI Research Engineer</p>
-                        <div class="member-expertise">
-                            <span class="expertise-tag">Deep Learning</span>
-                            <span class="expertise-tag">Medical Imaging</span>
-                            <span class="expertise-tag">MRI Analysis</span>
-                            <span class="expertise-tag">Computer Vision</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="publications-title">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                    Publications
-                </div>
-                <div class="publication-list">
-                    <div class="publication-card">
-                        <h4>Evaluating artificial intelligence for a focal nodular hyperplasia diagnosis using magnetic resonance imaging: preliminary findings</h4>
-                        <div class="publication-meta">
-                            <span>Diagn Interv Radiol, 2025</span>
-                            <span>Co-Author</span>
-                        </div>
-                        <a href="https://pubmed.ncbi.nlm.nih.gov/40134285/" target="_blank" class="publication-link">View on PubMed →</a>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </section>
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer>
-        <p><strong>Diagnis Research Labs</strong> — A Division of <a href="https://diagnis.ai">Diagnis Medical AI</a></p>
-        <p style="margin-top: 0.5rem; font-size: 0.85rem;">© 2026 Diagnis. All rights reserved.</p>
+        <p class="footer-text"><strong>Diagnis Research Labs</strong> — A Division of <a href="https://diagnis.ai">Diagnis Medical AI</a></p>
+        <p class="footer-text" style="margin-top: 8px;">© 2026 Diagnis. All rights reserved.</p>
     </footer>
+
+    <script>
+        // Cursor Glow Effect
+        const cursorGlow = document.getElementById('cursorGlow');
+        let glowVisible = false;
+        
+        document.addEventListener('mousemove', (e) => {
+            if (!glowVisible) {
+                cursorGlow.style.opacity = '1';
+                glowVisible = true;
+            }
+            cursorGlow.style.left = e.clientX + 'px';
+            cursorGlow.style.top = e.clientY + 'px';
+        });
+        
+        document.addEventListener('mouseleave', () => {
+            cursorGlow.style.opacity = '0';
+            glowVisible = false;
+        });
+
+        // 3D Card Tilt Effect
+        const cards = document.querySelectorAll('[data-tilt]');
+        
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+            });
+        });
+
+        // Scroll Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('section:not(.visible)').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
 </body>
 </html>
