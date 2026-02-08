@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Araştırma Rehberi – Diagnis Research Labs</title>
+    <meta name="description" content="Araştırmanızda AI kullanmak için adım adım rehber. AI fırsatlarını keşfedin, doğru modeli seçin, publication-ready sonuçlar alın.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg: #000000;
+            --bg-card: #0a0a0a;
+            --bg-elevated: #111111;
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.15);
+            --text: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #71717a;
+            --accent: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+            --success: #22c55e;
+            --warning: #f59e0b;
+        }
+
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        ::selection { background: var(--accent); color: white; }
+        a { color: inherit; text-decoration: none; }
+
+        /* Animated Grid */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 80px 80px;
+            mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Gradient Mesh */
+        .gradient-mesh {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .gradient-mesh::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            top: -25%;
+            left: -25%;
+            background: 
+                radial-gradient(ellipse 80% 50% at 20% 40%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 80% at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 50%);
+            animation: meshMove1 25s ease-in-out infinite;
+        }
+        @keyframes meshMove1 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            50% { transform: translate(-3%, 5%) rotate(-1deg) scale(0.98); }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 0 2rem;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: -0.01em;
+        }
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-mark svg { width: 18px; height: 18px; color: white; }
+        
+        nav { display: flex; align-items: center; gap: 32px; }
+        .nav-link {
+            font-size: 14px;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+        .nav-link:hover { color: var(--text); }
+        .nav-link.active { color: var(--accent); }
+        .nav-cta {
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            background: var(--text);
+            color: var(--bg);
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .nav-cta:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* Progress Header */
+        .progress-header {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            z-index: 99;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 2rem;
+        }
+        .progress-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .progress-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .progress-step {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        .progress-title {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .progress-bar-container {
+            flex: 1;
+            max-width: 400px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin: 0 24px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient);
+            border-radius: 2px;
+            transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .progress-dots {
+            display: flex;
+            gap: 8px;
+        }
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--border);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .progress-dot.active {
+            background: var(--gradient);
+            box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+        }
+        .progress-dot.completed {
+            background: var(--success);
+        }
+        .progress-dot:hover {
+            transform: scale(1.2);
+        }
+
+        /* Main Content */
+        main {
+            position: relative;
+            z-index: 1;
+            padding-top: 130px;
+            min-height: 100vh;
+        }
+
+        /* Steps Container */
+        .steps-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step {
+            display: none;
+            padding: 60px 2rem 120px;
+            min-height: calc(100vh - 130px);
+            animation: fadeIn 0.5s ease;
+        }
+        .step.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-inner {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .step-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+        .step-icon svg {
+            width: 40px;
+            height: 40px;
+            color: var(--accent);
+        }
+        .step-title {
+            font-size: clamp(28px, 5vw, 40px);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+        }
+        .step-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Step Navigation */
+        .step-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            padding: 20px 2rem;
+            z-index: 98;
+        }
+        .step-nav-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .nav-btn svg { width: 16px; height: 16px; }
+        
+        .nav-btn-prev {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .nav-btn-prev:hover {
+            border-color: var(--border-hover);
+            color: var(--text);
+        }
+        .nav-btn-prev:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        .nav-btn-next {
+            background: var(--text);
+            color: var(--bg);
+        }
+        .nav-btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255,255,255,0.15);
+        }
+
+        /* Checklist Styles */
+        .checklist {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .checklist-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .checklist-item:hover {
+            border-color: var(--border-hover);
+            transform: translateX(4px);
+        }
+        .checklist-item.checked {
+            border-color: rgba(34, 197, 94, 0.3);
+            background: rgba(34, 197, 94, 0.05);
+        }
+        .checkbox {
+            width: 28px;
+            height: 28px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+        .checkbox svg {
+            width: 16px;
+            height: 16px;
+            color: white;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.3s;
+        }
+        .checklist-item.checked .checkbox {
+            background: var(--success);
+            border-color: var(--success);
+        }
+        .checklist-item.checked .checkbox svg {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .checklist-content h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .checklist-content p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .result-box {
+            margin-top: 40px;
+            padding: 32px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            text-align: center;
+        }
+        .result-box.success {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%);
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+        .result-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+        .result-icon.success {
+            background: rgba(34, 197, 94, 0.2);
+        }
+        .result-icon svg {
+            width: 32px;
+            height: 32px;
+        }
+        .result-box h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .result-box p {
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .fomo-box {
+            margin-top: 24px;
+            padding: 20px 24px;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .fomo-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(245, 158, 11, 0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .fomo-icon svg {
+            width: 24px;
+            height: 24px;
+            color: var(--warning);
+        }
+        .fomo-content {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .fomo-content strong {
+            color: var(--warning);
+        }
+
+        /* Decision Tree / Flowchart */
+        .decision-tree {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-top: 32px;
+        }
+        .tree-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .tree-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tree-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+        }
+        .tree-card:hover::before {
+            opacity: 1;
+        }
+        .tree-data-type {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+        .tree-data-type svg {
+            width: 16px;
+            height: 16px;
+        }
+        .tree-arrow {
+            display: block;
+            font-size: 24px;
+            color: var(--text-tertiary);
+            margin: 12px 0;
+        }
+        .tree-model {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .tree-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+        .tree-example {
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+        .tree-example strong {
+            color: var(--text-secondary);
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 32px 0;
+        }
+        .data-table th,
+        .data-table td {
+            text-align: left;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+        .data-table th {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-tertiary);
+            background: var(--bg-elevated);
+        }
+        .data-table th:first-child {
+            border-radius: 12px 0 0 0;
+        }
+        .data-table th:last-child {
+            border-radius: 0 12px 0 0;
+        }
+        .data-table td {
+            font-size: 15px;
+        }
+        .data-table tbody tr {
+            transition: background 0.2s;
+        }
+        .data-table tbody tr:hover {
+            background: rgba(99, 102, 241, 0.03);
+        }
+        .sample-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 8px;
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 14px;
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 32px;
+        }
+        .info-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+        }
+        .info-card h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .info-card h4 svg {
+            width: 18px;
+            height: 18px;
+            color: var(--accent);
+        }
+        .info-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 16px;
+            padding: 10px 18px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--accent);
+            transition: all 0.3s;
+        }
+        .link-btn:hover {
+            background: rgba(99, 102, 241, 0.15);
+            transform: translateY(-2px);
+        }
+        .link-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            margin: 48px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 28px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+        .timeline-item {
+            position: relative;
+            padding-left: 80px;
+            padding-bottom: 40px;
+        }
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: 16px;
+            width: 26px;
+            height: 26px;
+            background: var(--bg);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .timeline-dot svg {
+            width: 12px;
+            height: 12px;
+            color: var(--accent);
+        }
+        .timeline-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+        }
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .timeline-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .timeline-duration {
+            font-size: 13px;
+            color: var(--accent);
+            background: rgba(99, 102, 241, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+        .timeline-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .comparison-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-top: 40px;
+        }
+        .comp-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            text-align: center;
+        }
+        .comp-card.highlight {
+            border-color: rgba(99, 102, 241, 0.3);
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, var(--bg-card) 100%);
+        }
+        .comp-card h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .comp-list {
+            list-style: none;
+            text-align: left;
+        }
+        .comp-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .comp-list li:last-child {
+            border-bottom: none;
+        }
+        .comp-list li svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .comp-list li svg.check {
+            color: var(--success);
+        }
+        .comp-list li svg.x {
+            color: #ef4444;
+            opacity: 0.6;
+        }
+
+        /* Publication Checklist */
+        .pub-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-top: 32px;
+        }
+        .pub-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+        }
+        .pub-card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .pub-card-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .pub-card-icon svg {
+            width: 22px;
+            height: 22px;
+            color: var(--accent);
+        }
+        .pub-card-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .pub-list {
+            list-style: none;
+        }
+        .pub-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .pub-list li svg {
+            width: 16px;
+            height: 16px;
+            color: var(--success);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .warning-card {
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 16px;
+            padding: 28px;
+            margin-top: 32px;
+        }
+        .warning-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .warning-header svg {
+            width: 24px;
+            height: 24px;
+            color: #ef4444;
+        }
+        .warning-header h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ef4444;
+        }
+        .warning-list {
+            list-style: none;
+        }
+        .warning-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .warning-list li::before {
+            content: '✕';
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        /* CTA Section */
+        .cta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-top: 40px;
+        }
+        .cta-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .cta-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+        }
+        .cta-card.primary {
+            background: var(--gradient);
+            border: none;
+        }
+        .cta-card.primary::before {
+            content: '';
+            position: absolute;
+            inset: 1px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 100%);
+            border-radius: 23px;
+            pointer-events: none;
+        }
+        .cta-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cta-icon svg {
+            width: 32px;
+            height: 32px;
+            color: white;
+        }
+        .cta-card h4 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .cta-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+        .cta-card.primary p {
+            color: rgba(255,255,255,0.8);
+        }
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+        .cta-btn.white {
+            background: white;
+            color: var(--bg);
+        }
+        .cta-btn.outline {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .cta-btn:hover {
+            transform: translateY(-2px);
+        }
+        .cta-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .value-props {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 48px;
+            padding-top: 40px;
+            border-top: 1px solid var(--border);
+        }
+        .value-prop {
+            text-align: center;
+        }
+        .value-prop-value {
+            font-size: 36px;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .value-prop-label {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-top: 4px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 32px 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .footer-text {
+            font-size: 14px;
+            color: var(--text-tertiary);
+        }
+        .footer-text a {
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+        .footer-text a:hover { color: var(--text); }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            width: 40px;
+            height: 40px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+        .mobile-menu-btn svg {
+            width: 24px;
+            height: 24px;
+            color: var(--text);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .decision-tree,
+            .info-cards,
+            .comparison-cards,
+            .pub-grid,
+            .cta-grid {
+                grid-template-columns: 1fr;
+            }
+            .value-props {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+        }
+        @media (max-width: 768px) {
+            nav { display: none; }
+            .mobile-menu-btn { display: flex; }
+            header { padding: 0 1rem; }
+            .progress-header { padding: 12px 1rem; }
+            .progress-bar-container { display: none; }
+            .progress-title { display: none; }
+            .step { padding: 40px 1rem 100px; }
+            .step-nav { padding: 16px 1rem; }
+            .nav-btn { padding: 12px 20px; font-size: 14px; }
+            .data-table { font-size: 13px; }
+            .data-table th,
+            .data-table td { padding: 14px 12px; }
+            .timeline::before { left: 20px; }
+            .timeline-item { padding-left: 60px; }
+            .timeline-dot { left: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="gradient-mesh"></div>
+
+    <header>
+        <div class="header-inner">
+            <a href="tr.html" class="logo">
+                <div class="logo-mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <span>Diagnis Research Labs</span>
+            </a>
+            <nav>
+                <a href="why-ai-tr.html" class="nav-link">Neden AI?</a>
+                <a href="tr.html#features" class="nav-link">Özellikler</a>
+                <a href="team-tr.html" class="nav-link">Ekip</a>
+                <a href="guide-tr.html" class="nav-link active">📚 AI Rehberi</a>
+                <a href="mistakes-tr.html" class="nav-link">⚠️ Hatalar</a>
+                <a href="ai-quiz-tr.html" class="nav-link">AI Bulucu</a>
+                <a href="mailto:research@diagnis.ai" class="nav-cta">Başlayın</a>
+            </nav>
+            <button class="mobile-menu-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <div class="progress-header">
+        <div class="progress-inner">
+            <div class="progress-info">
+                <span class="progress-step" id="progressStep">Adım 1/6</span>
+                <span class="progress-title" id="progressTitle">Araştırmanızda AI Fırsatı Var mı?</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar" style="width: 16.66%"></div>
+            </div>
+            <div class="progress-dots">
+                <div class="progress-dot active" data-step="1"></div>
+                <div class="progress-dot" data-step="2"></div>
+                <div class="progress-dot" data-step="3"></div>
+                <div class="progress-dot" data-step="4"></div>
+                <div class="progress-dot" data-step="5"></div>
+                <div class="progress-dot" data-step="6"></div>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <div class="steps-container">
+            <!-- Adım 1: AI Fırsatı -->
+            <div class="step active" id="step1">
+                <div class="step-inner">
+                    <div class="step-header">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="M21 21l-4.35-4.35"/>
+                            </svg>
+                        </div>
+                        <h1 class="step-title">Araştırmanızda AI Fırsatı Var mı?</h1>
+                        <p class="step-subtitle">Aşağıdaki soruları yanıtlayarak araştırmanızda AI potansiyelini keşfedin.</p>
+                    </div>
+
+                    <ul class="checklist" id="opportunityChecklist">
+                        <li class="checklist-item" data-check="1">
+                            <div class="checkbox">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <div class="checklist-content">
+                                <h4>Tekrarlayan örüntü tanıma işiniz var mı?</h4>
+                                <p>Görüntülerde lezyon tespiti, histopatoloji analizi, radyolojik bulgular...</p>
+                            </div>
+                        </li>
+                        <li class="checklist-item" data-check="2">
+                            <div class="checkbox">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <div class="checklist-content">
+                                <h4>Büyük veri setleriniz var mı?</h4>
+                                <p>Yüzlerce veya binlerce örnek, EHR verileri, genomik veriler...</p>
+                            </div>
+                        </li>
+                        <li class="checklist-item" data-check="3">
+                            <div class="checkbox">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <div class="checklist-content">
+                                <h4>İnsan değerlendirmesi subjektif mi?</h4>
+                                <p>Gözlemciler arası değişkenlik yüksek, standartlaşma zor, yoruma açık sonuçlar...</p>
+                            </div>
+                        </li>
+                        <li class="checklist-item" data-check="4">
+                            <div class="checkbox">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <div class="checklist-content">
+                                <h4>Mevcut yöntemler yavaş mı?</h4>
+                                <p>Manuel analiz saatler alıyor, uzman zamanı kısıtlı, ölçeklendirme zor...</p>
+                            </div>
+                        </li>
+                        <li class="checklist-item" data-check="5">
+                            <div class="checkbox">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <div class="checklist-content">
+                                <h4>Tahmin/prognoz gerektiren durumlar var mı?</h4>
+                                <p>Risk skoru, tedavi yanıtı tahmini, hastalık progresyonu...</p>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div class="result-box" id="opportunityResult" style="display: none;">
+                        <div class="result-icon success">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                        </div>
+                        <h3>🎉 Araştırmanızda AI potansiyeli var!</h3>
+                        <p>Seçtiğiniz kriterlere göre araştırmanız AI'dan önemli ölçüde faydalanabilir.</p>
+                    </div>
+
+                    <div class="fomo-box">
+                        <div class="fomo-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                <line x1="12" y1="9" x2="12" y2="13"/>
+                                <line x1="12" y1="17" x2="12.01" y2="17"/>
+                            </svg>
+                        </div>
+                        <div class="fomo-content">
+                            <strong>Biliyor muydunuz?</strong> Alanınızda AI kullanan araştırmacılar ortalama <strong>3 kat daha fazla atıf</strong> alıyor. AI destekli makaleler daha yüksek etki faktörlü dergilerde yayınlanıyor.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Adım 2: Hangi AI Tipi -->
+            <div class="step" id="step2">
+                <div class="step-inner">
+                    <div class="step-header">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                                <polyline points="2 17 12 22 22 17"/>
+                                <polyline points="2 12 12 17 22 12"/>
+                            </svg>
+                        </div>
+                        <h1 class="step-title">Hangi AI Tipi Size Uygun?</h1>
+                        <p class="step-subtitle">Veri tipinize göre en uygun AI modelini keşfedin.</p>
+                    </div>
+
+                    <div class="decision-tree">
+                        <div class="tree-card">
+                            <div class="tree-data-type">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                                Görüntü Verisi
+                            </div>
+                            <span class="tree-arrow">↓</span>
+                            <div class="tree-model">CNN / Vision Transformers</div>
+                            <p class="tree-desc">Konvolüsyonel sinir ağları görüntü sınıflandırma, segmentasyon ve tespit için idealdir.</p>
+                            <div class="tree-example"><strong>Örnek:</strong> Dermoskopi görüntülerinden melanom tespiti, retinal OCT analizi</div>
+                        </div>
+
+                        <div class="tree-card">
+                            <div class="tree-data-type">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+                                Tablo / Yapısal Veri
+                            </div>
+                            <span class="tree-arrow">↓</span>
+                            <div class="tree-model">Gradyan Artırma / MLP</div>
+                            <p class="tree-desc">XGBoost, LightGBM veya yapay sinir ağı tabanlı modeller yapısal veri için yüksek performans sunar.</p>
+                            <div class="tree-example"><strong>Örnek:</strong> Hasta özellikleri + laboratuvar sonuçlarından risk tahmini</div>
+                        </div>
+
+                        <div class="tree-card">
+                            <div class="tree-data-type">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                                Metin / Doküman
+                            </div>
+                            <span class="tree-arrow">↓</span>
+                            <div class="tree-model">Doğal Dil İşleme / Transformers</div>
+                            <p class="tree-desc">BERT, GPT tabanlı modeller metin sınıflandırma, varlık tanıma ve bilgi çıkarımı için kullanılır.</p>
+                            <div class="tree-example"><strong>Örnek:</strong> Radyoloji raporlarından otomatik tanı çıkarımı</div>
+                        </div>
+
+                        <div class="tree-card">
+                            <div class="tree-data-type">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                                Zaman Serisi
+                            </div>
+                            <span class="tree-arrow">↓</span>
+                            <div class="tree-model">LSTM / Transformer</div>
+                            <p class="tree-desc">Zamansal örüntüleri yakalamak için özelleşmiş tekrarlayan veya dikkat tabanlı modeller.</p>
+                            <div class="tree-example"><strong>Örnek:</strong> EKG sinyallerinden aritmi tespiti, hasta takip verileri</div>
+                        </div>
+                    </div>
+
+                    <div class="fomo-box" style="margin-top: 32px;">
+                        <div class="fomo-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        </div>
+                        <div class="fomo-content">
+                            <strong>İpucu:</strong> Çok modlu veri (örn: görüntü + klinik veri) kombinasyonu genellikle tek moddan daha iyi sonuç verir. Bu konuda size yardımcı olabiliriz!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Adım 3: Ne Kadar Veri Lazım -->
+            <div class="step" id="step3">
+                <div class="step-inner">
+                    <div class="step-header">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                                <line x1="12" y1="22.08" x2="12" y2="12"/>
+                            </svg>
+                        </div>
+                        <h1 class="step-title">Ne Kadar Veri Lazım?</h1>
+                        <p class="step-subtitle">Görev tipine göre minimum önerilen örnek sayıları.</p>
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Görev Tipi</th>
+                                <th>Minimum Örnek</th>
+                                <th>Önerilen</th>
+                                <th>Not</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Görüntü Sınıflandırma</td>
+                                <td><span class="sample-badge">100-200/sınıf</span></td>
+                                <td><span class="sample-badge">500+/sınıf</span></td>
+                                <td>Transfer öğrenme ile azaltılabilir</td>
+                            </tr>
+                            <tr>
+                                <td>Görüntü Segmentasyonu</td>
+                                <td><span class="sample-badge">50-100</span></td>
+                                <td><span class="sample-badge">200+</span></td>
+                                <td>Etiketleme kalitesi kritik</td>
+                            </tr>
+                            <tr>
+                                <td>Tablo Sınıflandırma</td>
+                                <td><span class="sample-badge">200-500</span></td>
+                                <td><span class="sample-badge">1000+</span></td>
+                                <td>Özellik sayısına bağlı</td>
+                            </tr>
+                            <tr>
+                                <td>Metin Sınıflandırma</td>
+                                <td><span class="sample-badge">100-200/sınıf</span></td>
+                                <td><span class="sample-badge">500+/sınıf</span></td>
+                                <td>Önceden eğitilmiş model ile azalır</td>
+                            </tr>
+                            <tr>
+                                <td>Zaman Serisi</td>
+                                <td><span class="sample-badge">100-300</span></td>
+                                <td><span class="sample-badge">500+</span></td>
+                                <td>Sekans uzunluğu önemli</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="info-cards">
+                        <div class="info-card">
+                            <h4>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 12h18"/></svg>
+                                Yeterli Veriniz Yoksa?
+                            </h4>
+                            <p><strong>Veri Artırma:</strong> Görüntüleri döndürme, yansıtma, renk değiştirme ile çoğaltın.<br><br><strong>Transfer Öğrenme:</strong> Büyük veri setleri üzerinde eğitilmiş modelleri kullanarak az veriyle yüksek performans alın.</p>
+                        </div>
+                        <div class="info-card">
+                            <h4>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                                Sentetik Veri
+                            </h4>
+                            <p>GAN'lar veya difüzyon modelleri kullanarak gerçekçi sentetik veri üretilebilir. Bu, nadir durumlar için veri artırmada özellikle etkilidir.</p>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 32px;">
+                        <a href="ai-quiz-tr.html" class="link-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            Örnek Boyutu Hesaplayıcıyı Deneyin
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Adım 4: Model Geliştirme Süreci -->
+            <div class="step" id="step4">
+                <div class="step-inner">
+                    <div class="step-header">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="16 18 22 12 16 6"/>
+                                <polyline points="8 6 2 12 8 18"/>
+                            </svg>
+                        </div>
+                        <h1 class="step-title">Model Geliştirme Süreci</h1>
+                        <p class="step-subtitle">Veri hazırlığından dokümantasyona, her adımda ne olur?</p>
+                    </div>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-header">
+                                    <span class="timeline-title">1. Veri Hazırlığı</span>
+                                    <span class="timeline-duration">3-5 gün</span>
+                                </div>
+                                <p class="timeline-desc">Veri temizleme, format standardizasyonu, eğitim/doğrulama/test bölümlemesi, sınıf dengeleme ve veri artırma hattı kurulumu.</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/></svg>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-header">
+                                    <span class="timeline-title">2. Model Eğitimi</span>
+                                    <span class="timeline-duration">5-7 gün</span>
+                                </div>
+                                <p class="timeline-desc">Mimari seçimi, hiperparametre ayarlama, çoklu model karşılaştırması, çapraz doğrulama ve aşırı öğrenme kontrolü.</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-header">
+                                    <span class="timeline-title">3. Doğrulama</span>
+                                    <span class="timeline-duration">3-5 gün</span>
+                                </div>
+                                <p class="timeline-desc">Ayrılmış test seti üzerinde değerlendirme, duyarlılık/özgüllük analizi, ROC/AUC, karışıklık matrisi ve alt grup analizi.</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-header">
+                                    <span class="timeline-title">4. Dokümantasyon</span>
+                                    <span class="timeline-duration">2-3 gün</span>
+                                </div>
+                                <p class="timeline-desc">Model kartı, tekrarlanabilirlik için kod dokümantasyonu, TRIPOD uyumlu raporlama ve metodoloji bölümü için materyal hazırlığı.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="comparison-cards">
+                        <div class="comp-card">
+                            <h4>🔧 Kendiniz Yapın</h4>
+                            <ul class="comp-list">
+                                <li>
+                                    <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Tam kontrol
+                                </li>
+                                <li>
+                                    <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Düşük doğrudan maliyet
+                                </li>
+                                <li>
+                                    <svg class="x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                    Dik öğrenme eğrisi
+                                </li>
+                                <li>
+                                    <svg class="x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                    3-6+ ay süre
+                                </li>
+                                <li>
+                                    <svg class="x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                    Hata riski yüksek
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="comp-card highlight">
+                            <h4>🚀 Uzmanla Çalışın</h4>
+                            <ul class="comp-list">
+                                <li>
+                                    <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Yayına hazır kalite
+                                </li>
+                                <li>
+                                    <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                    2-4 hafta teslimat
+                                </li>
+                                <li>
+                                    <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                    En iyi uygulamalar garantili
+                                </li>
+                                <li>
+                                    <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Tam fikri mülkiyet sahipliği
+                                </li>
+                                <li>
+                                    <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Hakem onayına hazır dokümantasyon
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Adım 5: Yayına Hazır -->
+            <div class="step" id="step5">
+                <div class="step-inner">
+                    <div class="step-header">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                            </svg>
+                        </div>
+                        <h1 class="step-title">Yayına Hazır Nasıl Olunur?</h1>
+                        <p class="step-subtitle">Hakemlerin beklediği standartlar ve yaygın hatalardan kaçınma.</p>
+                    </div>
+
+                    <div class="pub-grid">
+                        <div class="pub-card">
+                            <div class="pub-card-header">
+                                <div class="pub-card-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                </div>
+                                <span class="pub-card-title">Temel Metrikler</span>
+                            </div>
+                            <ul class="pub-list">
+                                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Duyarlılık ve Özgüllük</li>
+                                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>AUROC ve AUPRC eğrileri</li>
+                                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Güven aralıkları (%95 GA)</li>
+                                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Kalibrasyon grafikleri</li>
+                            </ul>
+                        </div>
+
+                        <div class="pub-card">
+                            <div class="pub-card-header">
+                                <div class="pub-card-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                                </div>
+                                <span class="pub-card-title">Raporlama Kılavuzları</span>
+                            </div>
+                            <ul class="pub-list">
+                                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>TRIPOD (tahmin modelleri)</li>
+                                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>CLAIM (tıbbi görüntüleme AI)</li>
+                                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>STARD (tanısal doğruluk)</li>
+                                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>CONSORT-AI (RKÇ'ler)</li>
+                            </ul>
+                        </div>
+
+                        <div class="pub-card">
+                            <div class="pub-card-header">
+                                <div class="pub-card-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+                                </div>
+                                <span class="pub-card-title">Dış Doğrulama</span>
+                            </div>
+                            <ul class="pub-list">
+                                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Farklı merkez/popülasyon</li>
+                                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Farklı cihaz/protokol</li>
+                                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Zamansal doğrulama</li>
+                                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Alt grup analizleri</li>
+                            </ul>
+                        </div>
+
+                        <div class="pub-card">
+                            <div class="pub-card-header">
+                                <div class="pub-card-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                </div>
+                                <span class="pub-card-title">Tekrarlanabilirlik</span>
+                            </div>
+                            <ul class="pub-list">
+                                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Kod/model paylaşımı (GitHub)</li>
+                                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Veri beyanı</li>
+                                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Rastgele tohum sabitleme</li>
+                                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Ortam özellikleri</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="warning-card">
+                        <div class="warning-header">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            <h4>Yaygın Hatalar — Bunlardan Kaçının!</h4>
+                        </div>
+                        <ul class="warning-list">
+                            <li>Test verisinin eğitimde kullanılması (veri sızıntısı)</li>
+                            <li>Artırılmış görüntülerin doğrulama/test setine sızması</li>
+                            <li>Sınıf dengesizliğinin göz ardı edilmesi</li>
+                            <li>Sadece doğruluk raporlama (dengesiz veri için yanıltıcı)</li>
+                            <li>Hiperparametre ayarlamada test seti kullanma</li>
+                            <li>Dış doğrulama eksikliği</li>
+                            <li>Aşırı öğrenmiş modeli üretime hazır sanma</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Adım 6: Sonraki Adım -->
+            <div class="step" id="step6">
+                <div class="step-inner">
+                    <div class="step-header">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                        </div>
+                        <h1 class="step-title">Sonraki Adımınız</h1>
+                        <p class="step-subtitle">Araştırmanızı bir sonraki seviyeye taşıyın.</p>
+                    </div>
+
+                    <div class="cta-grid">
+                        <div class="cta-card primary" style="position: relative;">
+                            <div class="cta-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                            </div>
+                            <h4>Ücretsiz Fizibilite Görüşmesi</h4>
+                            <p>30 dakikalık görüşmede projenizi değerlendirelim. AI'ın araştırmanız için uygun olup olmadığını, ne kadar süreceğini ve tahmini maliyeti öğrenin.</p>
+                            <a href="mailto:research@diagnis.ai?subject=AI%20Fizibilite%20Görüşmesi" class="cta-btn white">
+                                Görüşme Ayarla
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </a>
+                        </div>
+
+                        <div class="cta-card">
+                            <div class="cta-icon" style="background: rgba(99, 102, 241, 0.1);">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                            </div>
+                            <h4>AI Bulucu Testi</h4>
+                            <p>5 dakikada hangi AI yaklaşımının sizin için uygun olduğunu öğrenin. Özelleştirilmiş öneriler ve tahmini örnek boyutu bilgisi alın.</p>
+                            <a href="ai-quiz-tr.html" class="cta-btn outline">
+                                Testi Başlat
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="value-props">
+                        <div class="value-prop">
+                            <div class="value-prop-value">$3-8K</div>
+                            <div class="value-prop-label">Akademik dostu fiyatlandırma</div>
+                        </div>
+                        <div class="value-prop">
+                            <div class="value-prop-value">2-4 Hafta</div>
+                            <div class="value-prop-label">Hızlı teslimat</div>
+                        </div>
+                        <div class="value-prop">
+                            <div class="value-prop-value">100%</div>
+                            <div class="value-prop-label">Fikri mülkiyet size ait</div>
+                        </div>
+                    </div>
+
+                    <div class="fomo-box" style="margin-top: 48px;">
+                        <div class="fomo-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </div>
+                        <div class="fomo-content">
+                            <strong>Zaman değerli:</strong> AI projeleri ortalama <strong>6-12 ay</strong> gecikmeye neden olabilir — uzman desteğiyle bu süreyi <strong>2-4 haftaya</strong> indirebilirsiniz.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-nav">
+            <div class="step-nav-inner">
+                <button class="nav-btn nav-btn-prev" id="prevBtn" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    Önceki
+                </button>
+                <button class="nav-btn nav-btn-next" id="nextBtn">
+                    Sonraki
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p class="footer-text">© 2025 Diagnis Research Labs — <a href="mailto:research@diagnis.ai">research@diagnis.ai</a></p>
+    </footer>
+
+    <script>
+        // Adım Navigasyonu
+        const steps = document.querySelectorAll('.step');
+        const dots = document.querySelectorAll('.progress-dot');
+        const progressBar = document.getElementById('progressBar');
+        const progressStep = document.getElementById('progressStep');
+        const progressTitle = document.getElementById('progressTitle');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        const stepTitles = [
+            'Araştırmanızda AI Fırsatı Var mı?',
+            'Hangi AI Tipi Size Uygun?',
+            'Ne Kadar Veri Lazım?',
+            'Model Geliştirme Süreci',
+            'Yayına Hazır Nasıl Olunur?',
+            'Sonraki Adımınız'
+        ];
+        
+        let currentStep = 1;
+        
+        function updateStep(step) {
+            // Adımları güncelle
+            steps.forEach((s, i) => {
+                s.classList.toggle('active', i + 1 === step);
+            });
+            
+            // Noktaları güncelle
+            dots.forEach((dot, i) => {
+                dot.classList.remove('active');
+                dot.classList.toggle('completed', i + 1 < step);
+                if (i + 1 === step) dot.classList.add('active');
+            });
+            
+            // İlerleme çubuğunu güncelle
+            progressBar.style.width = `${(step / 6) * 100}%`;
+            
+            // Metni güncelle
+            progressStep.textContent = `Adım ${step}/6`;
+            progressTitle.textContent = stepTitles[step - 1];
+            
+            // Düğmeleri güncelle
+            prevBtn.disabled = step === 1;
+            
+            if (step === 6) {
+                nextBtn.innerHTML = `Bitir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+            } else {
+                nextBtn.innerHTML = `Sonraki <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+            }
+            
+            currentStep = step;
+            
+            // Yukarı kaydır
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 1) updateStep(currentStep - 1);
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < 6) {
+                updateStep(currentStep + 1);
+            } else {
+                // Son adımda iletişime git
+                window.location.href = 'mailto:research@diagnis.ai?subject=AI%20Araştırma%20Talebi';
+            }
+        });
+        
+        // Nokta navigasyonu
+        dots.forEach((dot, i) => {
+            dot.addEventListener('click', () => {
+                updateStep(i + 1);
+            });
+        });
+        
+        // Klavye navigasyonu
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' && currentStep < 6) updateStep(currentStep + 1);
+            if (e.key === 'ArrowLeft' && currentStep > 1) updateStep(currentStep - 1);
+        });
+        
+        // Kontrol listesi işlevselliği
+        const checklistItems = document.querySelectorAll('.checklist-item');
+        const resultBox = document.getElementById('opportunityResult');
+        let checkedCount = 0;
+        
+        checklistItems.forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('checked');
+                checkedCount = document.querySelectorAll('.checklist-item.checked').length;
+                
+                if (checkedCount > 0) {
+                    resultBox.style.display = 'block';
+                    resultBox.classList.add('success');
+                } else {
+                    resultBox.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
