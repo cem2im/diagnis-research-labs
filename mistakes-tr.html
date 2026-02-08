@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Araştırmalarında 10 Kritik Hata – Diagnis Research Labs</title>
+    <meta name="description" content="AI araştırmalarında en sık yapılan 10 hata ve bunlardan nasıl kaçınılacağı. Araştırmacılar için interaktif rehber.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg: #000000;
+            --bg-card: #0a0a0a;
+            --bg-elevated: #111111;
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.15);
+            --text: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #71717a;
+            --accent: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+            --danger: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.1);
+            --danger-border: rgba(239, 68, 68, 0.2);
+            --success: #22c55e;
+            --success-bg: rgba(34, 197, 94, 0.1);
+            --success-border: rgba(34, 197, 94, 0.2);
+        }
+
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        ::selection { background: var(--accent); color: white; }
+        a { color: inherit; text-decoration: none; }
+
+        /* Animated Grid */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 80px 80px;
+            mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Gradient Mesh */
+        .gradient-mesh {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .gradient-mesh::before,
+        .gradient-mesh::after {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            top: -25%;
+            left: -25%;
+        }
+        .gradient-mesh::before {
+            background: 
+                radial-gradient(ellipse 80% 50% at 20% 40%, rgba(239, 68, 68, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 80% at 80% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 60% at 40% 80%, rgba(34, 197, 94, 0.06) 0%, transparent 50%);
+            animation: meshMove1 25s ease-in-out infinite;
+        }
+        .gradient-mesh::after {
+            background: 
+                radial-gradient(ellipse 70% 60% at 70% 60%, rgba(239, 68, 68, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 70% at 30% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+            animation: meshMove2 30s ease-in-out infinite;
+        }
+        @keyframes meshMove1 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            25% { transform: translate(5%, -5%) rotate(2deg) scale(1.05); }
+            50% { transform: translate(-3%, 5%) rotate(-1deg) scale(0.98); }
+            75% { transform: translate(3%, 3%) rotate(1deg) scale(1.02); }
+        }
+        @keyframes meshMove2 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            33% { transform: translate(-5%, 3%) rotate(-2deg) scale(1.03); }
+            66% { transform: translate(4%, -4%) rotate(2deg) scale(0.97); }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 0 2rem;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: -0.01em;
+        }
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-mark svg { width: 18px; height: 18px; color: white; }
+        
+        nav { display: flex; align-items: center; gap: 32px; }
+        .nav-link {
+            font-size: 14px;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+        .nav-link:hover { color: var(--text); }
+        .nav-link.active { color: var(--text); }
+        .nav-cta {
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            background: var(--text);
+            color: var(--bg);
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .nav-cta:hover { opacity: 0.9; transform: translateY(-1px); }
+        
+        /* Language Switch */
+        .lang-switch {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+        .lang-switch a {
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+        .lang-switch a:hover { color: var(--text); }
+        .lang-switch a.active { color: var(--text); font-weight: 600; }
+
+        /* Main */
+        main { position: relative; z-index: 1; }
+
+        /* Hero Section */
+        .hero {
+            padding: 140px 2rem 80px;
+            text-align: center;
+        }
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--danger-bg);
+            border: 1px solid var(--danger-border);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--danger);
+            margin-bottom: 24px;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        .hero h1 {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            margin-bottom: 16px;
+            animation: fadeInUp 0.6s ease 0.1s forwards;
+            opacity: 0;
+        }
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, var(--danger) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-description {
+            font-size: 17px;
+            color: var(--text-secondary);
+            max-width: 560px;
+            margin: 0 auto 32px;
+            line-height: 1.7;
+            animation: fadeInUp 0.6s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            max-width: 800px;
+            margin: 0 auto 48px;
+            padding: 0 2rem;
+            animation: fadeInUp 0.6s ease 0.3s forwards;
+            opacity: 0;
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .progress-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .progress-count {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .progress-count span {
+            color: var(--success);
+        }
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-elevated);
+            border-radius: 100px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--success) 0%, #4ade80 100%);
+            border-radius: 100px;
+            transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Mistakes Container */
+        .mistakes-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem 80px;
+        }
+
+        /* Mistake Card */
+        .mistake-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .mistake-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .mistake-card:hover {
+            border-color: var(--border-hover);
+        }
+        .mistake-card.expanded {
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.1);
+        }
+        .mistake-card.read {
+            border-left: 3px solid var(--success);
+        }
+
+        /* Card Header */
+        .mistake-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 24px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .mistake-header:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .mistake-number {
+            width: 36px;
+            height: 36px;
+            background: var(--danger-bg);
+            border: 1px solid var(--danger-border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--danger);
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+        .mistake-card.read .mistake-number {
+            background: var(--success-bg);
+            border-color: var(--success-border);
+            color: var(--success);
+        }
+        .mistake-card.read .mistake-number::before {
+            content: '✓';
+        }
+        .mistake-card:not(.read) .mistake-number::before {
+            content: attr(data-num);
+        }
+        .mistake-title-container {
+            flex: 1;
+            min-width: 0;
+        }
+        .mistake-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+        .mistake-subtitle {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+        .mistake-chevron {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-tertiary);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .mistake-card.expanded .mistake-chevron {
+            transform: rotate(180deg);
+        }
+        .mistake-chevron svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Card Content */
+        .mistake-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .mistake-card.expanded .mistake-content {
+            max-height: 600px;
+        }
+        .mistake-content-inner {
+            padding: 0 24px 24px;
+        }
+
+        /* Problem & Solution Boxes */
+        .info-box {
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        .info-box:last-child {
+            margin-bottom: 0;
+        }
+        .info-box-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .info-box-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .info-box-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+        .info-box-label {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .info-box-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        /* Problem Box */
+        .problem-box {
+            background: var(--danger-bg);
+            border: 1px solid var(--danger-border);
+        }
+        .problem-box .info-box-icon {
+            background: var(--danger);
+        }
+        .problem-box .info-box-icon svg {
+            color: white;
+        }
+        .problem-box .info-box-label {
+            color: var(--danger);
+        }
+
+        /* Solution Box */
+        .solution-box {
+            background: var(--success-bg);
+            border: 1px solid var(--success-border);
+        }
+        .solution-box .info-box-icon {
+            background: var(--success);
+        }
+        .solution-box .info-box-icon svg {
+            color: white;
+        }
+        .solution-box .info-box-label {
+            color: var(--success);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem 100px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+        .cta-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .cta-card {
+            background: var(--gradient);
+            border-radius: 24px;
+            padding: 48px;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-card::before {
+            content: '';
+            position: absolute;
+            inset: 1px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 100%);
+            border-radius: 23px;
+        }
+        .cta-card > * {
+            position: relative;
+            z-index: 1;
+        }
+        .cta-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .cta-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .cta-text {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 28px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            border: none;
+        }
+        .btn svg { width: 16px; height: 16px; }
+        .btn-white {
+            background: white;
+            color: var(--accent);
+        }
+        .btn-white:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Completion Badge */
+        .completion-badge {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--success-bg);
+            border: 1px solid var(--success-border);
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--success);
+            margin-bottom: 24px;
+        }
+        .completion-badge.show {
+            display: inline-flex;
+            animation: badgePop 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes badgePop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Footer */
+        footer {
+            padding: 32px 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+        .footer-text {
+            font-size: 14px;
+            color: var(--text-tertiary);
+        }
+        .footer-text a {
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+        .footer-text a:hover { color: var(--text); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav { display: none; }
+            .hero { padding: 120px 1.5rem 60px; }
+            .mistakes-container { padding: 0 1.5rem 60px; }
+            .mistake-header { padding: 16px 20px; gap: 12px; }
+            .mistake-content-inner { padding: 0 20px 20px; }
+            .info-box { padding: 16px; }
+            .cta-card { padding: 32px 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="gradient-mesh"></div>
+
+    <header>
+        <div class="header-inner">
+            <a href="tr.html" class="logo">
+                <div class="logo-mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <span>Diagnis Research Labs</span>
+            </a>
+            <nav>
+                <a href="tr.html" class="nav-link">Ana Sayfa</a>
+                <a href="why-ai-tr.html" class="nav-link">Neden AI?</a>
+                <a href="team-tr.html" class="nav-link">Ekip</a>
+                <a href="guide.html" class="nav-link">📚 AI Rehberi</a>
+                <a href="mistakes-tr.html" class="nav-link active">⚠️ Hatalar</a>
+                <a href="ai-quiz-tr.html" class="nav-link">AI Bulucu</a>
+                <a href="calculator-tr.html" class="nav-link">Hesaplayıcı</a>
+                <span class="lang-switch"><a href="mistakes.html">EN</a> | <a href="mistakes-tr.html" class="active">TR</a></span>
+                <a href="mailto:research@diagnis.ai" class="nav-cta">İletişim</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    Araştırmacılar İçin Kritik Bilgiler
+                </div>
+                <h1>AI Araştırmalarında<br><span class="gradient-text">10 Kritik Hata</span></h1>
+                <p class="hero-description">Bu hataları yapan araştırmacılar zaman, para ve itibar kaybediyor. Her birini öğrenin, projenizi koruyun.</p>
+            </div>
+        </section>
+
+        <div class="progress-container">
+            <div class="progress-header">
+                <span class="progress-label">İlerlemeniz</span>
+                <span class="progress-count"><span id="readCount">0</span> / 10 hata incelendi</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="mistakes-container">
+            <!-- Mistake 1 -->
+            <div class="mistake-card" data-index="0">
+                <div class="mistake-header">
+                    <div class="mistake-number" data-num="1"></div>
+                    <div class="mistake-title-container">
+                        <div class="mistake-title">Yetersiz Veri ile Başlamak</div>
+                        <div class="mistake-subtitle">Veri miktarı × Model karmaşıklığı dengesizliği</div>
+                    </div>
+                    <div class="mistake-chevron">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mistake-content">
+                    <div class="mistake-content-inner">
+                        <div class="info-box problem-box">
+                            <div class="info-box-header">
+                                <div class="info-box-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"/>
+                                        <line x1="6" y1="6" x2="18" y2="18"/>
+                                    </svg>
+                                </div>
+                                <span class="info-box-label">Problem</span>
+                            </div>
+                            <div class="info-box-text">
+                                50 görüntüyle derin CNN eğitmeye çalışmak. Model milyonlarca parametre içerirken, eğitim verisi yetersiz kalıyor. Sonuç: Overfitting garantisi ve %30-40 gerçek performans.
+                            </div>
+                        </div>
+                        <div class="info-box solution-box">
+                            <div class="info-box-header">
+                                <div class="info-box-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <span class="info-box-label">Çözüm</span>
+                            </div>
+                            <div class="info-box-text">
+                                <strong>Minimum sample size hesaplama</strong> yapın (power analysis). <strong>Data augmentation</strong> (rotation, flip, color jittering) uygulayın. <strong>Transfer learning</strong> ile ImageNet pre-trained modeller kullanın — 100 görüntüyle bile iyi sonuçlar alabilirsiniz.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mistake 2 -->
+            <div class="mistake-card" data-index="1">
+                <div class="mistake-header">
+                    <div class="mistake-number" data-num="2"></div>
+                    <div class="mistake-title-container">
+                        <div class="mistake-title">Data Leakage</div>
+                        <div class="mistake-subtitle">Test verisinin training'e sızması</div>
+                    </div>
+                    <div class="mistake-chevron">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mistake-content">
+                    <div class="mistake-content-inner">
+                        <div class="info-box problem-box">
+                            <div class="info-box-header">
+                                <div class="info-box-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"/>
+                                        <line x1="6" y1="6" x2="18" y2="18"/>
+                                    </svg>
+                                </div>
+                                <span class="info-box-label">Problem</span>
+                            </div>
+                            <div class="info-box-text">
+                                Aynı hastadan birden fazla görüntü var ve bunlar farklı setlere dağılıyor. Model hasta özelliklerini "ezberliyor" ve test'te mucizevi %98 AUC gösteriyor. Gerçek dünyada: %65.
+                            </div>
+                        </div>
+                        <div class="info-box solution-box">
+                            <div class="info-box-header">
+                                <div class="info-box-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <span class="info-box-label">Çözüm</span>
+                            </div>
+                            <div class="info-box-text">
+                                <strong>Patient-level splitting</strong> yapın: Bir hastanın TÜM görüntüleri aynı sette olmalı. Normalization'ı SADECE training set üzerinden hesaplayın. Temporal split düşünün: Eski tarihli verilerle eğit, yeni tarihliyle test et.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mistake 3 -->
+            <div class="mistake-card" data-index="2">
+                <div class="mistake-header">
+                    <div class="mistake-number" data-num="3"></div>
+                    <div class="mistake-title-container">
+                        <div class="mistake-title">Yanlış Metrik Seçimi</div>
+                        <div class="mistake-subtitle">Accuracy yanılsaması</div>
+                    </div>
+                    <div class="mistake-chevron">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mistake-content">
+                    <div class="mistake-content-inner">
+                        <div class="info-box problem-box">
+                            <div class="info-box-header">
+                                <div class="info-box-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"/>
+                                        <line x1="6" y1="6" x2="18" y2="18"/>
+                                    </svg>
+                                </div>
+                                <span class="info-box-label">Problem</span>
+                            </div>
+                            <div class="info-box-text">
+                                %95 normal, %5 kanser içeren bir datasette accuracy kullanmak. Model "hep normal de" derse %95 accuracy alır ama hiçbir kanseri yakalayamaz. Reviewer bu hatayı hemen görür.
+                            </div>
+                        </div>
+                        <div class="info-box solution-box">
+                            <div class="info-box-header">
+                                <div class="info-box-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <span class="info-box-label">Çözüm</span>
+                            </div>
+                            <div class="info-box-text">
+                                <strong>AUC-ROC</strong> ve <strong>AUC-PR</strong> kullanın (imbalanced data için PR daha iyi). <strong>Sensitivity/Specificity</strong> rapor edin. <strong>F1 Score</strong> ve confusion matrix mutlaka olsun. Threshold seçimini açıklayın.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mistake 4 -->
+            <div class="mistake-card" data-index="3">
+                <div class="mistake-header">
+                    <div class="mistake-number" data-num="4"></div>
+                    <div class="mistake-title-container">
+                        <div class="mistake-title">Overfitting'i Görmezden Gelmek</div>
+                        <div class="mistake-subtitle">Training vs Test gap'i</div>
+                    </div>
+                    <div class="mistake-chevron">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mistake-content">
+                    <div class="mistake-content-inner">
+                        <div class="info-box problem-box">
+                            <div class="info-box-header">
+                                <div class="info-box-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"/>
+                                        <line x1="6" y1="6" x2="18" y2="18"/>
+                                    </svg>
+                                </div>
+                                <span class="info-box-label">Problem</span>
+                            </div>
+                            <div class="info-box-text">
+                                Training'de %99 accuracy, test'te %60. Model verinizi ezberlemiş, generalize edememiş. Bu hâlâ yayına gönderiliyor ve "AI çok iyi çalışıyor" deniyor.
+                            </div>
+                        </div>
+                        <div class="info-box solution-box">
+                            <div class="info-box-header">
+                                <div class="info-box-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <span class="info-box-label">Çözüm</span>
+                            </div>
+                            <div class="info-box-text">
+                                <strong>Early stopping</strong> uygulayın (validation loss'a göre). <strong>Dropout</strong> ve <strong>L2 regularization</strong> ekleyin. <strong>K-fold cross-validation</strong> yapın. Learning curves'ı mutlaka çizin ve makaleye koyun.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mistake 5 -->
+            <div class="mistake-card" data-index="4">
+                <div class="mistake-header">
+                    <div class="mistake-number" data-num="5"></div>
+                    <div class="mistake-title-container">
+                        <div class="mistake-title">External Validation Atlama</div>
+                        <div class="mistake-subtitle">Tek merkez körlüğü</div>
+                    </div>
+                    <div class="mistake-chevron">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mistake-content">
+                    <div class="mistake-content-inner">
+                        <div class="info-box problem-box">
+                            <div class="info-box-header">
+                                <div class="info-box-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"/>
+                                        <line x1="6" y1="6" x2="18" y2="18"/>
+                                    </svg>
+                                </div>
+                                <span class="info-box-label">Problem</span>
+                            </div>
+                            <div class="info-box-text">
+                                Sadece kendi hastanenizin verileriyle eğitip test etmek. Model cihazınızın artifact'larını, departmanınızın labeling stilini öğreniyor. Başka bir hastanede çalışmıyor.
+                            </div>
+                        </div>
+                        <div class="info-box solution-box">
+                            <div class="info-box-header">
+                                <div class="info-box-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <span class="info-box-label">Çözüm</span>
+                            </div>
+                            <div class="info-box-text">
+                                <strong>Farklı kurumdan external test seti</strong> temin edin. Açık veri setleri kullanın (public benchmarks). Farklı cihaz/marka verilerini dahil edin. Multicenter collaboration kurun — reviewer'lar bunu ödüllendirir.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mistake 6 -->
+            <div class="mistake-card" data-index="5">
+                <div class="mistake-header">
+                    <div class="mistake-number" data-num="6"></div>
+                    <div class="mistake-title-container">
+                        <div class="mistake-title">Kara Kutu Bırakmak</div>
+                        <div class="mistake-subtitle">Explainability eksikliği</div>
+                    </div>
+                    <div class="mistake-chevron">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mistake-content">
+                    <div class="mistake-content-inner">
+                        <div class="info-box problem-box">
+                            <div class="info-box-header">
+                                <div class="info-box-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"/>
+                                        <line x1="6" y1="6" x2="18" y2="18"/>
+                                    </svg>
+                                </div>
+                                <span class="info-box-label">Problem</span>
+                            </div>
+                            <div class="info-box-text">
+                                "Model %92 doğrulukla tahmin ediyor" ama NEYE bakarak karar veriyor? Klinik kabul için bu kritik. FDA ve CE onayları explainability istiyor.
+                            </div>
+                        </div>
+                        <div class="info-box solution-box">
+                            <div class="info-box-header">
+                                <div class="info-box-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <span class="info-box-label">Çözüm</span>
+                            </div>
+                            <div class="info-box-text">
+                                <strong>GradCAM/GradCAM++</strong> ile görsel açıklamalar üretin. <strong>SHAP</strong> values ile feature importance gösterin. Attention maps ekleyin. Örnek vakalar üzerinde "model neye bakıyor" görselleri oluşturun.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mistake 7 -->
+            <div class="mistake-card" data-index="6">
+                <div class="mistake-header">
+                    <div class="mistake-number" data-num="7"></div>
+                    <div class="mistake-title-container">
+                        <div class="mistake-title">Baseline Karşılaştırma Yapmamak</div>
+                        <div class="mistake-subtitle">Referans noktası eksikliği</div>
+                    </div>
+                    <div class="mistake-chevron">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mistake-content">
+                    <div class="mistake-content-inner">
+                        <div class="info-box problem-box">
+                            <div class="info-box-header">
+                                <div class="info-box-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"/>
+                                        <line x1="6" y1="6" x2="18" y2="18"/>
+                                    </svg>
+                                </div>
+                                <span class="info-box-label">Problem</span>
+                            </div>
+                            <div class="info-box-text">
+                                "AI %85 başarılı!" diye heyecanla yazıyorsunuz. Ama deneyimli bir doktor %90 yapabiliyor. Basit bir logistic regression %80 yapabiliyor. Karmaşık modeliniz ne kadar değerli?
+                            </div>
+                        </div>
+                        <div class="info-box solution-box">
+                            <div class="info-box-header">
+                                <div class="info-box-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <span class="info-box-label">Çözüm</span>
+                            </div>
+                            <div class="info-box-text">
+                                <strong>Human expert baseline</strong> oluşturun (doktor performansı). <strong>Simple model baseline</strong> ekleyin (logistic regression, random forest). <strong>Existing SOTA</strong> ile karşılaştırın. Statistical significance testleri yapın (p-values, confidence intervals).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mistake 8 -->
+            <div class="mistake-card" data-index="7">
+                <div class="mistake-header">
+                    <div class="mistake-number" data-num="8"></div>
+                    <div class="mistake-title-container">
+                        <div class="mistake-title">Annotation Kalitesini Önemsememek</div>
+                        <div class="mistake-subtitle">Garbage in, garbage out</div>
+                    </div>
+                    <div class="mistake-chevron">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mistake-content">
+                    <div class="mistake-content-inner">
+                        <div class="info-box problem-box">
+                            <div class="info-box-header">
+                                <div class="info-box-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"/>
+                                        <line x1="6" y1="6" x2="18" y2="18"/>
+                                    </svg>
+                                </div>
+                                <span class="info-box-label">Problem</span>
+                            </div>
+                            <div class="info-box-text">
+                                Tek bir asistan tüm verileri etiketledi. Başka biri kontrol etmedi. Tutarsız ve öznel labellar. Noisy labels = noisy model. Sonuç: Gerçek performanstan 10-15% düşük.
+                            </div>
+                        </div>
+                        <div class="info-box solution-box">
+                            <div class="info-box-header">
+                                <div class="info-box-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <span class="info-box-label">Çözüm</span>
+                            </div>
+                            <div class="info-box-text">
+                                <strong>En az 2 annotator</strong> kullanın. <strong>Inter-rater agreement</strong> hesaplayın (Cohen's Kappa, Fleiss' Kappa). Anlaşmazlıkları uzman ile çözün. Annotation guideline hazırlayın ve makaleye ekleyin.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mistake 9 -->
+            <div class="mistake-card" data-index="8">
+                <div class="mistake-header">
+                    <div class="mistake-number" data-num="9"></div>
+                    <div class="mistake-title-container">
+                        <div class="mistake-title">Reproducibility Düşünmemek</div>
+                        <div class="mistake-subtitle">"Bende çalışıyor" sendromu</div>
+                    </div>
+                    <div class="mistake-chevron">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mistake-content">
+                    <div class="mistake-content-inner">
+                        <div class="info-box problem-box">
+                            <div class="info-box-header">
+                                <div class="info-box-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"/>
+                                        <line x1="6" y1="6" x2="18" y2="18"/>
+                                    </svg>
+                                </div>
+                                <span class="info-box-label">Problem</span>
+                            </div>
+                            <div class="info-box-text">
+                                Kod paylaşılmıyor, veri paylaşılmıyor, hyperparameters belirsiz. Başka bir araştırmacı tekrarlayamıyor. Nature/Science bile reproducibility krizi yaşıyor.
+                            </div>
+                        </div>
+                        <div class="info-box solution-box">
+                            <div class="info-box-header">
+                                <div class="info-box-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <span class="info-box-label">Çözüm</span>
+                            </div>
+                            <div class="info-box-text">
+                                <strong>GitHub'da kod paylaşın</strong> (temiz, yorumlu). <strong>Random seed fix</strong> edin ve dokümante edin. <strong>requirements.txt</strong> veya Docker environment sağlayın. Mümkünse veriyi de paylaşın veya nasıl temin edileceğini açıklayın.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mistake 10 -->
+            <div class="mistake-card" data-index="9">
+                <div class="mistake-header">
+                    <div class="mistake-number" data-num="10"></div>
+                    <div class="mistake-title-container">
+                        <div class="mistake-title">Deployment Planı Yapmamak</div>
+                        <div class="mistake-subtitle">Güzel model, kullanılamıyor</div>
+                    </div>
+                    <div class="mistake-chevron">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mistake-content">
+                    <div class="mistake-content-inner">
+                        <div class="info-box problem-box">
+                            <div class="info-box-header">
+                                <div class="info-box-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"/>
+                                        <line x1="6" y1="6" x2="18" y2="18"/>
+                                    </svg>
+                                </div>
+                                <span class="info-box-label">Problem</span>
+                            </div>
+                            <div class="info-box-text">
+                                Model Jupyter notebook'ta harika çalışıyor. Ama klinik kullanıma nasıl geçecek? Inference süresi 5 dakika. PACS entegrasyonu yok. IT onayı alınmamış.
+                            </div>
+                        </div>
+                        <div class="info-box solution-box">
+                            <div class="info-box-header">
+                                <div class="info-box-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <span class="info-box-label">Çözüm</span>
+                            </div>
+                            <div class="info-box-text">
+                                <strong>Inference pipeline</strong> hazırlayın (REST API, ONNX export). <strong>Latency requirements</strong> belirleyin ve optimize edin. <strong>DICOM/HL7 integration</strong> planı yapın. IT ve klinik ekiple erken konuşun. FDA/CE yol haritası çıkarın.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="cta-card">
+                <div class="completion-badge" id="completionBadge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    Tüm hataları incelediniz!
+                </div>
+                <div class="cta-icon">🛡️</div>
+                <h2 class="cta-title">Bu hatalardan kaçının — bize danışın</h2>
+                <p class="cta-text">30+ yayınla kanıtlanmış AI expertise'imizle araştırmanızı doğru temeller üzerine kurun.</p>
+                <a href="mailto:research@diagnis.ai?subject=AI Araştırma Danışmanlığı" class="btn btn-white">
+                    Ücretsiz Görüşme
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p class="footer-text"><strong>Diagnis Research Labs</strong> — <a href="https://diagnis.ai">Diagnis Medical AI</a>'ın bir bölümü</p>
+        <p class="footer-text" style="margin-top: 8px;">© 2026 Diagnis. Tüm hakları saklıdır.</p>
+    </footer>
+
+    <script>
+        // ============================================
+        // STATE
+        // ============================================
+        const readMistakes = new Set(JSON.parse(localStorage.getItem('readMistakes') || '[]'));
+
+        // ============================================
+        // DOM ELEMENTS
+        // ============================================
+        const cards = document.querySelectorAll('.mistake-card');
+        const progressFill = document.getElementById('progressFill');
+        const readCount = document.getElementById('readCount');
+        const completionBadge = document.getElementById('completionBadge');
+        const ctaSection = document.querySelector('.cta-section');
+
+        // ============================================
+        // FUNCTIONS
+        // ============================================
+        function updateProgress() {
+            const count = readMistakes.size;
+            const percentage = (count / 10) * 100;
+            
+            readCount.textContent = count;
+            progressFill.style.width = percentage + '%';
+            
+            localStorage.setItem('readMistakes', JSON.stringify([...readMistakes]));
+            
+            if (count === 10) {
+                completionBadge.classList.add('show');
+            }
+        }
+
+        function markAsRead(index) {
+            if (!readMistakes.has(index)) {
+                readMistakes.add(index);
+                cards[index].classList.add('read');
+                updateProgress();
+            }
+        }
+
+        function toggleCard(card) {
+            const index = parseInt(card.dataset.index);
+            const isExpanded = card.classList.contains('expanded');
+            
+            // Close all other cards
+            cards.forEach(c => {
+                if (c !== card) {
+                    c.classList.remove('expanded');
+                }
+            });
+            
+            // Toggle this card
+            card.classList.toggle('expanded', !isExpanded);
+            
+            // Mark as read when expanded
+            if (!isExpanded) {
+                markAsRead(index);
+            }
+        }
+
+        // ============================================
+        // INIT
+        // ============================================
+        // Restore read state
+        readMistakes.forEach(index => {
+            if (cards[index]) {
+                cards[index].classList.add('read');
+            }
+        });
+        updateProgress();
+
+        // Card click handlers
+        cards.forEach(card => {
+            const header = card.querySelector('.mistake-header');
+            header.addEventListener('click', () => toggleCard(card));
+        });
+
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        cards.forEach((card, index) => {
+            card.style.transitionDelay = (index * 0.05) + 's';
+            observer.observe(card);
+        });
+
+        observer.observe(ctaSection);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            const expanded = document.querySelector('.mistake-card.expanded');
+            if (!expanded) return;
+            
+            const index = parseInt(expanded.dataset.index);
+            
+            if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+                e.preventDefault();
+                if (index < 9) {
+                    toggleCard(expanded);
+                    toggleCard(cards[index + 1]);
+                    cards[index + 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (index > 0) {
+                    toggleCard(expanded);
+                    toggleCard(cards[index - 1]);
+                    cards[index - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            } else if (e.key === 'Escape') {
+                toggleCard(expanded);
+            }
+        });
+    </script>
+</body>
+</html>
