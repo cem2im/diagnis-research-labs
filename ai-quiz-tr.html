@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI IQ Testi - Yapay Zeka Hakkında Ne Kadar Biliyorsun? | Diagnis Research Labs</title>
+    <meta name="description" content="20 soruyla yapay zeka bilgini test et. Başlangıçtan uzmanlığa - startup dünyasında hangi rolsün?">
+    <meta property="og:title" content="AI IQ Testi - Startup Rolün Ne?">
+    <meta property="og:description" content="AI IQ Testini çözdüm! Sen kaç puan alabilirsin?">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #1e40af;
+            --accent: #10b981;
+            --correct: #22c55e;
+            --wrong: #ef4444;
+            --bg-dark: #0a0f1a;
+            --bg-card: #111827;
+            --text: #f8fafc;
+            --text-dim: #94a3b8;
+            --border: #1e293b;
+            --glow: rgba(59, 130, 246, 0.5);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.15;
+            z-index: 0;
+            animation: float 20s ease-in-out infinite;
+        }
+        .bg-glow-1 { background: var(--primary); top: -200px; right: -200px; }
+        .bg-glow-2 { background: var(--accent); bottom: -200px; left: -200px; animation-delay: -10s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-50px, 50px); }
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon svg { width: 22px; height: 22px; color: white; }
+        .logo-text { font-size: 1.1rem; font-weight: 600; }
+        .logo-text span { color: var(--primary); }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, var(--text), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-bottom: 2rem;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .question-count {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .difficulty-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .difficulty-easy { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+        .difficulty-medium { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+        .difficulty-hard { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .difficulty-expert { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 4px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 20px var(--glow);
+        }
+
+        /* Card */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        /* Start Screen */
+        .start-screen {
+            text-align: center;
+        }
+
+        .start-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .start-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .start-description {
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .start-features {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .feature-icon {
+            color: var(--accent);
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px var(--glow);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--glow);
+        }
+
+        /* Question Screen */
+        .question-screen {
+            display: none;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option:hover:not(.disabled) {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.1);
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.15);
+        }
+
+        .option.correct {
+            border-color: var(--correct);
+            background: rgba(34, 197, 94, 0.15);
+            animation: correctPulse 0.5s ease;
+        }
+
+        .option.wrong {
+            border-color: var(--wrong);
+            background: rgba(239, 68, 68, 0.15);
+            animation: wrongShake 0.5s ease;
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .option.show-correct {
+            border-color: var(--correct);
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .option-letter {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover:not(.disabled) .option-letter {
+            background: var(--primary);
+        }
+
+        .option.correct .option-letter {
+            background: var(--correct);
+        }
+
+        .option.wrong .option-letter {
+            background: var(--wrong);
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 1rem;
+        }
+
+        .option-icon {
+            font-size: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .option.correct .option-icon,
+        .option.wrong .option-icon {
+            opacity: 1;
+        }
+
+        .feedback {
+            margin-top: 1.5rem;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback.correct {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            display: block;
+        }
+
+        .feedback.wrong {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            display: block;
+        }
+
+        .feedback-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .feedback.correct .feedback-title { color: var(--correct); }
+        .feedback.wrong .feedback-title { color: var(--wrong); }
+
+        .feedback-text {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        .next-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--glow);
+        }
+
+        .next-btn.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Result Screen */
+        .result-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .result-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .result-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--text), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .result-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+        }
+
+        .result-score {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-number {
+            font-size: 3rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .score-label {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .result-bar {
+            background: var(--border);
+            height: 12px;
+            border-radius: 6px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .result-bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .share-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .share-title {
+            font-size: 1rem;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+        }
+
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .share-btn.twitter {
+            background: #1da1f2;
+            color: white;
+        }
+
+        .share-btn.linkedin {
+            background: #0077b5;
+            color: white;
+        }
+
+        .share-btn.whatsapp {
+            background: #25d366;
+            color: white;
+        }
+
+        .share-btn.copy {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .retry-btn {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .retry-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Score Streak */
+        .streak {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 100;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .streak.show {
+            display: flex;
+        }
+
+        .streak-icon {
+            font-size: 1.5rem;
+        }
+
+        .streak-text {
+            font-weight: 600;
+        }
+
+        .streak-count {
+            color: var(--accent);
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            z-index: 1000;
+            animation: confettiFall 3s linear forwards;
+        }
+
+        @keyframes confettiFall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 640px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .start-features {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .result-score {
+                gap: 2rem;
+            }
+
+            .share-buttons {
+                flex-direction: column;
+            }
+
+            .share-btn {
+                justify-content: center;
+            }
+        }
+
+        /* Hidden */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <div class="streak" id="streak">
+        <span class="streak-icon">🔥</span>
+        <span class="streak-text"><span class="streak-count" id="streakCount">0</span> üst üste!</span>
+    </div>
+
+    <div class="container">
+        <header class="header">
+            <a href="tr.html" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <span class="logo-text">Diagnis <span>Research Labs</span></span>
+            </a>
+            <h1 class="title">AI IQ Testi</h1>
+            <p class="subtitle">Yapay Zeka hakkında gerçekten ne kadar biliyorsun?</p>
+        </header>
+
+        <div class="progress-container" id="progressContainer" style="display: none;">
+            <div class="progress-info">
+                <span class="question-count">Soru <span id="currentQuestion">1</span> / 20</span>
+                <span class="difficulty-badge difficulty-easy" id="difficultyBadge">Kolay</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <!-- Start Screen -->
+            <div class="start-screen" id="startScreen">
+                <div class="start-icon">🧠</div>
+                <h2 class="start-title">AI Bilgini Test Etmeye Hazır mısın?</h2>
+                <p class="start-description">
+                    Yapay zekanın öncülerinden derin öğrenmedeki son gelişmelere — 
+                    20 soru ile startup dünyasındaki rolünü keşfet.
+                </p>
+                <div class="start-features">
+                    <div class="feature">
+                        <span class="feature-icon">📊</span>
+                        <span>20 Soru</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📈</span>
+                        <span>Artan Zorluk</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">🎯</span>
+                        <span>Anında Geri Bildirim</span>
+                    </div>
+                </div>
+                <button class="start-btn" onclick="startQuiz()">Teste Başla →</button>
+            </div>
+
+            <!-- Question Screen -->
+            <div class="question-screen" id="questionScreen">
+                <p class="question-text" id="questionText"></p>
+                <div class="options" id="optionsContainer"></div>
+                <div class="feedback" id="feedback">
+                    <p class="feedback-title" id="feedbackTitle"></p>
+                    <p class="feedback-text" id="feedbackText"></p>
+                </div>
+                <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Sonraki Soru →</button>
+            </div>
+
+            <!-- Result Screen -->
+            <div class="result-screen" id="resultScreen">
+                <div class="result-icon" id="resultIcon">💼</div>
+                <h2 class="result-title" id="resultTitle">Startup Rolün</h2>
+                <p class="result-subtitle" id="resultSubtitle">"Zoom'u açamayan yatırımcı"</p>
+                <div class="result-score">
+                    <div class="score-item">
+                        <div class="score-number" id="finalScore">0</div>
+                        <div class="score-label">Doğru</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-number" id="percentScore">0%</div>
+                        <div class="score-label">Başarı Oranı</div>
+                    </div>
+                </div>
+                <div class="result-bar">
+                    <div class="result-bar-fill" id="resultBarFill" style="width: 0%"></div>
+                </div>
+                <div class="share-section">
+                    <p class="share-title">Arkadaşlarına meydan oku!</p>
+                    <div class="share-buttons">
+                        <a class="share-btn twitter" id="shareTwitter" target="_blank">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                            X'te Paylaş
+                        </a>
+                        <a class="share-btn linkedin" id="shareLinkedIn" target="_blank">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                            LinkedIn
+                        </a>
+                        <a class="share-btn whatsapp" id="shareWhatsApp" target="_blank">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            WhatsApp
+                        </a>
+                        <button class="share-btn copy" onclick="copyResult()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Sonucu Kopyala
+                        </button>
+                    </div>
+                </div>
+                <button class="retry-btn" onclick="restartQuiz()">Tekrar Dene</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // KOLAY (1-5)
+            {
+                question: "'AI' neyin kısaltması?",
+                options: ["Automated Intelligence (Otomatik Zeka)", "Artificial Intelligence (Yapay Zeka)", "Advanced Integration (Gelişmiş Entegrasyon)", "Algorithmic Interface (Algoritmik Arayüz)"],
+                correct: 1,
+                explanation: "AI, 'Artificial Intelligence' yani Yapay Zeka'nın kısaltmasıdır. Makineler tarafından insan zekasının simülasyonunu ifade eder.",
+                difficulty: "easy"
+            },
+            {
+                question: "ChatGPT'yi hangi şirket geliştirdi?",
+                options: ["Google", "Microsoft", "OpenAI", "Meta"],
+                correct: 2,
+                explanation: "ChatGPT, OpenAI tarafından geliştirildi ve Kasım 2022'de yayınlandı.",
+                difficulty: "easy"
+            },
+            {
+                question: "GPT neyin kısaltması?",
+                options: ["General Processing Tool (Genel İşleme Aracı)", "Generative Pre-trained Transformer (Üretken Ön-eğitimli Dönüştürücü)", "Global Pattern Technology (Küresel Örüntü Teknolojisi)", "Graphical Processing Terminal (Grafik İşleme Terminali)"],
+                correct: 1,
+                explanation: "GPT, 'Generative Pre-trained Transformer' yani Üretken Ön-eğitimli Dönüştürücü anlamına gelir, bir tür büyük dil modelidir.",
+                difficulty: "easy"
+            },
+            {
+                question: "Aşağıdakilerden hangisi yapay zeka destekli bir sanal asistan?",
+                options: ["Microsoft Word", "Siri", "Photoshop", "Firefox"],
+                correct: 1,
+                explanation: "Siri, Apple'ın 2011'de tanıtılan yapay zeka destekli sanal asistanıdır.",
+                difficulty: "easy"
+            },
+            {
+                question: "Makine öğrenmesi nedir?",
+                options: ["Robotların yürümeyi öğrenmesi", "Bilgisayarların açıkça programlanmadan veriden öğrenmesi", "Makinelerin insanların yerini alması", "Bir programlama dili"],
+                correct: 1,
+                explanation: "Makine öğrenmesi, sistemlerin açıkça programlanmadan deneyimden öğrenip geliştiği yapay zekanın bir alt dalıdır.",
+                difficulty: "easy"
+            },
+            // ORTA (6-10)
+            {
+                question: "'Yapay Zeka' terimini kim ortaya attı?",
+                options: ["Alan Turing", "John McCarthy", "Marvin Minsky", "Geoffrey Hinton"],
+                correct: 1,
+                explanation: "John McCarthy, 1956'da Dartmouth Konferansı'nda 'Artificial Intelligence' (Yapay Zeka) terimini ortaya attı.",
+                difficulty: "medium"
+            },
+            {
+                question: "'Sinir ağı' neyden esinlenmiştir?",
+                options: ["Bilgisayar devreleri", "İnsan beyni", "Örümcek ağları", "İnternet"],
+                correct: 1,
+                explanation: "Sinir ağları, insan beynindeki biyolojik sinir ağlarından esinlenen hesaplama sistemleridir.",
+                difficulty: "medium"
+            },
+            {
+                question: "Dünya Go şampiyonlarını yenen AlphaGo'yu hangi şirket geliştirdi?",
+                options: ["OpenAI", "DeepMind", "IBM", "Facebook AI"],
+                correct: 1,
+                explanation: "DeepMind (Alphabet/Google'a ait) AlphaGo'yu geliştirdi ve 2016'da Go şampiyonu Lee Sedol'u yendi.",
+                difficulty: "medium"
+            },
+            {
+                question: "'Derin öğrenme' nedir?",
+                options: ["Çok yavaş öğrenme", "Çok katmanlı sinir ağları", "Yıllarca AI çalışmak", "Yeraltı bilişim"],
+                correct: 1,
+                explanation: "Derin öğrenme, veriden giderek daha yüksek seviyeli özellikler çıkarmak için birden fazla katmanlı (derin) sinir ağları kullanır.",
+                difficulty: "medium"
+            },
+            {
+                question: "Ünlü 'Turing Testi' bir yapay zekanın neyi yapıp yapamadığını değerlendirir?",
+                options: ["Matematik problemleri çözmek", "İnsandan ayırt edilemez davranış sergilemek", "Satrançta insanları yenmek", "Kod yazmak"],
+                correct: 1,
+                explanation: "1950'de Alan Turing tarafından önerilen Turing Testi, bir makinenin insana eşdeğer zeki davranış sergileyip sergileyemediğini test eder.",
+                difficulty: "medium"
+            },
+            // ZOR (11-15)
+            {
+                question: "İlk yapay sinir ağı (Perceptron) hangi yılda oluşturuldu?",
+                options: ["1943", "1957", "1965", "1972"],
+                correct: 1,
+                explanation: "Perceptron, 1957'de Frank Rosenblatt tarafından icat edildi, ancak yapay nöron kavramı 1943'e dayanır.",
+                difficulty: "hard"
+            },
+            {
+                question: "Sinir ağlarını eğitmek için geri yayılımı geliştirmesiyle kim tanınır?",
+                options: ["Yann LeCun", "Geoffrey Hinton", "Andrew Ng", "Elon Musk"],
+                correct: 1,
+                explanation: "Geoffrey Hinton, David Rumelhart ve Ronald Williams ile birlikte, 1986'daki etkili makaleleriyle geri yayılımı popülerleştirdi.",
+                difficulty: "hard"
+            },
+            {
+                question: "'Attention Is All You Need' makalesinde hangi çığır açan mimari tanıtıldı?",
+                options: ["CNN", "RNN", "Transformer", "GAN"],
+                correct: 2,
+                explanation: "Transformer mimarisi, 2017'de Google'da Vaswani ve arkadaşları tarafından tanıtıldı ve doğal dil işlemede devrim yarattı.",
+                difficulty: "hard"
+            },
+            {
+                question: "Protein yapısı tahminini çözen AlphaFold'u hangi şirket geliştirdi?",
+                options: ["OpenAI", "DeepMind", "IBM Watson", "NVIDIA"],
+                correct: 1,
+                explanation: "DeepMind'ın AlphaFold'u, 2020'de 50 yıllık protein katlama problemini çözdü ve Science dergisinin Yılın Buluşu ödülünü kazandı.",
+                difficulty: "hard"
+            },
+            {
+                question: "AI eğitiminde RLHF neyin kısaltması?",
+                options: ["Recursive Learning from Human Feedback", "Reinforcement Learning from Human Feedback (İnsan Geri Bildirimi ile Pekiştirmeli Öğrenme)", "Real-time Learning with High Fidelity", "Rapid Learning through Hybrid Functions"],
+                correct: 1,
+                explanation: "RLHF (İnsan Geri Bildirimi ile Pekiştirmeli Öğrenme), ChatGPT gibi AI modellerini insan tercihleriyle uyumlu hale getirmek için kullanılan önemli bir tekniktir.",
+                difficulty: "hard"
+            },
+            // UZMAN (16-20)
+            {
+                question: "Transformer'larda 'dikkat mekanizması' (attention mechanism) öncelikle ne için kullanılır?",
+                options: ["Model boyutunu küçültmek", "Modelin girdinin ilgili kısımlarına odaklanmasını sağlamak", "Eğitimi hızlandırmak", "Görüntü üretmek"],
+                correct: 1,
+                explanation: "Dikkat mekanizması, modellerin çıktının her bir parçasını üretirken girdinin farklı kısımlarının önemini ağırlıklandırmasına olanak tanır.",
+                difficulty: "expert"
+            },
+            {
+                question: "2018 Turing Ödülü'nü kazanan 'AI'ın Babaları' kimlerdir?",
+                options: ["Musk, Altman, Hassabis", "Hinton, LeCun, Bengio", "McCarthy, Minsky, Simon", "Ng, Dean, Sutskever"],
+                correct: 1,
+                explanation: "Geoffrey Hinton, Yann LeCun ve Yoshua Bengio, derin öğrenme üzerine çalışmalarıyla 2018 Turing Ödülü'nü kazandı.",
+                difficulty: "expert"
+            },
+            {
+                question: "Büyük dil modellerinde 'ortaya çıkan davranış' (emergent behavior) nedir?",
+                options: ["Koddaki hatalar", "Açıkça eğitilmeden sadece büyük ölçekte ortaya çıkan yetenekler", "Acil durum kapatma prosedürleri", "Eğitim sırasında erken durdurma"],
+                correct: 1,
+                explanation: "Ortaya çıkan yetenekler, büyük dil modellerinin ölçekte kazandığı, daha küçük versiyonlarda bulunmayan ve açıkça eğitilmemiş yeteneklerdir.",
+                difficulty: "expert"
+            },
+            {
+                question: "Difüzyon modellerinde (DALL-E, Stable Diffusion gibi) üretim süreci nasıl çalışır?",
+                options: ["Görüntüleri piksel piksel oluşturarak", "Rastgele bir görüntüden kademeli olarak gürültüyü kaldırarak", "Mevcut görüntüleri birleştirerek", "GAN'ları kullanarak"],
+                correct: 1,
+                explanation: "Difüzyon modelleri, görüntüleri kademeli olarak gürültüden arındırmayı öğrenir, ardından gürültü ekleme sürecini tersine çevirerek yeni görüntüler üretir.",
+                difficulty: "expert"
+            },
+            {
+                question: "Demis Hassabis kimdir?",
+                options: ["Python'un mucidi", "DeepMind'ın kurucu ortağı ve CEO'su", "Bitcoin'in yaratıcısı", "OpenAI'ın kurucusu"],
+                correct: 1,
+                explanation: "Demis Hassabis, DeepMind'ın kurucu ortağı ve CEO'sudur. AlphaFold ile 2024 Nobel Kimya Ödülü'nü kazandı.",
+                difficulty: "expert"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let streak = 0;
+        let answered = false;
+
+        const difficultyLabels = {
+            easy: "Kolay",
+            medium: "Orta",
+            hard: "Zor",
+            expert: "Uzman"
+        };
+
+        const resultTiers = [
+            { min: 0, max: 4, icon: "💼", title: "Zoom'u açamayan yatırımcı", subtitle: '"AI? O da ne, yeniyor mu?"', color: "#94a3b8" },
+            { min: 5, max: 8, icon: "📝", title: "ChatGPT'ye prompt yazan stajyer", subtitle: '"En azından ChatGPT\'yi duydun"', color: "#fbbf24" },
+            { min: 9, max: 12, icon: "📊", title: "LinkedIn'de AI paylaşan PM", subtitle: '"AI transformation journey 🚀"', color: "#3b82f6" },
+            { min: 13, max: 16, icon: "🚀", title: "Series A alan founder", subtitle: '"Yatırımcılar seni seviyor!"', color: "#8b5cf6" },
+            { min: 17, max: 19, icon: "🔥", title: "OpenAI'dan teklif alan mühendis", subtitle: '"Neredeyse mükemmelsin!"', color: "#f59e0b" },
+            { min: 20, max: 20, icon: "👔", title: "Sam Altman'ı kovup geri alan board member", subtitle: '"Sen YAPAY ZEKANIN kendisisin"', color: "#10b981" }
+        ];
+
+        function startQuiz() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('questionScreen').style.display = 'block';
+            document.getElementById('progressContainer').style.display = 'block';
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const question = questions[currentQuestionIndex];
+            document.getElementById('questionText').textContent = question.question;
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            document.getElementById('progressFill').style.width = `${((currentQuestionIndex) / questions.length) * 100}%`;
+            
+            // Update difficulty badge
+            const badge = document.getElementById('difficultyBadge');
+            badge.textContent = difficultyLabels[question.difficulty];
+            badge.className = `difficulty-badge difficulty-${question.difficulty}`;
+
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            const letters = ['A', 'B', 'C', 'D'];
+            question.options.forEach((option, index) => {
+                const optionEl = document.createElement('div');
+                optionEl.className = 'option';
+                optionEl.innerHTML = `
+                    <span class="option-letter">${letters[index]}</span>
+                    <span class="option-text">${option}</span>
+                    <span class="option-icon"></span>
+                `;
+                optionEl.onclick = () => selectOption(index);
+                optionsContainer.appendChild(optionEl);
+            });
+
+            // Reset UI
+            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('nextBtn').className = 'next-btn';
+            answered = false;
+        }
+
+        function selectOption(selectedIndex) {
+            if (answered) return;
+            answered = true;
+
+            const question = questions[currentQuestionIndex];
+            const options = document.querySelectorAll('.option');
+            const isCorrect = selectedIndex === question.correct;
+
+            options.forEach((opt, idx) => {
+                opt.classList.add('disabled');
+                if (idx === question.correct) {
+                    opt.classList.add('show-correct');
+                    opt.querySelector('.option-icon').textContent = '✓';
+                }
+                if (idx === selectedIndex) {
+                    if (isCorrect) {
+                        opt.classList.add('correct');
+                        opt.querySelector('.option-icon').textContent = '✓';
+                    } else {
+                        opt.classList.add('wrong');
+                        opt.querySelector('.option-icon').textContent = '✗';
+                    }
+                }
+            });
+
+            // Update score and streak
+            if (isCorrect) {
+                score++;
+                streak++;
+                updateStreak();
+            } else {
+                streak = 0;
+                document.getElementById('streak').classList.remove('show');
+            }
+
+            // Show feedback
+            const feedback = document.getElementById('feedback');
+            feedback.className = `feedback ${isCorrect ? 'correct' : 'wrong'}`;
+            document.getElementById('feedbackTitle').textContent = isCorrect ? '🎉 Doğru!' : '❌ Maalesef yanlış!';
+            document.getElementById('feedbackText').textContent = question.explanation;
+
+            // Show next button
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.classList.add('show');
+            nextBtn.textContent = currentQuestionIndex === questions.length - 1 ? 'Sonuçları Gör →' : 'Sonraki Soru →';
+        }
+
+        function updateStreak() {
+            if (streak >= 3) {
+                document.getElementById('streak').classList.add('show');
+                document.getElementById('streakCount').textContent = streak;
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex >= questions.length) {
+                showResults();
+            } else {
+                loadQuestion();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('questionScreen').style.display = 'none';
+            document.getElementById('progressContainer').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'block';
+            document.getElementById('streak').classList.remove('show');
+
+            const tier = resultTiers.find(t => score >= t.min && score <= t.max);
+            
+            document.getElementById('resultIcon').textContent = tier.icon;
+            document.getElementById('resultTitle').textContent = tier.title;
+            document.getElementById('resultSubtitle').textContent = tier.subtitle;
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('percentScore').textContent = Math.round((score / questions.length) * 100) + '%';
+
+            // Animate result bar
+            setTimeout(() => {
+                const barFill = document.getElementById('resultBarFill');
+                barFill.style.width = `${(score / questions.length) * 100}%`;
+                barFill.style.background = `linear-gradient(90deg, ${tier.color}, var(--accent))`;
+            }, 100);
+
+            // Set up share links
+            const shareText = `AI IQ Testinde ${score}/20 aldım ve "${tier.title}" oldum! ${tier.subtitle} Sen kaç alabilirsin?`;
+            const shareUrl = window.location.href;
+            
+            document.getElementById('shareTwitter').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+            document.getElementById('shareLinkedIn').href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent('AI IQ Testi')}&summary=${encodeURIComponent(shareText)}`;
+            document.getElementById('shareWhatsApp').href = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+
+            // Celebrate high scores
+            if (score >= 17) {
+                launchConfetti();
+            }
+        }
+
+        function copyResult() {
+            const tier = resultTiers.find(t => score >= t.min && score <= t.max);
+            const text = `🧠 AI IQ Testi Sonucu\n\n${score}/20 aldım ve "${tier.title}" oldum!\n${tier.subtitle}\n\nTesti çöz: ${window.location.href}`;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target.closest('.share-btn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Kopyalandı!';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                }, 2000);
+            });
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            streak = 0;
+            document.getElementById('resultScreen').style.display = 'none';
+            document.getElementById('startScreen').style.display = 'block';
+        }
+
+        function launchConfetti() {
+            const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                    confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
+                    document.body.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 4000);
+                }, i * 30);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (!answered && document.getElementById('questionScreen').style.display === 'block') {
+                const keyMap = { '1': 0, '2': 1, '3': 2, '4': 3, 'a': 0, 'b': 1, 'c': 2, 'd': 3 };
+                if (keyMap.hasOwnProperty(e.key.toLowerCase())) {
+                    selectOption(keyMap[e.key.toLowerCase()]);
+                }
+            }
+            if (e.key === 'Enter' && answered) {
+                nextQuestion();
+            }
+        });
+    </script>
+</body>
+</html>
