@@ -53,42 +53,90 @@
             z-index: 0;
         }
 
-        /* Glows */
-        .glow-container {
+        /* Animated Gradient Mesh Background */
+        .gradient-mesh {
             position: fixed;
             inset: 0;
             overflow: hidden;
             pointer-events: none;
             z-index: 0;
         }
-        .glow {
+        .gradient-mesh::before,
+        .gradient-mesh::after {
+            content: '';
             position: absolute;
-            border-radius: 50%;
-            filter: blur(120px);
+            width: 150%;
+            height: 150%;
+            top: -25%;
+            left: -25%;
+        }
+        .gradient-mesh::before {
+            background: 
+                radial-gradient(ellipse 80% 50% at 20% 40%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 80% at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 60% at 40% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+            animation: meshMove1 25s ease-in-out infinite;
+        }
+        .gradient-mesh::after {
+            background: 
+                radial-gradient(ellipse 70% 60% at 70% 60%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 70% at 30% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 50% at 60% 70%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+            animation: meshMove2 30s ease-in-out infinite;
+        }
+        @keyframes meshMove1 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            25% { transform: translate(5%, -5%) rotate(2deg) scale(1.05); }
+            50% { transform: translate(-3%, 5%) rotate(-1deg) scale(0.98); }
+            75% { transform: translate(3%, 3%) rotate(1deg) scale(1.02); }
+        }
+        @keyframes meshMove2 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            33% { transform: translate(-5%, 3%) rotate(-2deg) scale(1.03); }
+            66% { transform: translate(4%, -4%) rotate(2deg) scale(0.97); }
+        }
+        
+        /* Aurora overlay */
+        .aurora {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
             opacity: 0.4;
-            animation: glowFloat 20s ease-in-out infinite;
         }
-        .glow-1 {
-            width: 600px;
-            height: 600px;
-            background: var(--accent);
-            top: -300px;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0.15;
+        .aurora-beam {
+            position: absolute;
+            width: 200%;
+            height: 300px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(99, 102, 241, 0.05) 20%, 
+                rgba(139, 92, 246, 0.08) 40%, 
+                rgba(168, 85, 247, 0.05) 60%, 
+                rgba(59, 130, 246, 0.06) 80%, 
+                transparent 100%
+            );
+            filter: blur(60px);
+            animation: auroraWave 20s ease-in-out infinite;
         }
-        .glow-2 {
-            width: 400px;
-            height: 400px;
-            background: var(--accent-secondary);
-            bottom: 20%;
-            right: -100px;
-            opacity: 0.1;
-            animation-delay: -10s;
+        .aurora-beam:nth-child(1) {
+            top: 10%;
+            animation-delay: 0s;
         }
-        @keyframes glowFloat {
-            0%, 100% { transform: translateY(0) translateX(-50%); }
-            50% { transform: translateY(30px) translateX(-50%); }
+        .aurora-beam:nth-child(2) {
+            top: 40%;
+            animation-delay: -7s;
+            opacity: 0.6;
+        }
+        .aurora-beam:nth-child(3) {
+            top: 70%;
+            animation-delay: -14s;
+            opacity: 0.4;
+        }
+        @keyframes auroraWave {
+            0%, 100% { transform: translateX(-30%) skewX(-5deg); }
+            50% { transform: translateX(-10%) skewX(5deg); }
         }
 
         /* Header */
@@ -304,6 +352,152 @@
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Trust Logos Section */
+        .trust-section {
+            padding: 60px 2rem;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .trust-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .trust-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 32px;
+        }
+        .trust-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 64px;
+            flex-wrap: wrap;
+        }
+        .trust-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-tertiary);
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+        .trust-logo:hover {
+            opacity: 1;
+        }
+        .trust-logo svg {
+            width: 32px;
+            height: 32px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.5;
+        }
+        .trust-logo-text {
+            white-space: nowrap;
+        }
+        
+        /* Video Demo Section */
+        .video-section {
+            padding: 100px 2rem;
+        }
+        .video-inner {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .video-card {
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .video-card:hover {
+            border-color: var(--border-hover);
+            transform: scale(1.01);
+            box-shadow: 0 24px 80px rgba(99, 102, 241, 0.15);
+        }
+        .video-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, 
+                rgba(99, 102, 241, 0.05) 0%, 
+                rgba(139, 92, 246, 0.03) 50%, 
+                rgba(168, 85, 247, 0.02) 100%
+            );
+        }
+        .video-content {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+        }
+        .play-button {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
+        }
+        .video-card:hover .play-button {
+            transform: scale(1.1);
+            box-shadow: 0 12px 48px rgba(99, 102, 241, 0.4);
+        }
+        .play-button svg {
+            width: 28px;
+            height: 28px;
+            color: white;
+            margin-left: 4px;
+        }
+        .video-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .video-card:hover .video-text {
+            color: var(--text);
+        }
+        .video-decorative-lines {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+        .video-decorative-lines::before,
+        .video-decorative-lines::after {
+            content: '';
+            position: absolute;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.2), transparent);
+            height: 1px;
+        }
+        .video-decorative-lines::before {
+            top: 25%;
+            left: 10%;
+            right: 10%;
+        }
+        .video-decorative-lines::after {
+            bottom: 25%;
+            left: 15%;
+            right: 15%;
         }
 
         /* Features */
@@ -769,9 +963,11 @@
 </head>
 <body>
     <div class="grid-bg"></div>
-    <div class="glow-container">
-        <div class="glow glow-1"></div>
-        <div class="glow glow-2"></div>
+    <div class="gradient-mesh"></div>
+    <div class="aurora">
+        <div class="aurora-beam"></div>
+        <div class="aurora-beam"></div>
+        <div class="aurora-beam"></div>
     </div>
 
     <header>
@@ -829,6 +1025,40 @@
             </div>
         </section>
 
+        <section class="trust-section visible">
+            <div class="trust-inner">
+                <div class="trust-label">Our team trained at</div>
+                <div class="trust-logos">
+                    <div class="trust-logo">
+                        <svg viewBox="0 0 32 32" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="4" y="8" width="24" height="18" rx="2"/>
+                            <path d="M4 14h24"/>
+                            <path d="M12 8V6a4 4 0 0 1 8 0v2"/>
+                            <circle cx="16" cy="20" r="2"/>
+                        </svg>
+                        <span class="trust-logo-text">Harvard Medical School</span>
+                    </div>
+                    <div class="trust-logo">
+                        <svg viewBox="0 0 32 32" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4L4 10v12l12 6 12-6V10L16 4z"/>
+                            <path d="M16 16v12"/>
+                            <path d="M4 10l12 6 12-6"/>
+                        </svg>
+                        <span class="trust-logo-text">Hacettepe University</span>
+                    </div>
+                    <div class="trust-logo">
+                        <svg viewBox="0 0 32 32" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4v4"/>
+                            <circle cx="16" cy="12" r="4"/>
+                            <path d="M8 28v-6a8 8 0 0 1 16 0v6"/>
+                            <path d="M4 28h24"/>
+                        </svg>
+                        <span class="trust-logo-text">Brigham and Women's Hospital</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="features">
             <div class="section-inner">
                 <div class="section-header">
@@ -869,6 +1099,22 @@
                         </div>
                         <h3>Research-ready</h3>
                         <p>Built for publication. We understand IRB requirements, validation standards, and reproducibility.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="video-section">
+            <div class="video-inner">
+                <div class="video-card">
+                    <div class="video-decorative-lines"></div>
+                    <div class="video-content">
+                        <div class="play-button">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5.14v14l11-7-11-7z"/>
+                            </svg>
+                        </div>
+                        <span class="video-text">See how it works</span>
                     </div>
                 </div>
             </div>
@@ -989,6 +1235,169 @@
                             </div>
                         </li>
                     </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="comparison">
+            <div class="section-inner">
+                <div class="section-header">
+                    <div class="section-label">Compare</div>
+                    <h2 class="section-title">Us vs Traditional Consulting</h2>
+                    <p class="section-subtitle">See why researchers choose Diagnis Research Labs.</p>
+                </div>
+                <div class="comparison-grid">
+                    <div class="comparison-col highlight">
+                        <div class="comparison-header">
+                            <span class="comparison-badge ours">Diagnis Research Labs</span>
+                        </div>
+                        <ul class="comparison-list">
+                            <li class="comparison-item">
+                                <div class="comparison-icon check">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                </div>
+                                <div class="comparison-text"><strong>$3–8K</strong> <span>· Academic-friendly pricing</span></div>
+                            </li>
+                            <li class="comparison-item">
+                                <div class="comparison-icon check">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                </div>
+                                <div class="comparison-text"><strong>2–4 weeks</strong> <span>· Fast turnaround</span></div>
+                            </li>
+                            <li class="comparison-item">
+                                <div class="comparison-icon check">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                </div>
+                                <div class="comparison-text"><strong>Full IP yours</strong> <span>· Complete ownership</span></div>
+                            </li>
+                            <li class="comparison-item">
+                                <div class="comparison-icon check">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                </div>
+                                <div class="comparison-text"><strong>Publication-focused</strong> <span>· Built for papers</span></div>
+                            </li>
+                            <li class="comparison-item">
+                                <div class="comparison-icon check">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                </div>
+                                <div class="comparison-text"><strong>Direct expert access</strong> <span>· Work with the team</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="comparison-col">
+                        <div class="comparison-header">
+                            <span class="comparison-badge theirs">Traditional Consulting</span>
+                        </div>
+                        <ul class="comparison-list">
+                            <li class="comparison-item">
+                                <div class="comparison-icon x">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                </div>
+                                <div class="comparison-text"><strong>$50K+</strong> <span>· Enterprise pricing</span></div>
+                            </li>
+                            <li class="comparison-item">
+                                <div class="comparison-icon x">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                </div>
+                                <div class="comparison-text"><strong>6+ months</strong> <span>· Long timelines</span></div>
+                            </li>
+                            <li class="comparison-item">
+                                <div class="comparison-icon x">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                </div>
+                                <div class="comparison-text"><strong>Complex IP terms</strong> <span>· Legal hurdles</span></div>
+                            </li>
+                            <li class="comparison-item">
+                                <div class="comparison-icon x">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                </div>
+                                <div class="comparison-text"><strong>Generic approach</strong> <span>· One size fits all</span></div>
+                            </li>
+                            <li class="comparison-item">
+                                <div class="comparison-icon x">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                </div>
+                                <div class="comparison-text"><strong>Account managers</strong> <span>· Layers of bureaucracy</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="faq">
+            <div class="section-inner">
+                <div class="section-header">
+                    <div class="section-label">FAQ</div>
+                    <h2 class="section-title">Common questions</h2>
+                    <p class="section-subtitle">Everything you need to know about working with us.</p>
+                </div>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            What types of AI models can you build?
+                            <span class="faq-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                We specialize in medical imaging AI — classification, detection, segmentation, and prediction models. This includes radiology (X-ray, CT, MRI), pathology, dermatology, ophthalmology, and endoscopy. We can also work with structured clinical data, time-series, and multimodal datasets.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            How does pricing work?
+                            <span class="faq-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                Projects typically range from $3,000–$8,000 depending on complexity, dataset size, and model requirements. We provide a fixed quote after our discovery call — no surprises. Payment can be structured to fit academic billing cycles.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Who owns the intellectual property?
+                            <span class="faq-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                You do. 100%. We transfer all rights to the trained model, source code, and documentation upon project completion. You're free to publish, patent, commercialize, or share as you see fit — no licensing fees or ongoing obligations.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            What data do I need to provide?
+                            <span class="faq-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                You'll need a labeled dataset relevant to your research question. We can advise on minimum sample sizes during our discovery call. Data can be transferred securely via encrypted channels, and we work within your institution's data governance requirements.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Can you help with the methods section of my paper?
+                            <span class="faq-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                Absolutely. We provide detailed technical documentation including model architecture, training procedures, hyperparameters, and validation methodology — everything you need for a reproducible methods section. We can also review and suggest edits to your manuscript.
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1144,6 +1553,152 @@
                 card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
             });
         });
+
+        // ============================================
+        // 4. TEXT REVEAL ANIMATION (Hero Headline)
+        // ============================================
+        (function() {
+            const heroH1 = document.querySelector('.hero h1');
+            if (!heroH1) return;
+            
+            const html = heroH1.innerHTML;
+            const words = [];
+            let buffer = '';
+            let inTag = false;
+            
+            for (let i = 0; i < html.length; i++) {
+                const char = html[i];
+                if (char === '<') inTag = true;
+                if (char === '>') { inTag = false; buffer += char; continue; }
+                
+                if (!inTag && char === ' ') {
+                    if (buffer) words.push(buffer);
+                    words.push(' ');
+                    buffer = '';
+                } else {
+                    buffer += char;
+                }
+            }
+            if (buffer) words.push(buffer);
+            
+            let wordIndex = 0;
+            heroH1.innerHTML = words.map(w => {
+                if (w === ' ') return ' ';
+                const delay = wordIndex * 0.1;
+                wordIndex++;
+                return `<span class="word" style="animation-delay: ${delay}s">${w}</span>`;
+            }).join('');
+        })();
+
+        // ============================================
+        // 5. ANIMATED STATS COUNTER
+        // ============================================
+        (function() {
+            const statValues = document.querySelectorAll('.stat-value');
+            let statsAnimated = false;
+            
+            function parseStatValue(text) {
+                const cleaned = text.trim();
+                if (cleaned.includes('–') || cleaned.includes('-')) {
+                    const parts = cleaned.split(/[–-]/);
+                    return { type: 'range', start: parseInt(parts[0]), end: parseInt(parts[1]), separator: cleaned.includes('–') ? '–' : '-' };
+                } else if (cleaned.includes('%')) {
+                    return { type: 'percent', value: parseInt(cleaned) };
+                } else if (cleaned.includes('+')) {
+                    return { type: 'plus', value: parseInt(cleaned) };
+                } else {
+                    return { type: 'number', value: parseInt(cleaned) };
+                }
+            }
+            
+            function animateCounter(element, parsed, duration = 1500) {
+                const startTime = performance.now();
+                
+                function easeOutCubic(t) {
+                    return 1 - Math.pow(1 - t, 3);
+                }
+                
+                function update(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const eased = easeOutCubic(progress);
+                    
+                    if (parsed.type === 'range') {
+                        const currentStart = Math.round(eased * parsed.start);
+                        const currentEnd = Math.round(eased * parsed.end);
+                        element.textContent = `${currentStart}${parsed.separator}${currentEnd}`;
+                    } else if (parsed.type === 'percent') {
+                        element.textContent = `${Math.round(eased * parsed.value)}%`;
+                    } else if (parsed.type === 'plus') {
+                        element.textContent = `${Math.round(eased * parsed.value)}+`;
+                    } else {
+                        element.textContent = Math.round(eased * parsed.value);
+                    }
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(update);
+                    }
+                }
+                
+                requestAnimationFrame(update);
+            }
+            
+            statValues.forEach(el => {
+                el.dataset.original = el.textContent;
+                el.textContent = '0';
+            });
+            
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !statsAnimated) {
+                        statsAnimated = true;
+                        statValues.forEach((el, index) => {
+                            const parsed = parseStatValue(el.dataset.original);
+                            setTimeout(() => {
+                                animateCounter(el, parsed, 1800);
+                            }, index * 200);
+                        });
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            const heroStats = document.querySelector('.hero-stats');
+            if (heroStats) statsObserver.observe(heroStats);
+        })();
+
+        // ============================================
+        // 6. PARALLAX SCROLL (Background Elements)
+        // ============================================
+        (function() {
+            const gridBg = document.querySelector('.grid-bg');
+            const glow1 = document.querySelector('.glow-1');
+            const glow2 = document.querySelector('.glow-2');
+            
+            let ticking = false;
+            
+            function updateParallax() {
+                const scrollY = window.scrollY;
+                
+                if (gridBg) {
+                    gridBg.style.transform = `translateY(${scrollY * 0.3}px)`;
+                }
+                if (glow1) {
+                    glow1.style.transform = `translateX(-50%) translateY(${scrollY * 0.15}px)`;
+                }
+                if (glow2) {
+                    glow2.style.transform = `translateY(${scrollY * -0.1}px)`;
+                }
+                
+                ticking = false;
+            }
+            
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    requestAnimationFrame(updateParallax);
+                    ticking = true;
+                }
+            }, { passive: true });
+        })();
     </script>
 </body>
 </html>
