@@ -1,0 +1,492 @@
+{
+  "modules": [
+    {
+      "id": 1,
+      "title": "AI Nedir, Neden Şimdi?",
+      "questions": [
+        {
+          "q": "Yapay zeka, makine öğrenmesi ve derin öğrenme arasındaki ilişki nedir?",
+          "options": [
+            "Hepsi aynı şey, farklı isimler",
+            "Derin öğrenme en geniş kavram, diğerleri alt dalları",
+            "Yapay zeka en geniş kavram, makine öğrenmesi onun alt dalı, derin öğrenme de makine öğrenmesinin alt dalı",
+            "Makine öğrenmesi en geniş kavram"
+          ],
+          "correct": 2,
+          "explanation": "Yapay zeka en geniş şemsiye kavramdır. Makine öğrenmesi onun bir alt dalı, derin öğrenme de makine öğrenmesinin bir alt dalıdır."
+        },
+        {
+          "q": "Son 10 yılda yapay zekanın patlamasının ana nedenlerinden biri değildir?",
+          "options": [
+            "Veri bolluğu",
+            "GPU'ların gelişmesi",
+            "Açık kaynak araçlar",
+            "Quantum bilgisayarların yaygınlaşması"
+          ],
+          "correct": 3,
+          "explanation": "Quantum bilgisayarlar henüz yaygınlaşmadı. AI patlamasının nedenleri: veri bolluğu, GPU gelişimi ve açık kaynak araçlardır."
+        },
+        {
+          "q": "Hangi tür araştırma sorusu AI için EN uygun değildir?",
+          "options": [
+            "Büyük görüntü setlerinde örüntü tanıma",
+            "5 hastalık vaka serisi analizi",
+            "Subjektif değerlendirme gerektiren tanılar",
+            "Tekrarlayan pattern tanıma görevleri"
+          ],
+          "correct": 1,
+          "explanation": "5 hastalık küçük vaka serisi AI için uygun değildir. AI büyük veri setlerinde parlar."
+        },
+        {
+          "q": "CNN (Convolutional Neural Network) en çok hangi veri tipi için kullanılır?",
+          "options": [
+            "Tablo verileri",
+            "Görüntü verileri",
+            "Metin verileri",
+            "Ses verileri"
+          ],
+          "correct": 1,
+          "explanation": "CNN'ler görüntü işleme için tasarlanmıştır ve tıbbi görüntülemede altın standarttır."
+        },
+        {
+          "q": "AI içeren tıbbi makalelerin avantajı nedir?",
+          "options": [
+            "Daha az reviewer gerektirir",
+            "Etik kurul onayı gerekmez",
+            "Daha fazla atıf alır ve daha hızlı kabul edilir",
+            "Daha kısa yazılabilir"
+          ],
+          "correct": 2,
+          "explanation": "AI içeren makaleler genellikle daha fazla atıf alır ve editörlerin ilgisini çeker."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Veri - Her Şeyin Temeli",
+      "questions": [
+        {
+          "q": "'Garbage in, garbage out' deyimi neyi ifade eder?",
+          "options": [
+            "Eski modelleri çöpe atmalısınız",
+            "Veri kalitesi kötüyse sonuçlar da kötü olur",
+            "Eğitim sonrası veriyi silmelisiniz",
+            "Sadece yeni veri kullanmalısınız"
+          ],
+          "correct": 1,
+          "explanation": "Bu deyim, kötü kaliteli verinin kötü sonuçlara yol açacağını anlatır."
+        },
+        {
+          "q": "Görüntü sınıflandırma için minimum kaç görüntü önerilir (her sınıf için)?",
+          "options": [
+            "10-20",
+            "50-100",
+            "100-200",
+            "1000+"
+          ],
+          "correct": 2,
+          "explanation": "Minimum her sınıf için 100-200 görüntü önerilir, ideal olarak 500-1000."
+        },
+        {
+          "q": "Data augmentation nedir?",
+          "options": [
+            "Yeni hastalardan veri toplamak",
+            "Mevcut veriyi yapay olarak çoğaltmak (döndürme, çevirme vb.)",
+            "Veriyi silmek",
+            "Veriyi başka merkezlerden almak"
+          ],
+          "correct": 1,
+          "explanation": "Data augmentation, mevcut görüntüleri döndürme, çevirme gibi işlemlerle çoğaltarak modeli daha robust yapmaktır."
+        },
+        {
+          "q": "Inter-rater agreement neden önemlidir?",
+          "options": [
+            "Daha hızlı etiketleme için",
+            "Etiketleyicilerin tutarlılığını ölçmek için",
+            "Daha az etiketleyici kullanmak için",
+            "Otomatik etiketleme için"
+          ],
+          "correct": 1,
+          "explanation": "Inter-rater agreement, farklı etiketleyicilerin ne kadar tutarlı olduğunu gösterir ve veri kalitesinin bir göstergesidir."
+        },
+        {
+          "q": "Veri bölünmesinde (train/val/test) tipik oran nedir?",
+          "options": [
+            "50/25/25",
+            "90/5/5",
+            "70/15/15 veya 80/10/10",
+            "60/20/20"
+          ],
+          "correct": 2,
+          "explanation": "Tipik olarak 70/15/15 veya 80/10/10 oranları kullanılır."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Doğru Model Seçimi",
+      "questions": [
+        {
+          "q": "Tablo verileri için genellikle en iyi performansı veren model hangisidir?",
+          "options": [
+            "CNN",
+            "LSTM",
+            "XGBoost veya Random Forest",
+            "BERT"
+          ],
+          "correct": 2,
+          "explanation": "Tablo verilerinde XGBoost, LightGBM gibi gradient boosting modelleri genellikle en iyi performansı verir."
+        },
+        {
+          "q": "Transfer learning nedir?",
+          "options": [
+            "Modeli başka bir bilgisayara taşımak",
+            "Büyük veri setinde eğitilmiş modeli kendi verinize adapte etmek",
+            "Veriyi başka formata dönüştürmek",
+            "Sonuçları başka bir yazılıma aktarmak"
+          ],
+          "correct": 1,
+          "explanation": "Transfer learning, ImageNet gibi büyük veri setlerinde öğrenilmiş özellikleri kendi küçük veri setinize aktarmaktır."
+        },
+        {
+          "q": "Metin verileri için standart model mimarisi hangisidir?",
+          "options": [
+            "CNN",
+            "Random Forest",
+            "Transformer (BERT, GPT)",
+            "K-Nearest Neighbors"
+          ],
+          "correct": 2,
+          "explanation": "Metin işleme için Transformer mimarisi (BERT, GPT) günümüzün standardıdır."
+        },
+        {
+          "q": "ResNet modelinin özelliği nedir?",
+          "options": [
+            "Sadece küçük görüntüler için çalışır",
+            "Skip connection ile çok derin ağlar eğitmeyi mümkün kılar",
+            "Sadece tablo verileri için uygundur",
+            "Eğitim gerektirmez"
+          ],
+          "correct": 1,
+          "explanation": "ResNet, skip/residual connection sayesinde 100+ katmanlı derin ağların eğitimini mümkün kılmıştır."
+        },
+        {
+          "q": "Az veriniz varsa (<500 görüntü) transfer learning'de ne yapmalısınız?",
+          "options": [
+            "Tüm modeli sıfırdan eğitin",
+            "Sadece son katmanları eğitin, önceki katmanları dondurün",
+            "Transfer learning kullanmayın",
+            "Daha büyük model kullanın"
+          ],
+          "correct": 1,
+          "explanation": "Az veri varsa, pre-trained ağırlıkları koruyup sadece son sınıflandırma katmanlarını eğitmek en iyi stratejidir."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Model Eğitimi Temelleri",
+      "questions": [
+        {
+          "q": "Overfitting nedir?",
+          "options": [
+            "Modelin çok yavaş öğrenmesi",
+            "Modelin eğitim verisini ezberleyip yeni veride kötü performans göstermesi",
+            "Modelin hiç öğrenememesi",
+            "Eğitimin çok uzun sürmesi"
+          ],
+          "correct": 1,
+          "explanation": "Overfitting, modelin training verisini ezberleyip test verisinde kötü performans göstermesidir."
+        },
+        {
+          "q": "Hasta bazlı veri bölünmesi neden kritiktir?",
+          "options": [
+            "Daha hızlı eğitim için",
+            "Aynı hastanın görüntüleri farklı setlere dağılırsa data leakage olur",
+            "Daha az veri gerektirir",
+            "Model daha küçük olur"
+          ],
+          "correct": 1,
+          "explanation": "Aynı hastanın görüntüleri train ve test'e dağılırsa model gerçek performansını göstermez, bu data leakage'dır."
+        },
+        {
+          "q": "Early stopping ne işe yarar?",
+          "options": [
+            "Eğitimi daha hızlı başlatır",
+            "Validation loss artmaya başlayınca eğitimi durdurarak overfitting'i önler",
+            "Daha az GPU kullanır",
+            "Veriyi otomatik böler"
+          ],
+          "correct": 1,
+          "explanation": "Early stopping, validation performansı düşmeye başlayınca eğitimi durdurarak overfitting'i önler."
+        },
+        {
+          "q": "Learning rate çok yüksekse ne olur?",
+          "options": [
+            "Model çok yavaş öğrenir",
+            "Model hiç öğrenemez, loss değerleri saçma rakamlar gösterir",
+            "Eğitim çok uzun sürer",
+            "Daha iyi sonuç alınır"
+          ],
+          "correct": 1,
+          "explanation": "Çok yüksek learning rate modelin diverge etmesine, yani öğrenememesine neden olur."
+        },
+        {
+          "q": "Dropout tekniği ne yapar?",
+          "options": [
+            "Veriyi siler",
+            "Eğitim sırasında rastgele nöronları kapatarak regularization sağlar",
+            "Test setini küçültür",
+            "Learning rate'i düşürür"
+          ],
+          "correct": 1,
+          "explanation": "Dropout, eğitim sırasında rastgele nöronları kapatarak modelin tek nöronlara bağımlı olmasını önler ve overfitting'i azaltır."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Değerlendirme Metrikleri",
+      "questions": [
+        {
+          "q": "Dengesiz veri setinde (95% normal, 5% hasta) neden accuracy yanıltıcıdır?",
+          "options": [
+            "Hesaplaması zordur",
+            "Model herkese 'normal' dese %95 accuracy alır ama hiç hasta bulamaz",
+            "Sadece dengeli veride hesaplanabilir",
+            "Accuracy her zaman doğru metriktir"
+          ],
+          "correct": 1,
+          "explanation": "Dengesiz veride model çoğunluk sınıfını tahmin ederek yüksek accuracy alabilir ama asıl görevi (hasta bulmak) yapamaz."
+        },
+        {
+          "q": "Sensitivity (Recall) neyi ölçer?",
+          "options": [
+            "Model 'hasta' dediğinde gerçekten hasta olanların oranı",
+            "Gerçek hastaların yüzde kaçının doğru tespit edildiği",
+            "Gerçek sağlıklıların yüzde kaçının doğru tespit edildiği",
+            "Toplam doğru tahminlerin oranı"
+          ],
+          "correct": 1,
+          "explanation": "Sensitivity = TP/(TP+FN), yani gerçek hastaların ne kadarını yakaladığınızı gösterir."
+        },
+        {
+          "q": "AUC = 0.5 ne anlama gelir?",
+          "options": [
+            "Mükemmel model",
+            "İyi model",
+            "Rastgele tahmin (para atma gibi)",
+            "Çok kötü model"
+          ],
+          "correct": 2,
+          "explanation": "AUC = 0.5, modelin rastgele tahminden iyi olmadığını gösterir. İdeal AUC = 1.0'dır."
+        },
+        {
+          "q": "Confusion matrix'te False Negative (FN) ne demektir?",
+          "options": [
+            "Gerçekte sağlıklı, model 'hasta' dedi",
+            "Gerçekte hasta, model 'sağlıklı' dedi (kaçırılmış vaka)",
+            "Gerçekte hasta, model 'hasta' dedi",
+            "Gerçekte sağlıklı, model 'sağlıklı' dedi"
+          ],
+          "correct": 1,
+          "explanation": "FN = gerçek hastayı kaçırmak. Tıpta genellikle en tehlikeli hata budur."
+        },
+        {
+          "q": "F1-Score neyin ortalamasıdır?",
+          "options": [
+            "Accuracy ve AUC",
+            "Precision ve Recall",
+            "Sensitivity ve Specificity",
+            "Training ve Test accuracy"
+          ],
+          "correct": 1,
+          "explanation": "F1-Score, Precision ve Recall'un harmonik ortalamasıdır."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Yayına Hazırlık",
+      "questions": [
+        {
+          "q": "TRIPOD nedir?",
+          "options": [
+            "Bir derin öğrenme modeli",
+            "Tahmin modelleri için raporlama standardı/checklist",
+            "Bir dergi adı",
+            "Bir programlama dili"
+          ],
+          "correct": 1,
+          "explanation": "TRIPOD, tahmin modelleri için şeffaf raporlama standardıdır ve birçok dergi uyumluluğunu ister."
+        },
+        {
+          "q": "External validation neden şarttır?",
+          "options": [
+            "Dergiler istemez ama iyi görünür",
+            "Modelin sadece sizin veri setinizde değil, farklı ortamlarda da çalıştığını gösterir",
+            "Daha hızlı yayın için",
+            "Sadece yüksek impakt dergiler ister"
+          ],
+          "correct": 1,
+          "explanation": "External validation, modelin generalize edebildiğini, sadece kendi veri setinize overfitting olmadığını gösterir."
+        },
+        {
+          "q": "Methods section'da mutlaka belirtilmesi gereken nedir?",
+          "options": [
+            "Sadece sonuçlar",
+            "Hasta sayısı, model detayları, train/test split, hyperparameters",
+            "Sadece model ismi",
+            "Sadece accuracy değeri"
+          ],
+          "correct": 1,
+          "explanation": "Methods section reproducibility için kritiktir: veri, model, eğitim detayları, değerlendirme yöntemleri belirtilmelidir."
+        },
+        {
+          "q": "Reproducibility için ne yapmalısınız?",
+          "options": [
+            "Kodu gizli tutun",
+            "Random seed sabitleyin, kod ve versiyonları paylaşın",
+            "Sadece sonuçları paylaşın",
+            "Hiçbir şey paylaşmayın"
+          ],
+          "correct": 1,
+          "explanation": "Reproducibility için random seed, kod, yazılım versiyonları paylaşılmalı, ideal olarak Docker container sağlanmalıdır."
+        },
+        {
+          "q": "Reviewer'ların sık sorduğu soru hangisidir?",
+          "options": [
+            "Hangi bilgisayar kullandınız?",
+            "External validation nerede? Data leakage var mı?",
+            "Neden bu konuyu seçtiniz?",
+            "Kaç sayfa yazdınız?"
+          ],
+          "correct": 1,
+          "explanation": "Reviewer'lar genellikle external validation, data leakage, baseline karşılaştırma ve explainability sorar."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Yaygın Hatalar ve Çözümleri",
+      "questions": [
+        {
+          "q": "Data leakage nedir?",
+          "options": [
+            "Verinin kaybolması",
+            "Test verisinden bilginin eğitim sürecine sızması",
+            "Verinin başkalarıyla paylaşılması",
+            "Veri güvenliği ihlali"
+          ],
+          "correct": 1,
+          "explanation": "Data leakage, test verisinin bilgisinin eğitime sızmasıdır, örneğin aynı hastanın görüntüleri train ve test'e dağılırsa."
+        },
+        {
+          "q": "Imbalanced data probleminin çözümü ne değildir?",
+          "options": [
+            "Weighted loss function",
+            "Oversampling / Undersampling",
+            "Sadece accuracy raporlamak",
+            "SMOTE"
+          ],
+          "correct": 2,
+          "explanation": "Sadece accuracy raporlamak çözüm değil, aksine problemi gizler. Doğru metrikler (AUC, F1) ve class balancing teknikleri kullanılmalıdır."
+        },
+        {
+          "q": "Bir model COVID tanısını görüntüdeki yazı fontundan öğrenmişse, bu ne örneğidir?",
+          "options": [
+            "Başarılı transfer learning",
+            "Shortcut learning / spurious correlation",
+            "Good generalization",
+            "Data augmentation"
+          ],
+          "correct": 1,
+          "explanation": "Bu, modelin asıl özellik yerine alakasız bir ipucunu öğrendiği 'shortcut learning' örneğidir."
+        },
+        {
+          "q": "Explainability teknikleri neden önemlidir?",
+          "options": [
+            "Modeli hızlandırır",
+            "Modelin neden o kararı verdiğini anlamamızı sağlar, güven oluşturur",
+            "Accuracy'yi artırır",
+            "Veri toplamayı kolaylaştırır"
+          ],
+          "correct": 1,
+          "explanation": "GradCAM, SHAP gibi teknikler modelin 'neden' dediğini gösterir, bu klinik güven ve hata tespiti için kritiktir."
+        },
+        {
+          "q": "Baseline karşılaştırma neden gereklidir?",
+          "options": [
+            "Makaleyi uzatmak için",
+            "Modelinizin gerçekten değer kattığını göstermek için",
+            "Reviewer'ları mutlu etmek için",
+            "Daha fazla tablo eklemek için"
+          ],
+          "correct": 1,
+          "explanation": "Baseline olmadan %90 accuracy'nin iyi mi kötü mü olduğu anlaşılmaz. İnsan performansı veya basit modelle karşılaştırma şart."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Sonraki Adımlar",
+      "questions": [
+        {
+          "q": "Kendin yap (DIY) yaklaşımının dezavantajı nedir?",
+          "options": [
+            "Tam kontrol",
+            "Öğrenme eğrisi dik ve zaman yatırımı büyük",
+            "Maliyet düşük",
+            "Bağımlılık yok"
+          ],
+          "correct": 1,
+          "explanation": "DIY yaklaşımı kontrol ve öğrenme fırsatı sunar ama 6-12 aylık yoğun öğrenme süreci ve yüksek fırsat maliyeti gerektirir."
+        },
+        {
+          "q": "PyTorch veya TensorFlow hangi amaçla kullanılır?",
+          "options": [
+            "Veri toplama",
+            "Derin öğrenme modelleri geliştirme",
+            "Makale yazma",
+            "İstatistik hesaplama"
+          ],
+          "correct": 1,
+          "explanation": "PyTorch ve TensorFlow, derin öğrenme modelleri oluşturmak ve eğitmek için kullanılan kütüphanelerdir."
+        },
+        {
+          "q": "MONAI nedir?",
+          "options": [
+            "Bir dergi",
+            "Tıbbi görüntüleme için özel PyTorch ekosistemi",
+            "Bir hastalık",
+            "Bir istatistik yöntemi"
+          ],
+          "correct": 1,
+          "explanation": "MONAI, tıbbi görüntüleme için tasarlanmış, PyTorch tabanlı açık kaynak bir framework'tür."
+        },
+        {
+          "q": "Hibrit yaklaşım nedir?",
+          "options": [
+            "İki farklı model kullanmak",
+            "Uzman desteği alırken süreçte öğrenmek ve gelecekte bağımsızlaşmak",
+            "İki farklı veri seti kullanmak",
+            "Sadece başkalarına yaptırmak"
+          ],
+          "correct": 1,
+          "explanation": "Hibrit yaklaşımda uzman model geliştirirken siz sürece katılır, öğrenir ve sonraki projelerde daha bağımsız olursunuz."
+        },
+        {
+          "q": "Google Colab'ın avantajı nedir?",
+          "options": [
+            "Ücretli GPU",
+            "Ücretsiz GPU erişimi, başlangıç için ideal",
+            "Sadece profesyoneller kullanabilir",
+            "İnternet gerektirmez"
+          ],
+          "correct": 1,
+          "explanation": "Google Colab ücretsiz GPU erişimi sağlar ve AI'a başlayanlar için ideal bir ortamdır."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sıfırdan AI Paper'a - Diagnis AI Lab</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --bg-card: #0a0a0a;
+            --bg-elevated: #111111;
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.15);
+            --text: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #71717a;
+            --accent: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+            --green: #22c55e;
+            --red: #ef4444;
+            --yellow: #eab308;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Background Effects */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 80px 80px;
+            mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .gradient-mesh {
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 20% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 100%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 0 2rem;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--text); }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 100px 2rem 60px;
+        }
+
+        /* Course Header */
+        .course-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .course-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 100px;
+            font-size: 13px;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .course-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .course-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 40px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .progress-percent {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--bg-elevated);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Module Cards */
+        .modules-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .module-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .module-card:hover:not(.locked) {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+
+        .module-card.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .module-card.completed {
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+
+        .module-number {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .module-card.completed .module-number {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--green);
+        }
+
+        .module-card.active .module-number {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--accent);
+        }
+
+        .module-info {
+            flex: 1;
+        }
+
+        .module-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .module-meta {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        .module-status {
+            font-size: 24px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 200;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active {
+            display: block;
+        }
+
+        .modal {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-elevated);
+            border: none;
+            border-radius: 10px;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: var(--border-hover);
+        }
+
+        /* Module Content */
+        .module-content {
+            margin-bottom: 40px;
+        }
+
+        .module-section-title {
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-tertiary);
+            margin-bottom: 16px;
+        }
+
+        .video-placeholder {
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            padding: 60px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .video-placeholder svg {
+            width: 48px;
+            height: 48px;
+            color: var(--text-tertiary);
+            margin-bottom: 16px;
+        }
+
+        .video-placeholder p {
+            color: var(--text-tertiary);
+            font-size: 14px;
+        }
+
+        .content-text {
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            padding: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        .content-text h2 {
+            font-size: 18px;
+            color: var(--text);
+            margin: 24px 0 12px;
+        }
+
+        .content-text h2:first-child {
+            margin-top: 0;
+        }
+
+        .content-text p {
+            margin-bottom: 12px;
+        }
+
+        .content-text strong {
+            color: var(--text);
+        }
+
+        .mark-complete-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: var(--gradient);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: opacity 0.2s;
+        }
+
+        .mark-complete-btn:hover {
+            opacity: 0.9;
+        }
+
+        .mark-complete-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Quiz Section */
+        .quiz-section {
+            display: none;
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 1px solid var(--border);
+        }
+
+        .quiz-section.active {
+            display: block;
+        }
+
+        .quiz-question {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .quiz-option {
+            padding: 16px 20px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .quiz-option:hover:not(.disabled) {
+            border-color: var(--border-hover);
+        }
+
+        .quiz-option.selected {
+            border-color: var(--accent);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--green);
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .quiz-option.wrong {
+            border-color: var(--red);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .quiz-option.disabled {
+            cursor: not-allowed;
+        }
+
+        .quiz-explanation {
+            display: none;
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 10px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .quiz-explanation.show {
+            display: block;
+        }
+
+        .quiz-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .quiz-progress {
+            font-size: 14px;
+            color: var(--text-tertiary);
+        }
+
+        .quiz-btn {
+            padding: 12px 24px;
+            background: var(--text);
+            color: var(--bg);
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .quiz-btn:hover { opacity: 0.9; }
+        .quiz-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        /* Quiz Result */
+        .quiz-result {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .quiz-result.show {
+            display: block;
+        }
+
+        .result-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .result-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .result-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .result-score {
+            font-size: 48px;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+        }
+
+        /* Certificate */
+        .certificate-section {
+            display: none;
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        .certificate-section.show {
+            display: block;
+        }
+
+        .certificate-card {
+            background: var(--bg-card);
+            border: 2px solid var(--green);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .certificate-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .certificate-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .certificate-input {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px 16px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 16px;
+            text-align: center;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .certificate-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .certificate-btn {
+            padding: 14px 32px;
+            background: var(--gradient);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 1;
+            padding: 32px 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 14px;
+            color: var(--text-tertiary);
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 80px 1rem 40px; }
+            .modal { margin: 20px; padding: 24px; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="gradient-mesh"></div>
+
+    <header>
+        <div class="header-inner">
+            <a href="tr.html" class="logo">
+                <div class="logo-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                Diagnis AI Lab
+            </a>
+            <nav class="nav-links">
+                <a href="tr.html">Ana Sayfa</a>
+                <a href="guide-tr.html">AI Rehberi</a>
+                <a href="calculator-tr.html">Hesaplayıcı</a>
+                <a href="research-finder-tr.html">Araştırma Bulucu</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="course-header">
+            <div class="course-badge">
+                <span>🎓</span>
+                <span>Ücretsiz Kurs</span>
+            </div>
+            <h1 class="course-title">Sıfırdan AI Paper'a</h1>
+            <p class="course-subtitle">Araştırmacılar için kapsamlı yapay zeka eğitimi. 8 modül, ~2 saat, quiz'ler ve sertifika.</p>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-header">
+                <span class="progress-text">Kurs İlerlemesi</span>
+                <span class="progress-percent" id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="modules-grid" id="modulesGrid">
+            <!-- Modules will be rendered here -->
+        </div>
+
+        <div class="certificate-section" id="certificateSection">
+            <div class="certificate-card">
+                <div class="certificate-icon">🏆</div>
+                <h2 class="certificate-title">Tebrikler!</h2>
+                <p style="color: var(--text-secondary);">Kursu başarıyla tamamladınız. Sertifikanızı almak için adınızı girin:</p>
+                <input type="text" class="certificate-input" id="certificateName" placeholder="Adınız Soyadınız">
+                <br>
+                <button class="certificate-btn" onclick="generateCertificate()">Sertifikayı İndir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module Modal -->
+    <div class="modal-overlay" id="moduleModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Modül 1</h2>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+
+            <div class="module-content" id="moduleContent">
+                <p class="module-section-title">Video</p>
+                <div class="video-placeholder">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    <p>NotebookLM'den oluşturulan sesi buraya ekleyin</p>
+                </div>
+
+                <p class="module-section-title">Ders İçeriği</p>
+                <div class="content-text" id="contentText">
+                    <!-- Content loaded here -->
+                </div>
+
+                <button class="mark-complete-btn" id="markCompleteBtn" onclick="markVideoComplete()">
+                    İçeriği Okudum, Quiz'e Geç
+                </button>
+            </div>
+
+            <div class="quiz-section" id="quizSection">
+                <p class="module-section-title">Quiz</p>
+                <div id="quizContainer">
+                    <p class="quiz-question" id="quizQuestion"></p>
+                    <div class="quiz-options" id="quizOptions"></div>
+                    <div class="quiz-explanation" id="quizExplanation"></div>
+                    <div class="quiz-nav">
+                        <span class="quiz-progress" id="quizProgress">Soru 1/5</span>
+                        <button class="quiz-btn" id="nextBtn" onclick="nextQuestion()" disabled>Sonraki →</button>
+                    </div>
+                </div>
+                <div class="quiz-result" id="quizResult">
+                    <div class="result-icon" id="resultIcon">🎉</div>
+                    <h3 class="result-title" id="resultTitle">Tebrikler!</h3>
+                    <div class="result-score" id="resultScore">5/5</div>
+                    <p class="result-text" id="resultText">Sonraki modül açıldı.</p>
+                    <button class="quiz-btn" onclick="closeModal()">Devam Et</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p class="footer-text">© 2025 Diagnis AI Lab. Tüm hakları saklıdır.</p>
+    </footer>
+
+    <script>
+        // Course Data
+        const modules = [
+            { id: 1, title: "AI Nedir, Neden Şimdi?", duration: "~15 dk", file: "modul-1-ai-nedir.md" },
+            { id: 2, title: "Veri - Her Şeyin Temeli", duration: "~15 dk", file: "modul-2-veri-temelleri.md" },
+            { id: 3, title: "Doğru Model Seçimi", duration: "~15 dk", file: "modul-3-model-secimi.md" },
+            { id: 4, title: "Model Eğitimi Temelleri", duration: "~15 dk", file: "modul-4-model-egitimi.md" },
+            { id: 5, title: "Değerlendirme Metrikleri", duration: "~15 dk", file: "modul-5-metrikler.md" },
+            { id: 6, title: "Yayına Hazırlık", duration: "~15 dk", file: "modul-6-yayin-hazirligi.md" },
+            { id: 7, title: "Yaygın Hatalar ve Çözümleri", duration: "~15 dk", file: "modul-7-hatalar.md" },
+            { id: 8, title: "Sonraki Adımlar", duration: "~15 dk", file: "modul-8-sonraki-adimlar.md" }
+        ];
+
+        let quizData = null;
+        let currentModule = null;
+        let currentQuestion = 0;
+        let correctAnswers = 0;
+        let answered = false;
+
+        // Progress Management
+        function getProgress() {
+            const saved = localStorage.getItem('diagnis_course_progress');
+            return saved ? JSON.parse(saved) : { completed: [], unlocked: [1] };
+        }
+
+        function saveProgress(progress) {
+            localStorage.setItem('diagnis_course_progress', JSON.stringify(progress));
+        }
+
+        function updateProgressBar() {
+            const progress = getProgress();
+            const percent = Math.round((progress.completed.length / modules.length) * 100);
+            document.getElementById('progressPercent').textContent = percent + '%';
+            document.getElementById('progressFill').style.width = percent + '%';
+
+            if (progress.completed.length === modules.length) {
+                document.getElementById('certificateSection').classList.add('show');
+            }
+        }
+
+        // Render Modules
+        function renderModules() {
+            const progress = getProgress();
+            const grid = document.getElementById('modulesGrid');
+            
+            grid.innerHTML = modules.map(m => {
+                const isCompleted = progress.completed.includes(m.id);
+                const isUnlocked = progress.unlocked.includes(m.id);
+                const isActive = isUnlocked && !isCompleted;
+
+                let statusClass = '';
+                let statusIcon = '🔒';
+                
+                if (isCompleted) {
+                    statusClass = 'completed';
+                    statusIcon = '✅';
+                } else if (isUnlocked) {
+                    statusClass = 'active';
+                    statusIcon = '▶️';
+                } else {
+                    statusClass = 'locked';
+                }
+
+                return `
+                    <div class="module-card ${statusClass}" onclick="${isUnlocked ? `openModule(${m.id})` : ''}">
+                        <div class="module-number">${m.id}</div>
+                        <div class="module-info">
+                            <h3 class="module-title">${m.title}</h3>
+                            <span class="module-meta">${m.duration} • 5 soru</span>
+                        </div>
+                        <span class="module-status">${statusIcon}</span>
+                    </div>
+                `;
+            }).join('');
+
+            updateProgressBar();
+        }
+
+        // Load Quiz Data
+        async function loadQuizData() {
+            try {
+                const response = await fetch('course-content/quizzes.json');
+                quizData = await response.json();
+            } catch (e) {
+                console.error('Quiz data load error:', e);
+            }
+        }
+
+        // Open Module
+        async function openModule(moduleId) {
+            currentModule = moduleId;
+            currentQuestion = 0;
+            correctAnswers = 0;
+            answered = false;
+
+            const module = modules.find(m => m.id === moduleId);
+            document.getElementById('modalTitle').textContent = `Modül ${moduleId}: ${module.title}`;
+
+            // Load content
+            try {
+                const response = await fetch(`course-content/${module.file}`);
+                const text = await response.text();
+                // Simple markdown to HTML
+                const html = text
+                    .replace(/^# (.+)$/gm, '<h2>$1</h2>')
+                    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+                    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\n\n/g, '</p><p>')
+                    .replace(/^/g, '<p>')
+                    .replace(/$/g, '</p>');
+                document.getElementById('contentText').innerHTML = html;
+            } catch (e) {
+                document.getElementById('contentText').innerHTML = '<p>İçerik yüklenemedi.</p>';
+            }
+
+            // Reset UI
+            document.getElementById('moduleContent').style.display = 'block';
+            document.getElementById('quizSection').classList.remove('active');
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('quizResult').classList.remove('show');
+            document.getElementById('markCompleteBtn').disabled = false;
+
+            document.getElementById('moduleModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('moduleModal').classList.remove('active');
+            document.body.style.overflow = '';
+            renderModules();
+        }
+
+        function markVideoComplete() {
+            document.getElementById('moduleContent').style.display = 'none';
+            document.getElementById('quizSection').classList.add('active');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (!quizData) return;
+
+            const moduleQuiz = quizData.modules.find(m => m.id === currentModule);
+            if (!moduleQuiz) return;
+
+            const q = moduleQuiz.questions[currentQuestion];
+            document.getElementById('quizQuestion').textContent = q.q;
+            document.getElementById('quizProgress').textContent = `Soru ${currentQuestion + 1}/5`;
+            document.getElementById('quizExplanation').classList.remove('show');
+            document.getElementById('nextBtn').disabled = true;
+            answered = false;
+
+            const optionsHtml = q.options.map((opt, i) => `
+                <div class="quiz-option" onclick="selectOption(${i})" data-index="${i}">
+                    ${opt}
+                </div>
+            `).join('');
+            document.getElementById('quizOptions').innerHTML = optionsHtml;
+        }
+
+        function selectOption(index) {
+            if (answered) return;
+            answered = true;
+
+            const moduleQuiz = quizData.modules.find(m => m.id === currentModule);
+            const q = moduleQuiz.questions[currentQuestion];
+            const isCorrect = index === q.correct;
+
+            if (isCorrect) correctAnswers++;
+
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === q.correct) opt.classList.add('correct');
+                if (i === index && !isCorrect) opt.classList.add('wrong');
+            });
+
+            document.getElementById('quizExplanation').textContent = q.explanation;
+            document.getElementById('quizExplanation').classList.add('show');
+            document.getElementById('nextBtn').disabled = false;
+            document.getElementById('nextBtn').textContent = currentQuestion === 4 ? 'Sonuçları Gör' : 'Sonraki →';
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion >= 5) {
+                showResult();
+            } else {
+                loadQuestion();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('quizResult').classList.add('show');
+            
+            document.getElementById('resultScore').textContent = `${correctAnswers}/5`;
+
+            const passed = correctAnswers >= 4;
+            
+            if (passed) {
+                document.getElementById('resultIcon').textContent = '🎉';
+                document.getElementById('resultTitle').textContent = 'Tebrikler!';
+                document.getElementById('resultText').textContent = currentModule < 8 
+                    ? 'Sonraki modül açıldı.' 
+                    : 'Kursu tamamladınız!';
+
+                // Update progress
+                const progress = getProgress();
+                if (!progress.completed.includes(currentModule)) {
+                    progress.completed.push(currentModule);
+                }
+                if (currentModule < 8 && !progress.unlocked.includes(currentModule + 1)) {
+                    progress.unlocked.push(currentModule + 1);
+                }
+                saveProgress(progress);
+            } else {
+                document.getElementById('resultIcon').textContent = '😅';
+                document.getElementById('resultTitle').textContent = 'Tekrar Deneyin';
+                document.getElementById('resultText').textContent = 'Geçmek için en az 4/5 doğru gerekli.';
+            }
+        }
+
+        function generateCertificate() {
+            const name = document.getElementById('certificateName').value.trim();
+            if (!name) {
+                alert('Lütfen adınızı girin.');
+                return;
+            }
+
+            const today = new Date().toLocaleDateString('tr-TR');
+            
+            const certHtml = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Sertifika - ${name}</title>
+                    <style>
+                        body { font-family: Georgia, serif; text-align: center; padding: 60px; background: #fafafa; }
+                        .cert { background: white; padding: 60px; border: 3px solid #6366f1; max-width: 800px; margin: 0 auto; }
+                        h1 { font-size: 36px; color: #6366f1; margin-bottom: 10px; }
+                        h2 { font-size: 24px; font-weight: normal; color: #333; margin-bottom: 40px; }
+                        .name { font-size: 32px; font-weight: bold; color: #111; margin: 40px 0; }
+                        .course { font-size: 18px; color: #666; margin-bottom: 40px; }
+                        .date { font-size: 14px; color: #999; }
+                        .logo { font-size: 20px; font-weight: bold; color: #6366f1; margin-top: 40px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="cert">
+                        <h1>🏆 Başarı Sertifikası</h1>
+                        <h2>Bu belge</h2>
+                        <p class="name">${name}</p>
+                        <p class="course">"Sıfırdan AI Paper'a: Araştırmacılar için Pratik Rehber"<br>kursunu başarıyla tamamladığını onaylar.</p>
+                        <p class="date">Tarih: ${today}</p>
+                        <p class="logo">Diagnis AI Lab</p>
+                    </div>
+                    <script>window.print();<\/script>
+                </body>
+                </html>
+            `;
+
+            const win = window.open('', '_blank');
+            win.document.write(certHtml);
+            win.document.close();
+        }
+
+        // Initialize
+        loadQuizData();
+        renderModules();
+    </script>
+</body>
+</html>
