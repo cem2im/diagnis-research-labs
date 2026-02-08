@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: Dr. Ayşe Yılmaz – Diagnis Research Labs</title>
+    <meta name="description" content="How a gastroenterology researcher built an AI to detect early gastric lesions in just 2 weeks with Diagnis Research Labs.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg: #000000;
+            --bg-card: #0a0a0a;
+            --bg-elevated: #111111;
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.15);
+            --text: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #71717a;
+            --accent: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+        }
+
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        ::selection { background: var(--accent); color: white; }
+        a { color: inherit; text-decoration: none; }
+
+        /* Animated Grid Background */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 80px 80px;
+            mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Gradient Mesh Background */
+        .gradient-mesh {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .gradient-mesh::before,
+        .gradient-mesh::after {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            top: -25%;
+            left: -25%;
+        }
+        .gradient-mesh::before {
+            background: 
+                radial-gradient(ellipse 80% 50% at 20% 40%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 80% at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 50%);
+            animation: meshMove1 25s ease-in-out infinite;
+        }
+        @keyframes meshMove1 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            50% { transform: translate(-3%, 5%) rotate(-1deg) scale(0.98); }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 0 2rem;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: -0.01em;
+        }
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-mark svg { width: 18px; height: 18px; color: white; }
+        
+        nav { display: flex; align-items: center; gap: 32px; }
+        .nav-link {
+            font-size: 14px;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+        .nav-link:hover { color: var(--text); }
+        .nav-cta {
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            background: var(--text);
+            color: var(--bg);
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .nav-cta:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            height: 3px;
+            background: var(--gradient);
+            width: 0%;
+            z-index: 99;
+            transition: width 0.1s linear;
+        }
+
+        /* Main Content */
+        main { position: relative; z-index: 1; }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 64px 2rem 0;
+            position: relative;
+        }
+        .hero-content {
+            max-width: 900px;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent);
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        .hero h1 {
+            font-size: clamp(36px, 6vw, 64px);
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.1s forwards;
+        }
+        .hero h1 .gradient-text {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+        }
+        .researcher-intro {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.3s forwards;
+        }
+        .researcher-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+        .researcher-info {
+            text-align: left;
+        }
+        .researcher-name {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .researcher-title {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-tertiary);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.5s forwards, bounce 2s ease-in-out infinite 1s;
+        }
+        .scroll-indicator svg {
+            width: 20px;
+            height: 20px;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(8px); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 100px 2rem;
+        }
+        .timeline-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Timeline Line */
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+            transform: translateX(-50%);
+        }
+        .timeline-line-progress {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 2px;
+            height: 0;
+            background: var(--gradient);
+            transform: translateX(-50%);
+            transition: height 0.1s linear;
+        }
+
+        /* Timeline Step */
+        .step {
+            display: grid;
+            grid-template-columns: 1fr 80px 1fr;
+            gap: 32px;
+            margin-bottom: 120px;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .step.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .step:nth-child(even) .step-content {
+            grid-column: 3;
+            text-align: left;
+        }
+        .step:nth-child(even) .step-visual {
+            grid-column: 1;
+            grid-row: 1;
+        }
+        .step:nth-child(even) .step-marker {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        .step-content {
+            grid-column: 1;
+            text-align: right;
+        }
+        .step-visual {
+            grid-column: 3;
+        }
+        .step-marker {
+            grid-column: 2;
+            display: flex;
+            justify-content: center;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 2;
+        }
+        .step.visible .step-number {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .step-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+        }
+        .step-title {
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+        }
+        .step-quote {
+            font-size: 20px;
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        .step-description {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        .step-list {
+            list-style: none;
+            margin-top: 16px;
+        }
+        .step-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .step:nth-child(even) .step-list li {
+            justify-content: flex-start;
+        }
+        .step:nth-child(odd) .step-list li {
+            justify-content: flex-end;
+        }
+        .step-list li svg {
+            width: 16px;
+            height: 16px;
+            color: #22c55e;
+            flex-shrink: 0;
+        }
+
+        /* Step Visual Cards */
+        .visual-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        .visual-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+        }
+
+        /* Illustration Styles */
+        .illustration {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .illustration svg {
+            width: 160px;
+            height: 160px;
+        }
+
+        /* Animated Counter */
+        .counter-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        .counter-item {
+            text-align: center;
+            padding: 16px;
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: 12px;
+        }
+        .counter-value {
+            font-size: 32px;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .counter-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 4px;
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .metric {
+            text-align: center;
+            padding: 16px 8px;
+            background: rgba(34, 197, 94, 0.05);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #22c55e;
+        }
+        .metric-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 4px;
+        }
+
+        /* Deliverables List */
+        .deliverables {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .deliverable {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .deliverable svg {
+            width: 20px;
+            height: 20px;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        /* Result Badge */
+        .result-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #22c55e;
+            margin-bottom: 16px;
+        }
+        .result-badge svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Testimonial Section */
+        .testimonial-section {
+            padding: 120px 2rem;
+            position: relative;
+        }
+        .testimonial-inner {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .testimonial-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 64px 48px;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .testimonial-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: 20px;
+            left: 40px;
+            font-size: 120px;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0.2;
+            line-height: 1;
+        }
+        .testimonial-quote {
+            font-size: 28px;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            line-height: 1.5;
+            margin-bottom: 32px;
+            position: relative;
+            z-index: 1;
+        }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+        .testimonial-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .testimonial-info {
+            text-align: left;
+        }
+        .testimonial-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .testimonial-title {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 120px 2rem;
+            border-top: 1px solid var(--border);
+        }
+        .cta-inner {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .cta-inner.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .cta-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        .cta-title .gradient-text {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .cta-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 28px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            border: none;
+        }
+        .btn svg { width: 18px; height: 18px; }
+        .btn-primary {
+            background: var(--text);
+            color: var(--bg);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255,255,255,0.15);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            border-color: var(--border-hover);
+            background: rgba(255,255,255,0.03);
+        }
+
+        /* Footer */
+        footer {
+            padding: 32px 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+        .footer-text {
+            font-size: 14px;
+            color: var(--text-tertiary);
+        }
+        .footer-text a {
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+        .footer-text a:hover { color: var(--text); }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .step {
+                grid-template-columns: 60px 1fr;
+                gap: 24px;
+            }
+            .step-content,
+            .step:nth-child(even) .step-content {
+                grid-column: 2;
+                text-align: left;
+            }
+            .step-visual,
+            .step:nth-child(even) .step-visual {
+                grid-column: 2;
+                grid-row: 2;
+            }
+            .step-marker,
+            .step:nth-child(even) .step-marker {
+                grid-column: 1;
+                grid-row: 1 / 3;
+            }
+            .step:nth-child(odd) .step-list li,
+            .step:nth-child(even) .step-list li {
+                justify-content: flex-start;
+            }
+            .timeline-line,
+            .timeline-line-progress {
+                left: 30px;
+            }
+        }
+        @media (max-width: 768px) {
+            nav { display: none; }
+            .hero h1 { font-size: 32px; }
+            .hero-subtitle { font-size: 16px; }
+            .step-title { font-size: 22px; }
+            .step-quote { font-size: 16px; }
+            .visual-card { padding: 24px; }
+            .counter-grid { grid-template-columns: 1fr; }
+            .metrics-grid { grid-template-columns: 1fr; }
+            .testimonial-card { padding: 40px 24px; }
+            .testimonial-quote { font-size: 20px; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="gradient-mesh"></div>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <header>
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <div class="logo-mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <span>Diagnis Research Labs</span>
+            </a>
+            <nav>
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="why-ai.html" class="nav-link">Why AI?</a>
+                <a href="team.html" class="nav-link">Team</a>
+                <a href="quiz.html" class="nav-link">AI Finder</a>
+                <a href="mailto:research@diagnis.ai" class="nav-cta">Get Started</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-badge">Case Study</div>
+                <h1>From <span class="gradient-text">2,000 images</span> to a<br>published AI model</h1>
+                <p class="hero-subtitle">How a gastroenterology researcher built an AI to detect early gastric lesions — in just 2 weeks.</p>
+                <div class="researcher-intro">
+                    <div class="researcher-avatar">👩‍⚕️</div>
+                    <div class="researcher-info">
+                        <div class="researcher-name">Dr. Ayşe Yılmaz</div>
+                        <div class="researcher-title">Gastroenterology Researcher, University Hospital</div>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <span>Scroll to explore</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 5v14M19 12l-7 7-7-7"/>
+                </svg>
+            </div>
+        </section>
+
+        <!-- Timeline -->
+        <div class="timeline">
+            <div class="timeline-inner">
+                <div class="timeline-line"></div>
+                <div class="timeline-line-progress" id="timelineProgress"></div>
+
+                <!-- Step 1: The Problem -->
+                <div class="step" data-step="1">
+                    <div class="step-content">
+                        <div class="step-label">The Challenge</div>
+                        <h3 class="step-title">The Problem</h3>
+                        <p class="step-quote">"I have 2,000 endoscopy images but no AI expertise."</p>
+                        <p class="step-description">
+                            Dr. Yılmaz had spent years collecting endoscopy images of early gastric lesions. 
+                            She knew AI could help detect them earlier, but building a model seemed impossible 
+                            without a computer science background.
+                        </p>
+                    </div>
+                    <div class="step-marker">
+                        <div class="step-number">1</div>
+                    </div>
+                    <div class="step-visual">
+                        <div class="visual-card">
+                            <div class="illustration">
+                                <svg viewBox="0 0 160 160" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <!-- Frustrated researcher -->
+                                    <circle cx="80" cy="50" r="25" stroke="#a1a1aa"/>
+                                    <path d="M55 50c0-14 11-25 25-25s25 11 25 25" stroke="#a1a1aa"/>
+                                    <!-- Confused marks -->
+                                    <text x="40" y="30" font-size="20" fill="#6366f1">?</text>
+                                    <text x="115" y="25" font-size="16" fill="#8b5cf6">?</text>
+                                    <!-- Body -->
+                                    <path d="M60 75 L55 110 M100 75 L105 110" stroke="#a1a1aa"/>
+                                    <path d="M55 110 L50 140 M105 110 L110 140" stroke="#a1a1aa"/>
+                                    <!-- Image stack -->
+                                    <rect x="15" y="100" width="30" height="22" rx="2" stroke="#71717a" fill="rgba(99,102,241,0.1)"/>
+                                    <rect x="20" y="105" width="30" height="22" rx="2" stroke="#71717a" fill="rgba(99,102,241,0.1)"/>
+                                    <rect x="25" y="110" width="30" height="22" rx="2" stroke="#71717a" fill="rgba(99,102,241,0.1)"/>
+                                    <!-- Code screen -->
+                                    <rect x="100" y="95" width="45" height="35" rx="3" stroke="#ef4444" opacity="0.6"/>
+                                    <path d="M108 105 L118 112 L108 119" stroke="#ef4444" opacity="0.6"/>
+                                    <line x1="122" y1="105" x2="138" y2="105" stroke="#ef4444" opacity="0.4"/>
+                                    <line x1="122" y1="112" x2="132" y2="112" stroke="#ef4444" opacity="0.4"/>
+                                    <!-- X mark -->
+                                    <circle cx="122" cy="83" r="12" stroke="#ef4444" opacity="0.8"/>
+                                    <path d="M116 77 L128 89 M128 77 L116 89" stroke="#ef4444" opacity="0.8"/>
+                                </svg>
+                            </div>
+                            <div class="counter-grid" style="margin-top: 24px;">
+                                <div class="counter-item">
+                                    <div class="counter-value" data-target="2000">0</div>
+                                    <div class="counter-label">Images</div>
+                                </div>
+                                <div class="counter-item">
+                                    <div class="counter-value" data-target="0">0</div>
+                                    <div class="counter-label">AI Experience</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Discovery Call -->
+                <div class="step" data-step="2">
+                    <div class="step-content">
+                        <div class="step-label">First Contact</div>
+                        <h3 class="step-title">Discovery Call</h3>
+                        <p class="step-quote">"30 minutes changed everything."</p>
+                        <p class="step-description">
+                            A quick video call to understand her research goals. The Diagnis team 
+                            assessed feasibility and confirmed: yes, this was doable.
+                        </p>
+                        <ul class="step-list">
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Understood needs immediately</span>
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Feasibility confirmed in 1 day</span>
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Clear roadmap provided</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="step-marker">
+                        <div class="step-number">2</div>
+                    </div>
+                    <div class="step-visual">
+                        <div class="visual-card">
+                            <div class="illustration">
+                                <svg viewBox="0 0 160 160" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <!-- Video call frame -->
+                                    <rect x="20" y="30" width="120" height="80" rx="8" stroke="#6366f1"/>
+                                    <!-- Two people on call -->
+                                    <circle cx="55" cy="60" r="15" stroke="#a1a1aa"/>
+                                    <path d="M40 85 Q55 75 70 85" stroke="#a1a1aa"/>
+                                    <circle cx="105" cy="60" r="15" stroke="#8b5cf6"/>
+                                    <path d="M90 85 Q105 75 120 85" stroke="#8b5cf6"/>
+                                    <!-- Connection line -->
+                                    <path d="M70 60 L90 60" stroke="#22c55e" stroke-dasharray="4 4">
+                                        <animate attributeName="stroke-dashoffset" from="8" to="0" dur="0.5s" repeatCount="indefinite"/>
+                                    </path>
+                                    <!-- Timer -->
+                                    <circle cx="80" cy="130" r="18" stroke="#6366f1"/>
+                                    <path d="M80 118 L80 130 L88 130" stroke="#6366f1"/>
+                                    <text x="65" y="155" font-size="10" fill="#a1a1aa">30 min</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Data Preparation -->
+                <div class="step" data-step="3">
+                    <div class="step-content">
+                        <div class="step-label">Foundation</div>
+                        <h3 class="step-title">Data Preparation</h3>
+                        <p class="step-quote">"They handled the messy work."</p>
+                        <p class="step-description">
+                            The team took her raw image collection and transformed it into 
+                            properly structured, AI-ready data with clear annotation guidelines.
+                        </p>
+                        <ul class="step-list">
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Annotation guidance provided</span>
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Quality checks performed</span>
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Train/val/test split done</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="step-marker">
+                        <div class="step-number">3</div>
+                    </div>
+                    <div class="step-visual">
+                        <div class="visual-card">
+                            <div class="illustration">
+                                <svg viewBox="0 0 160 160" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <!-- Messy data input -->
+                                    <rect x="10" y="50" width="35" height="25" rx="2" stroke="#71717a" transform="rotate(-5 27 62)"/>
+                                    <rect x="15" y="55" width="35" height="25" rx="2" stroke="#71717a" transform="rotate(3 32 67)"/>
+                                    <rect x="20" y="60" width="35" height="25" rx="2" stroke="#71717a" transform="rotate(-2 37 72)"/>
+                                    <!-- Arrow -->
+                                    <path d="M65 70 L95 70" stroke="#6366f1" stroke-width="2"/>
+                                    <path d="M90 65 L95 70 L90 75" stroke="#6366f1" stroke-width="2" fill="none"/>
+                                    <!-- Magic sparkles -->
+                                    <circle cx="80" cy="55" r="2" fill="#8b5cf6"/>
+                                    <circle cx="85" cy="62" r="1.5" fill="#a855f7"/>
+                                    <circle cx="75" cy="78" r="1.5" fill="#6366f1"/>
+                                    <!-- Organized output -->
+                                    <rect x="105" y="40" width="40" height="25" rx="2" stroke="#22c55e"/>
+                                    <text x="115" y="56" font-size="8" fill="#22c55e">Train</text>
+                                    <rect x="105" y="70" width="40" height="25" rx="2" stroke="#f59e0b"/>
+                                    <text x="120" y="86" font-size="8" fill="#f59e0b">Val</text>
+                                    <rect x="105" y="100" width="40" height="25" rx="2" stroke="#3b82f6"/>
+                                    <text x="117" y="116" font-size="8" fill="#3b82f6">Test</text>
+                                    <!-- Percentage labels -->
+                                    <text x="148" y="56" font-size="8" fill="#a1a1aa">70%</text>
+                                    <text x="148" y="86" font-size="8" fill="#a1a1aa">15%</text>
+                                    <text x="148" y="116" font-size="8" fill="#a1a1aa">15%</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Model Development -->
+                <div class="step" data-step="4">
+                    <div class="step-content">
+                        <div class="step-label">Building</div>
+                        <h3 class="step-title">Model Development</h3>
+                        <p class="step-quote">"2 weeks of magic."</p>
+                        <p class="step-description">
+                            Weekly progress updates kept her in the loop. The model evolved 
+                            based on her clinical feedback — a true collaboration.
+                        </p>
+                        <ul class="step-list">
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Weekly update calls</span>
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Iteration on feedback</span>
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Transparent process</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="step-marker">
+                        <div class="step-number">4</div>
+                    </div>
+                    <div class="step-visual">
+                        <div class="visual-card">
+                            <div class="illustration">
+                                <svg viewBox="0 0 160 160" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <!-- Neural network nodes -->
+                                    <circle cx="30" cy="50" r="8" stroke="#6366f1" fill="rgba(99,102,241,0.1)"/>
+                                    <circle cx="30" cy="80" r="8" stroke="#6366f1" fill="rgba(99,102,241,0.1)"/>
+                                    <circle cx="30" cy="110" r="8" stroke="#6366f1" fill="rgba(99,102,241,0.1)"/>
+                                    
+                                    <circle cx="80" cy="40" r="8" stroke="#8b5cf6" fill="rgba(139,92,246,0.1)"/>
+                                    <circle cx="80" cy="70" r="8" stroke="#8b5cf6" fill="rgba(139,92,246,0.1)"/>
+                                    <circle cx="80" cy="100" r="8" stroke="#8b5cf6" fill="rgba(139,92,246,0.1)"/>
+                                    <circle cx="80" cy="130" r="8" stroke="#8b5cf6" fill="rgba(139,92,246,0.1)"/>
+                                    
+                                    <circle cx="130" cy="80" r="8" stroke="#22c55e" fill="rgba(34,197,94,0.1)"/>
+                                    
+                                    <!-- Connections with animation -->
+                                    <line x1="38" y1="50" x2="72" y2="40" stroke="#6366f1" opacity="0.4"/>
+                                    <line x1="38" y1="50" x2="72" y2="70" stroke="#6366f1" opacity="0.4"/>
+                                    <line x1="38" y1="80" x2="72" y2="70" stroke="#6366f1" opacity="0.4"/>
+                                    <line x1="38" y1="80" x2="72" y2="100" stroke="#6366f1" opacity="0.4"/>
+                                    <line x1="38" y1="110" x2="72" y2="100" stroke="#6366f1" opacity="0.4"/>
+                                    <line x1="38" y1="110" x2="72" y2="130" stroke="#6366f1" opacity="0.4"/>
+                                    
+                                    <line x1="88" y1="40" x2="122" y2="80" stroke="#8b5cf6" opacity="0.4"/>
+                                    <line x1="88" y1="70" x2="122" y2="80" stroke="#8b5cf6" opacity="0.4"/>
+                                    <line x1="88" y1="100" x2="122" y2="80" stroke="#8b5cf6" opacity="0.4"/>
+                                    <line x1="88" y1="130" x2="122" y2="80" stroke="#8b5cf6" opacity="0.4"/>
+                                    
+                                    <!-- Progress indicator -->
+                                    <rect x="25" y="145" width="110" height="6" rx="3" stroke="#71717a" fill="none"/>
+                                    <rect x="25" y="145" width="110" height="6" rx="3" fill="url(#progressGrad)">
+                                        <animate attributeName="width" from="0" to="110" dur="2s" repeatCount="indefinite"/>
+                                    </rect>
+                                    <defs>
+                                        <linearGradient id="progressGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                            <stop offset="0%" style="stop-color:#6366f1"/>
+                                            <stop offset="100%" style="stop-color:#22c55e"/>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <div class="counter-grid" style="margin-top: 24px;">
+                                <div class="counter-item">
+                                    <div class="counter-value" data-target="2">0</div>
+                                    <div class="counter-label">Weeks</div>
+                                </div>
+                                <div class="counter-item">
+                                    <div class="counter-value" data-target="4">0</div>
+                                    <div class="counter-label">Iterations</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: Validation -->
+                <div class="step" data-step="5">
+                    <div class="step-content">
+                        <div class="step-label">Proof</div>
+                        <h3 class="step-title">Validation</h3>
+                        <p class="step-quote">"Publication-ready metrics."</p>
+                        <p class="step-description">
+                            Rigorous testing produced metrics that exceeded expectations — 
+                            and met the standards of top medical journals.
+                        </p>
+                        <ul class="step-list">
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>AUC, sensitivity, specificity</span>
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Confusion matrices</span>
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Literature comparison</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="step-marker">
+                        <div class="step-number">5</div>
+                    </div>
+                    <div class="step-visual">
+                        <div class="visual-card">
+                            <div class="metrics-grid">
+                                <div class="metric">
+                                    <div class="metric-value" data-target="94">0</div>
+                                    <div class="metric-label">AUC %</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value" data-target="92">0</div>
+                                    <div class="metric-label">Sensitivity %</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value" data-target="89">0</div>
+                                    <div class="metric-label">Specificity %</div>
+                                </div>
+                            </div>
+                            <div class="illustration" style="height: 140px; margin-top: 16px;">
+                                <svg viewBox="0 0 160 100" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <!-- ROC Curve -->
+                                    <rect x="10" y="5" width="90" height="90" stroke="#71717a" fill="none"/>
+                                    <!-- Diagonal reference -->
+                                    <line x1="10" y1="95" x2="100" y2="5" stroke="#71717a" stroke-dasharray="4 4" opacity="0.5"/>
+                                    <!-- ROC curve -->
+                                    <path d="M10 95 Q30 30 50 20 Q70 12 100 5" stroke="#22c55e" stroke-width="2" fill="none"/>
+                                    <!-- AUC fill -->
+                                    <path d="M10 95 Q30 30 50 20 Q70 12 100 5 L100 95 Z" fill="rgba(34,197,94,0.1)"/>
+                                    <!-- Labels -->
+                                    <text x="50" y="98" font-size="6" fill="#71717a" text-anchor="middle">1 - Specificity</text>
+                                    <!-- Checkmark -->
+                                    <circle cx="135" cy="50" r="20" stroke="#22c55e" fill="rgba(34,197,94,0.1)"/>
+                                    <path d="M125 50 L132 57 L145 44" stroke="#22c55e" stroke-width="2"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 6: Handoff -->
+                <div class="step" data-step="6">
+                    <div class="step-content">
+                        <div class="step-label">Ownership</div>
+                        <h3 class="step-title">Handoff</h3>
+                        <p class="step-quote">"I own everything."</p>
+                        <p class="step-description">
+                            Complete transfer of all code, model weights, and documentation. 
+                            No licensing fees, no strings attached.
+                        </p>
+                        <ul class="step-list">
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Full code + model weights</span>
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Complete documentation</span>
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Deployment support</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="step-marker">
+                        <div class="step-number">6</div>
+                    </div>
+                    <div class="step-visual">
+                        <div class="visual-card">
+                            <div class="deliverables">
+                                <div class="deliverable">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                        <path d="M16 13H8M16 17H8"/>
+                                    </svg>
+                                    <span>Source Code Repository</span>
+                                </div>
+                                <div class="deliverable">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M12 6v6l4 2"/>
+                                    </svg>
+                                    <span>Trained Model Weights</span>
+                                </div>
+                                <div class="deliverable">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                                    </svg>
+                                    <span>Technical Documentation</span>
+                                </div>
+                                <div class="deliverable">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                                        <line x1="8" y1="21" x2="16" y2="21"/>
+                                        <line x1="12" y1="17" x2="12" y2="21"/>
+                                    </svg>
+                                    <span>Deployment Guide</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 7: Result -->
+                <div class="step" data-step="7">
+                    <div class="step-content">
+                        <div class="step-label">Success</div>
+                        <h3 class="step-title">The Result</h3>
+                        <p class="step-quote">"Best decision I made."</p>
+                        <p class="step-description">
+                            The paper was accepted to a leading gastroenterology journal. 
+                            The model is now in clinical pilot at her hospital.
+                        </p>
+                        <ul class="step-list">
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Paper published</span>
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Model in clinical pilot</span>
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Career milestone achieved</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="step-marker">
+                        <div class="step-number">7</div>
+                    </div>
+                    <div class="step-visual">
+                        <div class="visual-card">
+                            <div class="result-badge">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                                Accepted to Journal
+                            </div>
+                            <div class="illustration" style="height: 150px;">
+                                <svg viewBox="0 0 160 120" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <!-- Trophy -->
+                                    <path d="M50 30 L50 10 L110 10 L110 30" stroke="#f59e0b" fill="rgba(245,158,11,0.1)"/>
+                                    <path d="M50 30 Q50 70 80 80 Q110 70 110 30" stroke="#f59e0b" fill="rgba(245,158,11,0.1)"/>
+                                    <rect x="70" y="80" width="20" height="15" stroke="#f59e0b"/>
+                                    <rect x="60" y="95" width="40" height="8" rx="2" stroke="#f59e0b"/>
+                                    <!-- Trophy handles -->
+                                    <path d="M50 35 Q30 35 30 50 Q30 60 50 60" stroke="#f59e0b"/>
+                                    <path d="M110 35 Q130 35 130 50 Q130 60 110 60" stroke="#f59e0b"/>
+                                    <!-- Star -->
+                                    <path d="M80 35 L83 45 L93 45 L85 52 L88 62 L80 55 L72 62 L75 52 L67 45 L77 45 Z" stroke="#f59e0b" fill="#f59e0b"/>
+                                    <!-- Sparkles -->
+                                    <circle cx="40" cy="20" r="2" fill="#8b5cf6"/>
+                                    <circle cx="120" cy="25" r="2" fill="#6366f1"/>
+                                    <circle cx="35" cy="75" r="1.5" fill="#22c55e"/>
+                                    <circle cx="125" cy="70" r="1.5" fill="#a855f7"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Testimonial -->
+        <section class="testimonial-section">
+            <div class="testimonial-inner">
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">
+                        Working with Diagnis Research Labs was the best decision I made for my research career. 
+                        They turned my dream of using AI into reality — faster and more affordably than I ever imagined.
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">👩‍⚕️</div>
+                        <div class="testimonial-info">
+                            <div class="testimonial-name">Dr. Ayşe Yılmaz</div>
+                            <div class="testimonial-title">Gastroenterology Researcher</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-section">
+            <div class="cta-inner">
+                <h2 class="cta-title">Ready to start <span class="gradient-text">your journey</span>?</h2>
+                <p class="cta-subtitle">Join researchers who've transformed their data into published AI models.</p>
+                <div class="cta-buttons">
+                    <a href="mailto:research@diagnis.ai" class="btn btn-primary">
+                        Start Your Project
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                    <a href="quiz.html" class="btn btn-secondary">
+                        Find Your AI Model
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p class="footer-text">
+            &copy; 2024 <a href="https://diagnis.ai">Diagnis</a>. Research Labs is a division of Diagnis Medical AI.
+        </p>
+    </footer>
+
+    <script>
+        // Scroll Progress Bar
+        const progressBar = document.getElementById('progressBar');
+        const timelineProgress = document.getElementById('timelineProgress');
+        const timeline = document.querySelector('.timeline');
+
+        function updateProgress() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (scrollTop / docHeight) * 100;
+            progressBar.style.width = progress + '%';
+
+            // Timeline progress
+            if (timeline) {
+                const timelineRect = timeline.getBoundingClientRect();
+                const timelineStart = timeline.offsetTop - window.innerHeight / 2;
+                const timelineEnd = timeline.offsetTop + timeline.offsetHeight - window.innerHeight / 2;
+                const timelineScrolled = Math.max(0, Math.min(1, (scrollTop - timelineStart) / (timelineEnd - timelineStart)));
+                timelineProgress.style.height = (timelineScrolled * 100) + '%';
+            }
+        }
+
+        // Scroll Reveal
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Animate counters when visible
+                    const counters = entry.target.querySelectorAll('.counter-value, .metric-value');
+                    counters.forEach(counter => {
+                        animateCounter(counter);
+                    });
+                }
+            });
+        }, observerOptions);
+
+        // Observe all steps and sections
+        document.querySelectorAll('.step, .testimonial-card, .cta-inner').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Counter Animation
+        function animateCounter(element) {
+            const target = parseInt(element.dataset.target);
+            if (isNaN(target)) return;
+            
+            const duration = 1500;
+            const start = performance.now();
+            const startValue = 0;
+
+            function update(currentTime) {
+                const elapsed = currentTime - start;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Easing function
+                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                const currentValue = Math.floor(startValue + (target - startValue) * easeOutQuart);
+                
+                element.textContent = currentValue;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                } else {
+                    element.textContent = target;
+                }
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        // Parallax effect on scroll
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    updateProgress();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // Initial call
+        updateProgress();
+    </script>
+</body>
+</html>
