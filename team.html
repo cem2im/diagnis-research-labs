@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Team & Research | Diagnis Research Labs</title>
+    <meta name="description" content="Meet the team behind Diagnis Research Labs. Our researchers have published extensively in medical AI, endoscopy, and clinical decision support.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #1e40af;
+            --primary-light: #3b82f6;
+            --primary-dark: #1e3a8a;
+            --accent: #10b981;
+            --accent-hover: #059669;
+            --bg-white: #FFFFFF;
+            --bg-cream: #f8fafc;
+            --bg-light: #F1F5F9;
+            --text-dark: #0f172a;
+            --text-medium: #475569;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-white);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.875rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-icon svg { width: 24px; height: 24px; color: white; }
+        .logo-text { font-size: 1.25rem; font-weight: 700; color: var(--text-dark); }
+        .logo-text span { color: var(--primary); }
+        .nav { display: flex; align-items: center; gap: 2rem; }
+        .nav-link {
+            color: var(--text-medium);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-link:hover { color: var(--primary); }
+        .lang-switch { display: flex; align-items: center; gap: 0.5rem; color: var(--text-light); font-size: 0.85rem; }
+        .lang-switch a { color: var(--text-light); text-decoration: none; }
+        .lang-switch a:hover, .lang-switch a.active { color: var(--primary); }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+        .btn-primary:hover { transform: translateY(-2px); }
+
+        /* Hero */
+        .page-hero {
+            padding: 10rem 2rem 5rem;
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            text-align: center;
+            color: white;
+        }
+        .page-hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 1rem;
+        }
+        .page-hero p {
+            font-size: 1.15rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Team Section */
+        .team-section {
+            padding: 5rem 2rem;
+            background: var(--bg-cream);
+        }
+        .team-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Team Member */
+        .team-member {
+            background: white;
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+        .member-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .member-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            flex-shrink: 0;
+        }
+        .member-info h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        .member-title {
+            color: var(--text-medium);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .member-expertise {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .expertise-tag {
+            background: var(--bg-light);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Publications */
+        .publications-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .publications-title svg {
+            width: 20px;
+            height: 20px;
+            color: var(--primary);
+        }
+        .publication-list {
+            display: grid;
+            gap: 1rem;
+        }
+        .publication-card {
+            background: var(--bg-cream);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            border-left: 3px solid var(--primary);
+            transition: all 0.3s;
+        }
+        .publication-card:hover {
+            background: var(--bg-light);
+            transform: translateX(4px);
+        }
+        .publication-card h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+        .publication-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        .publication-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .publication-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+        }
+        .publication-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            background: var(--text-dark);
+            text-align: center;
+            color: rgba(255,255,255,0.7);
+        }
+        footer a { color: var(--primary-light); text-decoration: none; }
+
+        @media (max-width: 768px) {
+            .member-header { flex-direction: column; text-align: center; }
+            .member-expertise { justify-content: center; }
+            .nav { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
+                        <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
+                    </svg>
+                </div>
+                <div class="logo-text">Diagnis <span>Research Labs</span></div>
+            </a>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="team.html" class="nav-link" style="color: var(--primary);">Team</a>
+                <span class="lang-switch"><a href="team.html" class="active">EN</a> | <a href="team-tr.html">TR</a></span>
+                <a href="mailto:research@diagnis.ai" class="btn btn-primary">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <h1>Our Team & Research</h1>
+        <p>Meet the researchers behind Diagnis Research Labs. Combined 30+ peer-reviewed publications in medical AI.</p>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team-section">
+        <div class="team-inner">
+
+            <!-- Cem Simsek -->
+            <div class="team-member">
+                <div class="member-header">
+                    <div class="member-avatar">CS</div>
+                    <div class="member-info">
+                        <h2>Cem Şimşek, MD</h2>
+                        <p class="member-title">Founder & Principal Investigator</p>
+                        <p class="member-title">Associate Professor of Gastroenterology, Hacettepe University<br>Harvard Medical School / BWH Fellowship</p>
+                        <div class="member-expertise">
+                            <span class="expertise-tag">Medical AI</span>
+                            <span class="expertise-tag">Endoscopy AI</span>
+                            <span class="expertise-tag">Clinical LLMs</span>
+                            <span class="expertise-tag">Computer Vision</span>
+                            <span class="expertise-tag">Predictive Models</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="publications-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    Selected AI Publications (8 of 31+)
+                </div>
+                <div class="publication-list">
+                    <div class="publication-card">
+                        <h4>GastroGPT: Development and controlled testing of a proof-of-concept customized clinical language model</h4>
+                        <div class="publication-meta">
+                            <span>Endosc Int Open, 2025</span>
+                            <span>First Author</span>
+                        </div>
+                        <a href="https://pubmed.ncbi.nlm.nih.gov/40860687/" target="_blank" class="publication-link">View on PubMed →</a>
+                    </div>
+                    <div class="publication-card">
+                        <h4>QUAIDE - Quality assessment of AI preclinical studies in diagnostic endoscopy</h4>
+                        <div class="publication-meta">
+                            <span>Gut, 2024</span>
+                            <span>Co-Author</span>
+                        </div>
+                        <a href="https://pubmed.ncbi.nlm.nih.gov/39406471/" target="_blank" class="publication-link">View on PubMed →</a>
+                    </div>
+                    <div class="publication-card">
+                        <h4>Evaluating the Role of Artificial Intelligence in Making Clinical Decisions for Treating Acute Pancreatitis</h4>
+                        <div class="publication-meta">
+                            <span>J Clin Med, 2025</span>
+                            <span>Senior Author</span>
+                        </div>
+                        <a href="https://pubmed.ncbi.nlm.nih.gov/40566092/" target="_blank" class="publication-link">View on PubMed →</a>
+                    </div>
+                    <div class="publication-card">
+                        <h4>Virtual Reality and Augmented Reality Use Cases in Gastroenterology</h4>
+                        <div class="publication-meta">
+                            <span>Curr Gastroenterol Rep, 2025</span>
+                            <span>Co-Author</span>
+                        </div>
+                        <a href="https://pubmed.ncbi.nlm.nih.gov/39976780/" target="_blank" class="publication-link">View on PubMed →</a>
+                    </div>
+                    <div class="publication-card">
+                        <h4>Artificial intelligence method to predict overall survival of hepatocellular carcinoma</h4>
+                        <div class="publication-meta">
+                            <span>Hepatol Forum, 2021</span>
+                            <span>First Author</span>
+                        </div>
+                        <a href="https://pubmed.ncbi.nlm.nih.gov/35783900/" target="_blank" class="publication-link">View on PubMed →</a>
+                    </div>
+                    <div class="publication-card">
+                        <h4>Artificial intelligence to predict overall survivals of patients with cirrhosis and outcomes of variceal bleeding</h4>
+                        <div class="publication-meta">
+                            <span>Hepatol Forum, 2021</span>
+                            <span>First Author</span>
+                        </div>
+                        <a href="https://pubmed.ncbi.nlm.nih.gov/35783899/" target="_blank" class="publication-link">View on PubMed →</a>
+                    </div>
+                    <div class="publication-card">
+                        <h4>Training in Endoscopic Submucosal Dissection in the United States</h4>
+                        <div class="publication-meta">
+                            <span>Gastrointest Endosc Clin N Am, 2023</span>
+                            <span>First Author</span>
+                        </div>
+                        <a href="https://pubmed.ncbi.nlm.nih.gov/36375885/" target="_blank" class="publication-link">View on PubMed →</a>
+                    </div>
+                    <div class="publication-card">
+                        <h4>Novel articulating through-the-scope traction device</h4>
+                        <div class="publication-meta">
+                            <span>VideoGIE, 2022</span>
+                            <span>First Author</span>
+                        </div>
+                        <a href="https://pubmed.ncbi.nlm.nih.gov/36238810/" target="_blank" class="publication-link">View on PubMed →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ataberk Urfali -->
+            <div class="team-member">
+                <div class="member-header">
+                    <div class="member-avatar">AU</div>
+                    <div class="member-info">
+                        <h2>Ataberk Urfalı</h2>
+                        <p class="member-title">AI Research Engineer</p>
+                        <div class="member-expertise">
+                            <span class="expertise-tag">Deep Learning</span>
+                            <span class="expertise-tag">Medical Imaging</span>
+                            <span class="expertise-tag">Federated Learning</span>
+                            <span class="expertise-tag">LLMs & RAG</span>
+                            <span class="expertise-tag">PyTorch</span>
+                            <span class="expertise-tag">MONAI</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="publications-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></svg>
+                    Technical Expertise
+                </div>
+                <div class="publication-list">
+                    <div class="publication-card">
+                        <h4>Medical Image Segmentation & Classification</h4>
+                        <div class="publication-meta">
+                            <span>MONAI Framework</span>
+                            <span>PyTorch</span>
+                        </div>
+                    </div>
+                    <div class="publication-card">
+                        <h4>Federated Learning for Healthcare</h4>
+                        <div class="publication-meta">
+                            <span>Privacy-Preserving ML</span>
+                            <span>Distributed Training</span>
+                        </div>
+                    </div>
+                    <div class="publication-card">
+                        <h4>LLM Fine-tuning & RAG Systems</h4>
+                        <div class="publication-meta">
+                            <span>Clinical NLP</span>
+                            <span>Knowledge Retrieval</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="https://github.com/ataberkurfali" target="_blank" class="publication-link" style="margin-top: 1rem; display: inline-flex;">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style="margin-right: 0.5rem;"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    View GitHub Profile →
+                </a>
+            </div>
+
+            <!-- Ahmet Enes Kilic -->
+            <div class="team-member">
+                <div class="member-header">
+                    <div class="member-avatar">AK</div>
+                    <div class="member-info">
+                        <h2>Ahmet Enes Kılıç</h2>
+                        <p class="member-title">AI Research Engineer</p>
+                        <div class="member-expertise">
+                            <span class="expertise-tag">Deep Learning</span>
+                            <span class="expertise-tag">Medical Imaging</span>
+                            <span class="expertise-tag">MRI Analysis</span>
+                            <span class="expertise-tag">Computer Vision</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="publications-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    Publications
+                </div>
+                <div class="publication-list">
+                    <div class="publication-card">
+                        <h4>Evaluating artificial intelligence for a focal nodular hyperplasia diagnosis using magnetic resonance imaging: preliminary findings</h4>
+                        <div class="publication-meta">
+                            <span>Diagn Interv Radiol, 2025</span>
+                            <span>Co-Author</span>
+                        </div>
+                        <a href="https://pubmed.ncbi.nlm.nih.gov/40134285/" target="_blank" class="publication-link">View on PubMed →</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p><strong>Diagnis Research Labs</strong> — A Division of <a href="https://diagnis.ai">Diagnis Medical AI</a></p>
+        <p style="margin-top: 0.5rem; font-size: 0.85rem;">© 2026 Diagnis. All rights reserved.</p>
+    </footer>
+</body>
+</html>
