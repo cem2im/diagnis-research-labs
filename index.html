@@ -409,17 +409,49 @@
             transform: translateY(-4px);
         }
 
-        .process-number {
-            width: 40px;
-            height: 40px;
-            background: var(--gradient);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 20px;
+        .process-icon {
+            width: 56px;
+            height: 56px;
+            margin-bottom: 24px;
+            position: relative;
+        }
+        .process-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: rgba(255, 255, 255, 0.7);
+            stroke-width: 1;
+            fill: none;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
+        }
+        .process-icon svg path,
+        .process-icon svg circle,
+        .process-icon svg line,
+        .process-icon svg polyline,
+        .process-icon svg rect {
+            stroke-dasharray: 200;
+            stroke-dashoffset: 200;
+            animation: drawLine 2s ease forwards;
+        }
+        .process-card:nth-child(1) .process-icon svg * { animation-delay: 0s; }
+        .process-card:nth-child(2) .process-icon svg * { animation-delay: 0.3s; }
+        .process-card:nth-child(3) .process-icon svg * { animation-delay: 0.6s; }
+        .process-card:nth-child(4) .process-icon svg * { animation-delay: 0.9s; }
+        
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+        }
+        
+        .process-icon::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            animation: iconPulse 3s ease-in-out infinite;
+        }
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
         }
         .process-card h4 {
             font-size: 16px;
@@ -671,22 +703,46 @@
                 </div>
                 <div class="process-grid">
                     <div class="process-card">
-                        <div class="process-number">1</div>
+                        <div class="process-icon">
+                            <svg viewBox="0 0 56 56" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="24" cy="24" r="12"/>
+                                <line x1="32" y1="32" x2="44" y2="44"/>
+                                <circle cx="24" cy="24" r="4"/>
+                            </svg>
+                        </div>
                         <h4>Discovery</h4>
                         <p>30-min call to understand your research goals and data requirements</p>
                     </div>
                     <div class="process-card">
-                        <div class="process-number">2</div>
+                        <div class="process-icon">
+                            <svg viewBox="0 0 56 56" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="16 20 8 28 16 36"/>
+                                <polyline points="40 20 48 28 40 36"/>
+                                <line x1="32" y1="12" x2="24" y2="44"/>
+                            </svg>
+                        </div>
                         <h4>Development</h4>
                         <p>Model architecture selection, training, and hyperparameter optimization</p>
                     </div>
                     <div class="process-card">
-                        <div class="process-number">3</div>
+                        <div class="process-icon">
+                            <svg viewBox="0 0 56 56" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 28 L24 40 L44 16"/>
+                                <circle cx="28" cy="28" r="20"/>
+                            </svg>
+                        </div>
                         <h4>Validation</h4>
                         <p>Rigorous testing with publication-ready performance metrics</p>
                     </div>
                     <div class="process-card">
-                        <div class="process-number">4</div>
+                        <div class="process-icon">
+                            <svg viewBox="0 0 56 56" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="8" y="16" width="40" height="28" rx="2"/>
+                                <polyline points="8 24 28 36 48 24"/>
+                                <line x1="28" y1="8" x2="28" y2="16"/>
+                                <circle cx="28" cy="8" r="4"/>
+                            </svg>
+                        </div>
                         <h4>Handoff</h4>
                         <p>Complete code, documentation, and full IP transfer to you</p>
                     </div>
