@@ -3,1166 +3,1742 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diagnis Research Labs | Akademik Araştırma için Yapay Zeka Modelleri</title>
+    <title>Diagnis Research Labs – Akademik Araştırma için Özel Yapay Zeka</title>
     <meta name="description" content="Dünya standartlarında tıbbi yapay zeka uzmanlığı, akademik bütçelere uygun fiyatlarla. Araştırmacılar için özel AI model geliştirme.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         :root {
-            --primary: #1e40af;
-            --primary-light: #3b82f6;
-            --primary-dark: #1e3a8a;
-            --accent: #10b981;
-            --accent-hover: #059669;
-            --bg-white: #FFFFFF;
-            --bg-cream: #f8fafc;
-            --bg-light: #F1F5F9;
-            --text-dark: #0f172a;
-            --text-medium: #475569;
-            --text-light: #64748b;
-            --text-muted: #94a3b8;
-            --border: #e2e8f0;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
-            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
+            --bg: #000000;
+            --bg-card: #0a0a0a;
+            --bg-elevated: #111111;
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.15);
+            --text: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #71717a;
+            --accent: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
-
+        html { scroll-behavior: smooth; }
+        
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-white);
-            color: var(--text-dark);
+            background: var(--bg);
+            color: var(--text);
             line-height: 1.6;
-            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* ===== HEADER ===== */
-        .header {
+        ::selection { background: var(--accent); color: white; }
+        a { color: inherit; text-decoration: none; }
+
+        /* Animated Grid */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 80px 80px;
+            mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Animated Gradient Mesh Background */
+        .gradient-mesh {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .gradient-mesh::before,
+        .gradient-mesh::after {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            top: -25%;
+            left: -25%;
+        }
+        .gradient-mesh::before {
+            background: 
+                radial-gradient(ellipse 80% 50% at 20% 40%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 80% at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 60% at 40% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+            animation: meshMove1 25s ease-in-out infinite;
+        }
+        .gradient-mesh::after {
+            background: 
+                radial-gradient(ellipse 70% 60% at 70% 60%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 70% at 30% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 50% at 60% 70%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+            animation: meshMove2 30s ease-in-out infinite;
+        }
+        @keyframes meshMove1 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            25% { transform: translate(5%, -5%) rotate(2deg) scale(1.05); }
+            50% { transform: translate(-3%, 5%) rotate(-1deg) scale(0.98); }
+            75% { transform: translate(3%, 3%) rotate(1deg) scale(1.02); }
+        }
+        @keyframes meshMove2 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            33% { transform: translate(-5%, 3%) rotate(-2deg) scale(1.03); }
+            66% { transform: translate(4%, -4%) rotate(2deg) scale(0.97); }
+        }
+        
+        /* Aurora overlay */
+        .aurora {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+        .aurora-beam {
+            position: absolute;
+            width: 200%;
+            height: 300px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(99, 102, 241, 0.05) 20%, 
+                rgba(139, 92, 246, 0.08) 40%, 
+                rgba(168, 85, 247, 0.05) 60%, 
+                rgba(59, 130, 246, 0.06) 80%, 
+                transparent 100%
+            );
+            filter: blur(60px);
+            animation: auroraWave 20s ease-in-out infinite;
+        }
+        .aurora-beam:nth-child(1) {
+            top: 10%;
+            animation-delay: 0s;
+        }
+        .aurora-beam:nth-child(2) {
+            top: 40%;
+            animation-delay: -7s;
+            opacity: 0.6;
+        }
+        .aurora-beam:nth-child(3) {
+            top: 70%;
+            animation-delay: -14s;
+            opacity: 0.4;
+        }
+        @keyframes auroraWave {
+            0%, 100% { transform: translateX(-30%) skewX(-5deg); }
+            50% { transform: translateX(-10%) skewX(5deg); }
+        }
+
+        /* Header */
+        header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            z-index: 1000;
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
+            z-index: 100;
+            padding: 0 2rem;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
-            transition: all 0.3s ease;
         }
-
         .header-inner {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0.875rem 2rem;
+            height: 64px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            text-decoration: none;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: -0.01em;
         }
-
-        .logo-icon {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            border-radius: 12px;
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
-        .logo-icon svg {
-            width: 24px;
-            height: 24px;
-            color: white;
-        }
-
-        .logo-text {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        .logo-text span {
-            color: var(--primary);
-        }
-
-        .nav {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-
+        .logo-mark svg { width: 18px; height: 18px; color: white; }
+        
+        nav { display: flex; align-items: center; gap: 32px; }
         .nav-link {
-            color: var(--text-medium);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-secondary);
             transition: color 0.2s;
         }
-
-        .nav-link:hover {
-            color: var(--primary);
+        .nav-link:hover { color: var(--text); }
+        .nav-cta {
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            background: var(--text);
+            color: var(--bg);
+            border-radius: 8px;
+            transition: all 0.2s;
         }
+        .nav-cta:hover { opacity: 0.9; transform: translateY(-1px); }
 
         .lang-switch {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            color: var(--text-light);
-            font-size: 0.85rem;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-tertiary);
         }
-
         .lang-switch a {
-            color: var(--text-light);
-            text-decoration: none;
+            color: var(--text-tertiary);
+            transition: color 0.2s;
         }
-
         .lang-switch a:hover,
         .lang-switch a.active {
-            color: var(--primary);
+            color: var(--text);
         }
 
-        /* ===== BUTTONS ===== */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            border: none;
-            position: relative;
-            overflow: hidden;
+        /* Sections */
+        main { position: relative; z-index: 1; }
+        
+        section {
+            padding: 120px 2rem;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
+        .section-inner { max-width: 1200px; margin: 0 auto; }
 
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn-primary:hover::before {
-            left: 100%;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.4);
-        }
-
-        .btn-lg {
-            padding: 1rem 2rem;
-            font-size: 1rem;
-        }
-
-        /* ===== HERO SECTION ===== */
+        /* Hero */
         .hero {
-            position: relative;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            padding-top: 80px;
-        }
-
-        .hero-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(ellipse at 70% 20%, rgba(30, 64, 175, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 30% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
-                linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
-            z-index: 0;
-        }
-
-        .hero-pattern {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233b82f6' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            z-index: 1;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
             text-align: center;
-            color: white;
-            max-width: 900px;
-            padding: 2rem;
+            padding-top: 64px;
         }
-
-        @keyframes heroFadeInUp {
-            from { opacity: 0; transform: translateY(32px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .hero-content > * {
-            opacity: 0;
-            animation: heroFadeInUp 0.8s ease-out forwards;
-        }
-
-        .hero-content > *:nth-child(1) { animation-delay: 0.1s; }
-        .hero-content > *:nth-child(2) { animation-delay: 0.2s; }
-        .hero-content > *:nth-child(3) { animation-delay: 0.3s; }
-        .hero-content > *:nth-child(4) { animation-delay: 0.4s; }
-        .hero-content > *:nth-child(5) { animation-delay: 0.5s; }
-        .hero-content > *:nth-child(6) { animation-delay: 0.6s; }
-
+        .hero-content { max-width: 800px; }
+        
         .hero-badge {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            font-size: 0.85rem;
+            gap: 8px;
+            padding: 6px 14px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 100px;
+            font-size: 13px;
             font-weight: 500;
-            margin-bottom: 2rem;
-            backdrop-filter: blur(10px);
+            color: var(--accent);
+            margin-bottom: 32px;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
-        .hero-badge svg {
-            width: 16px;
-            height: 16px;
-        }
-
-        .hero-tagline {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2.5rem, 5vw, 4rem);
+        .hero h1 {
+            font-size: clamp(40px, 7vw, 72px);
             font-weight: 600;
-            line-height: 1.15;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.03em;
+            line-height: 1.05;
+            margin-bottom: 24px;
         }
-
-        .hero-tagline span {
-            color: var(--primary-light);
+        .hero h1 .word {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: wordReveal 0.6s ease forwards;
         }
-
-        .hero-separator {
-            width: 60px;
-            height: 2px;
-            background: linear-gradient(90deg, var(--primary-light), var(--accent));
-            margin: 2rem auto;
+        @keyframes wordReveal {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hero h1 .gradient-text {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .hero-description {
-            font-size: 1.15rem;
-            font-weight: 400;
-            opacity: 0.85;
-            max-width: 600px;
-            margin: 0 auto 2.5rem;
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 560px;
+            margin: 0 auto 40px;
             line-height: 1.7;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+            opacity: 0;
         }
 
         .hero-buttons {
             display: flex;
-            gap: 1rem;
+            gap: 16px;
             justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 4rem;
+            margin-bottom: 80px;
+            animation: fadeInUp 0.8s ease 0.3s forwards;
+            opacity: 0;
         }
 
-        .hero-btn-primary {
-            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
-            color: white;
-            padding: 1rem 2rem;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 12px;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+        .btn {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-        }
-
-        .hero-btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
-        }
-
-        .hero-btn-secondary {
-            background: rgba(255,255,255,0.08);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 1rem 2rem;
-            font-size: 1rem;
-            font-weight: 500;
+            gap: 8px;
+            padding: 14px 24px;
             border-radius: 12px;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(10px);
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            border: none;
         }
-
-        .hero-btn-secondary:hover {
-            background: rgba(255,255,255,0.15);
-            border-color: rgba(255,255,255,0.3);
+        .btn svg { width: 16px; height: 16px; }
+        
+        .btn-primary {
+            background: var(--text);
+            color: var(--bg);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255,255,255,0.15);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            border-color: var(--border-hover);
+            background: rgba(255,255,255,0.03);
         }
 
         .hero-stats {
             display: flex;
             justify-content: center;
-            gap: 4rem;
-        }
-
-        .hero-stat {
-            text-align: center;
-        }
-
-        .hero-stat-value {
-            font-size: 2rem;
-            font-weight: 800;
-            color: white;
-            line-height: 1;
-        }
-
-        .hero-stat-label {
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.6);
-            margin-top: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .hero-scroll-indicator {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 2;
+            gap: 80px;
+            animation: fadeInUp 0.8s ease 0.4s forwards;
             opacity: 0;
-            animation: heroFadeInUp 0.8s ease-out 0.8s forwards;
         }
-
-        .hero-scroll-indicator a {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            color: rgba(255,255,255,0.5);
-            text-decoration: none;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.1em;
+        .stat { text-align: center; }
+        .stat-value {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-tertiary);
             text-transform: uppercase;
-            transition: color 0.3s ease;
+            letter-spacing: 0.1em;
+            margin-top: 4px;
         }
 
-        .hero-scroll-indicator a:hover { color: rgba(255,255,255,0.8); }
-
-        .hero-scroll-indicator svg {
-            width: 24px;
-            height: 24px;
-            animation: scrollBounce 2s ease-in-out infinite;
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes scrollBounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(6px); }
-        }
-
-        /* ===== STATS BAR ===== */
-        .stats-bar {
-            background: var(--bg-cream);
+        /* Trust Logos Section */
+        .trust-section {
+            padding: 60px 2rem;
+            border-top: 1px solid var(--border);
             border-bottom: 1px solid var(--border);
-            padding: 3rem 2rem;
         }
-
-        .stats-inner {
+        .trust-inner {
             max-width: 1000px;
             margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
             text-align: center;
         }
-
-        .stat-item {
+        .trust-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 32px;
+        }
+        .trust-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 64px;
+            flex-wrap: wrap;
+        }
+        .trust-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-tertiary);
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+        .trust-logo:hover {
+            opacity: 1;
+        }
+        .trust-logo svg {
+            width: 32px;
+            height: 32px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.5;
+        }
+        .trust-logo-text {
+            white-space: nowrap;
+        }
+        
+        /* Video Demo Section */
+        .video-section {
+            padding: 100px 2rem;
+        }
+        .video-inner {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .video-card {
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .video-card:hover {
+            border-color: var(--border-hover);
+            transform: scale(1.01);
+            box-shadow: 0 24px 80px rgba(99, 102, 241, 0.15);
+        }
+        .video-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, 
+                rgba(99, 102, 241, 0.05) 0%, 
+                rgba(139, 92, 246, 0.03) 50%, 
+                rgba(168, 85, 247, 0.02) 100%
+            );
+        }
+        .video-content {
+            position: absolute;
+            inset: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            gap: 24px;
         }
-
-        .stat-icon {
-            width: 48px;
-            height: 48px;
-            margin-bottom: 1rem;
+        .play-button {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
         }
-
-        .stat-icon svg {
-            width: 100%;
-            height: 100%;
+        .video-card:hover .play-button {
+            transform: scale(1.1);
+            box-shadow: 0 12px 48px rgba(99, 102, 241, 0.4);
         }
-
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
+        .play-button svg {
+            width: 28px;
+            height: 28px;
+            color: white;
+            margin-left: 4px;
         }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--text-medium);
+        .video-text {
+            font-size: 16px;
             font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .video-card:hover .video-text {
+            color: var(--text);
+        }
+        .video-decorative-lines {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+        .video-decorative-lines::before,
+        .video-decorative-lines::after {
+            content: '';
+            position: absolute;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.2), transparent);
+            height: 1px;
+        }
+        .video-decorative-lines::before {
+            top: 25%;
+            left: 10%;
+            right: 10%;
+        }
+        .video-decorative-lines::after {
+            bottom: 25%;
+            left: 15%;
+            right: 15%;
         }
 
-        /* ===== SECTIONS ===== */
-        section {
-            padding: 6rem 2rem;
-        }
-
-        .section-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
+        /* Features */
         .section-header {
             text-align: center;
-            margin-bottom: 4rem;
+            margin-bottom: 64px;
         }
-
-        .section-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            padding: 0.5rem 1.25rem;
-            border-radius: 25px;
-            font-size: 0.85rem;
+        .section-label {
+            font-size: 13px;
             font-weight: 600;
-            margin-bottom: 1rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 16px;
         }
-
         .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(1.75rem, 4vw, 2.5rem);
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 1rem;
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
         }
-
         .section-subtitle {
-            font-size: 1.1rem;
-            color: var(--text-medium);
-            max-width: 600px;
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 560px;
             margin: 0 auto;
-        }
-
-        /* ===== FEATURES SECTION ===== */
-        .features-section {
-            background: linear-gradient(180deg, var(--bg-cream) 0%, var(--bg-light) 100%);
         }
 
         .features-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
+            gap: 1px;
+            background: var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .feature {
+            background: var(--bg);
+            padding: 48px 40px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+        .feature::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .feature:hover::before { opacity: 1; }
+        .feature:hover { transform: translateY(-4px); }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        .feature-icon svg {
+            width: 24px;
+            height: 24px;
+            color: var(--accent);
+        }
+        .feature h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .feature p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
         }
 
-        .feature-card {
-            background: white;
-            border-radius: 20px;
-            padding: 2.5rem 2rem;
-            text-align: center;
-            border: 1px solid rgba(0,0,0,0.06);
-            box-shadow: 0 4px 24px rgba(0,0,0,0.04);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Process */
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+        }
+        .process-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
         }
-
-        .feature-card::before {
+        .process-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            opacity: 0;
-            transition: opacity 0.3s;
+            height: 2px;
+            background: var(--gradient);
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+        .process-card:hover::before { transform: scaleX(1); }
+        .process-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
         }
 
-        .feature-card:hover {
-            transform: translateY(-12px);
-            box-shadow: 0 24px 48px rgba(0,0,0,0.12);
+        .process-icon {
+            width: 56px;
+            height: 56px;
+            margin-bottom: 24px;
+            position: relative;
         }
-
-        .feature-card:hover::before {
-            opacity: 1;
+        .process-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: rgba(255, 255, 255, 0.7);
+            stroke-width: 1;
+            fill: none;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
         }
-
-        .feature-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
+        .process-icon svg path,
+        .process-icon svg circle,
+        .process-icon svg line,
+        .process-icon svg polyline,
+        .process-icon svg rect {
+            stroke-dasharray: 200;
+            stroke-dashoffset: 200;
+            animation: drawLine 2s ease forwards;
         }
-
-        .feature-icon svg {
-            width: 40px;
-            height: 40px;
-            color: white;
+        .process-card:nth-child(1) .process-icon svg * { animation-delay: 0s; }
+        .process-card:nth-child(2) .process-icon svg * { animation-delay: 0.3s; }
+        .process-card:nth-child(3) .process-icon svg * { animation-delay: 0.6s; }
+        .process-card:nth-child(4) .process-icon svg * { animation-delay: 0.9s; }
+        
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
         }
-
-        .feature-card h3 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-            color: var(--text-dark);
+        
+        .process-icon::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            animation: iconPulse 3s ease-in-out infinite;
         }
-
-        .feature-card p {
-            color: var(--text-medium);
-            font-size: 0.95rem;
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        .process-card h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .process-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
             line-height: 1.6;
         }
 
-        /* ===== INCLUDED SECTION ===== */
-        .included-section {
-            background: white;
-        }
-
-        .included-content {
+        /* Pricing */
+        .pricing-grid {
             display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 4rem;
-            align-items: center;
+            grid-template-columns: 400px 1fr;
+            gap: 48px;
+            align-items: start;
         }
-
-        .included-visual {
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+        .pricing-card {
+            background: var(--gradient);
             border-radius: 24px;
-            padding: 3rem;
-            color: white;
+            padding: 48px;
             text-align: center;
             position: relative;
             overflow: hidden;
         }
-
-        .included-visual::before {
+        .pricing-card::before {
             content: '';
             position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            inset: 1px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 100%);
+            border-radius: 23px;
         }
-
-        .included-visual-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .included-visual h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
+        .pricing-card > * { position: relative; z-index: 1; }
+        .pricing-label {
+            font-size: 14px;
+            font-weight: 500;
             opacity: 0.9;
+            margin-bottom: 8px;
         }
-
-        .included-price {
-            font-size: 2.5rem;
-            font-weight: 800;
-            line-height: 1;
-            margin-bottom: 0.5rem;
+        .pricing-value {
+            font-size: 56px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
         }
-
-        .included-price-note {
-            font-size: 1rem;
+        .pricing-note {
+            font-size: 15px;
             opacity: 0.8;
         }
 
-        .included-list {
-            list-style: none;
-        }
-
+        .included-list { list-style: none; }
         .included-item {
             display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            padding: 1.25rem 0;
+            gap: 16px;
+            padding: 20px 0;
             border-bottom: 1px solid var(--border);
         }
-
-        .included-item:last-child {
-            border-bottom: none;
-        }
-
-        .included-check {
-            width: 28px;
-            height: 28px;
-            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-            border-radius: 8px;
+        .included-item:last-child { border-bottom: none; }
+        .included-icon {
+            width: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            margin-top: 2px;
         }
-
-        .included-check svg {
+        .included-icon svg {
             width: 16px;
             height: 16px;
+            stroke: rgba(255, 255, 255, 0.6);
+            stroke-width: 2;
+            fill: none;
+        }
+        .included-item:hover .included-icon svg {
+            stroke: rgba(255, 255, 255, 0.9);
+            transform: translateY(2px);
+            transition: all 0.3s ease;
+        }
+        .included-item h5 {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        .included-item p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Comparison Table */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2px;
+            background: var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .comparison-col {
+            background: var(--bg);
+            padding: 48px 40px;
+        }
+        .comparison-col.highlight {
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, var(--bg) 100%);
+        }
+        .comparison-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+        .comparison-badge {
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .comparison-badge.ours {
+            background: var(--gradient);
             color: white;
         }
-
-        .included-item h4 {
-            font-size: 1rem;
+        .comparison-badge.theirs {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        .comparison-title {
+            font-size: 18px;
             font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 0.25rem;
         }
-
-        .included-item p {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            margin: 0;
+        .comparison-list {
+            list-style: none;
         }
-
-        /* ===== PROCESS SECTION ===== */
-        .process-section {
-            background: var(--bg-cream);
+        .comparison-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
         }
-
-        .process-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            position: relative;
+        .comparison-item:last-child {
+            border-bottom: none;
         }
-
-        .process-grid::before {
-            content: '';
-            position: absolute;
-            top: 40px;
-            left: 12.5%;
-            right: 12.5%;
-            height: 2px;
-            background: linear-gradient(90deg, var(--primary-light), var(--accent));
-            z-index: 0;
-        }
-
-        .process-step {
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .process-number {
-            width: 80px;
-            height: 80px;
-            background: white;
-            border: 3px solid var(--primary-light);
-            border-radius: 50%;
+        .comparison-icon {
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1.5rem;
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--primary);
-            box-shadow: 0 4px 20px rgba(30, 64, 175, 0.15);
+            margin-top: 1px;
         }
-
-        .process-step h4 {
-            font-size: 1.1rem;
+        .comparison-icon.check svg {
+            color: #22c55e;
+        }
+        .comparison-icon.x svg {
+            color: #ef4444;
+            opacity: 0.6;
+        }
+        .comparison-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+        .comparison-text {
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        .comparison-text strong {
+            color: var(--text);
             font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
+        }
+        .comparison-text span {
+            color: var(--text-secondary);
         }
 
-        .process-step p {
-            font-size: 0.9rem;
-            color: var(--text-light);
-        }
-
-        /* ===== CTA SECTION ===== */
-        .cta-section {
-            position: relative;
-            overflow: hidden;
-            padding: 6rem 2rem;
-        }
-
-        .cta-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
-            z-index: 0;
-        }
-
-        .cta-pattern {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            z-index: 1;
-        }
-
-        .cta-inner {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            color: white;
-            max-width: 700px;
+        /* FAQ Accordion */
+        .faq-list {
+            max-width: 800px;
             margin: 0 auto;
         }
-
-        .cta-inner h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .cta-inner p {
-            font-size: 1.15rem;
-            opacity: 0.9;
-            margin-bottom: 2rem;
-        }
-
-        .cta-btn {
-            background: white;
-            color: var(--primary);
-            padding: 1rem 2.5rem;
-            font-size: 1rem;
-            font-weight: 600;
+        .faq-item {
+            border: 1px solid var(--border);
             border-radius: 12px;
-            text-decoration: none;
-            display: inline-flex;
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .faq-item:hover {
+            border-color: var(--border-hover);
+        }
+        .faq-item.active {
+            border-color: rgba(99, 102, 241, 0.3);
+            background: rgba(99, 102, 241, 0.03);
+        }
+        .faq-question {
+            width: 100%;
+            display: flex;
             align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            justify-content: space-between;
+            padding: 20px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text);
+            transition: all 0.2s;
+        }
+        .faq-question:hover {
+            color: var(--text);
+        }
+        .faq-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .faq-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--text-secondary);
+            stroke-width: 2;
+        }
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s;
+        }
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+        }
+        .faq-answer-inner {
+            padding: 0 24px 24px;
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--text-secondary);
         }
 
-        .cta-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        @media (max-width: 768px) {
+            .comparison-grid { grid-template-columns: 1fr; }
+            .comparison-col { padding: 32px 24px; }
+            .faq-question { padding: 16px 20px; font-size: 15px; }
+            .faq-answer-inner { padding: 0 20px 20px; }
         }
 
-        /* ===== FOOTER ===== */
+        /* CTA */
+        .cta {
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+        .cta-content { max-width: 560px; margin: 0 auto; }
+        .cta h2 {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        .cta p {
+            font-size: 17px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        /* Footer */
         footer {
-            padding: 3rem 2rem;
-            background: var(--text-dark);
+            padding: 32px 2rem;
+            border-top: 1px solid var(--border);
             text-align: center;
         }
-
-        .footer-brand {
-            font-size: 1rem;
-            color: rgba(255,255,255,0.9);
-            margin-bottom: 0.5rem;
+        .footer-text {
+            font-size: 14px;
+            color: var(--text-tertiary);
         }
-
-        .footer-brand a {
-            color: var(--primary-light);
-            text-decoration: none;
+        .footer-text a {
+            color: var(--text-secondary);
+            transition: color 0.2s;
         }
+        .footer-text a:hover { color: var(--text); }
 
-        .footer-copy {
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.5);
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .features-grid { grid-template-columns: 1fr; }
+            .process-grid { grid-template-columns: repeat(2, 1fr); }
+            .pricing-grid { grid-template-columns: 1fr; }
         }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 968px) {
-            .features-grid {
-                grid-template-columns: 1fr;
-                max-width: 400px;
-                margin: 0 auto;
-            }
-            .included-content {
-                grid-template-columns: 1fr;
-            }
-            .stats-inner {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .process-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .process-grid::before {
-                display: none;
-            }
-            .hero-stats {
-                gap: 2rem;
-            }
-            .nav {
-                display: none;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .hero-stats {
-                flex-direction: column;
-                gap: 1.5rem;
-            }
-            .process-grid {
-                grid-template-columns: 1fr;
-            }
+        @media (max-width: 768px) {
+            nav { display: none; }
+            section { padding: 80px 1.5rem; }
+            .hero-stats { flex-direction: column; gap: 32px; }
+            .hero-buttons { flex-direction: column; align-items: center; }
+            .process-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <!-- HEADER -->
-    <header class="header">
+    <div class="grid-bg"></div>
+    <div class="gradient-mesh"></div>
+    <div class="aurora">
+        <div class="aurora-beam"></div>
+        <div class="aurora-beam"></div>
+        <div class="aurora-beam"></div>
+    </div>
+
+    <header>
         <div class="header-inner">
-            <a href="/" class="logo">
-                <div class="logo-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
-                        <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
+            <a href="tr.html" class="logo">
+                <div class="logo-mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
                     </svg>
                 </div>
-                <div class="logo-text">Diagnis <span>Research Labs</span></div>
+                <span>Diagnis Research Labs</span>
             </a>
-            <nav class="nav">
+            <nav>
                 <a href="why-ai-tr.html" class="nav-link">Neden AI?</a>
-                <a href="#features" class="nav-link">Neden Biz</a>
+                <a href="#features" class="nav-link">Özellikler</a>
+                <a href="#process" class="nav-link">Süreç</a>
                 <a href="team-tr.html" class="nav-link">Ekip</a>
-                <a href="#included" class="nav-link">Hizmetler</a>
-                <a href="ai-quiz-tr.html" class="nav-link">🧠 AI Testi</a>
+                <a href="quiz-tr.html" class="nav-link">AI Bulucu</a>
                 <div class="lang-switch">
                     <a href="index.html">EN</a> | <a href="tr.html" class="active">TR</a>
                 </div>
-                <a href="mailto:research@diagnis.ai" class="btn btn-primary">Başlayın</a>
+                <a href="mailto:research@diagnis.ai" class="nav-cta">Başlayın</a>
             </nav>
         </div>
     </header>
 
-    <!-- HERO -->
-    <section class="hero">
-        <div class="hero-bg"></div>
-        <div class="hero-pattern"></div>
-        <div class="hero-content">
-            <div class="hero-badge">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                Diagnis Medical AI'ın bir bölümü
-            </div>
-            <h1 class="hero-tagline">Akademik Araştırma için<br>Özel <span>Yapay Zeka</span> Modelleri</h1>
-            <div class="hero-separator"></div>
-            <p class="hero-description">
-                Dünya standartlarında tıbbi yapay zeka uzmanlığı, akademik bütçelere uygun fiyatlarla.<br>
-                Araştırmanız için eğitilmiş, doğrulanmış model — aylar değil, haftalar içinde.
-            </p>
-            <div class="hero-buttons">
-                <a href="quiz.html" class="hero-btn-primary">
-                    AI Model Bul
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </a>
-                <a href="#included" class="hero-btn-secondary">Detayları Görün</a>
-            </div>
-            <div class="hero-stats">
-                <div class="hero-stat">
-                    <div class="hero-stat-value">Hızlı</div>
-                    <div class="hero-stat-label">Aylar Değil Haftalar</div>
+    <main>
+        <section class="hero visible">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    Diagnis Medical AI'ın bir bölümü
                 </div>
-                <div class="hero-stat">
-                    <div class="hero-stat-value">Uygun</div>
-                    <div class="hero-stat-label">Akademik Fiyatlar</div>
+                <h1>Akademik araştırma için<br>özel <span class="gradient-text">AI modelleri</span></h1>
+                <p class="hero-description">Dünya standartlarında tıbbi yapay zeka uzmanlığı, akademik bütçelere uygun fiyatlarla. Araştırmanız için eğitilmiş, doğrulanmış model — aylar değil, haftalar içinde.</p>
+                <div class="hero-buttons">
+                    <a href="quiz-tr.html" class="btn btn-primary">
+                        AI modelinizi bulun
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                    <a href="#features" class="btn btn-secondary">Daha fazla bilgi</a>
                 </div>
-                <div class="hero-stat">
-                    <div class="hero-stat-value">%100</div>
-                    <div class="hero-stat-label">IP Size Ait</div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-value">30+</div>
+                        <div class="stat-label">Yayın</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">2–4</div>
+                        <div class="stat-label">Hafta</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">100%</div>
+                        <div class="stat-label">IP Sizin</div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="hero-scroll-indicator">
-            <a href="#stats">
-                <span>Aşağı Kaydır</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-            </a>
-        </div>
-    </section>
+        </section>
 
-    <!-- STATS BAR -->
-    <section class="stats-bar" id="stats">
-        <div class="stats-inner">
-            <div class="stat-item">
-                <div class="stat-icon">
-                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="24" cy="14" r="6" stroke="#1e40af" stroke-width="2.5"/>
-                        <path d="M12 38C12 30 17 26 24 26C31 26 36 30 36 38" stroke="#1e40af" stroke-width="2.5" stroke-linecap="round"/>
-                        <circle cx="38" cy="16" r="4" stroke="#1e40af" stroke-width="2"/>
-                        <path d="M40 38C40 32 38 28 34 27" stroke="#1e40af" stroke-width="2" stroke-linecap="round"/>
-                        <circle cx="10" cy="16" r="4" stroke="#1e40af" stroke-width="2"/>
-                        <path d="M8 38C8 32 10 28 14 27" stroke="#1e40af" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                </div>
-                <div class="stat-value">Uzman Ekip</div>
-                <div class="stat-label">Deneyimli Mühendisler</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-icon">
-                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="24" cy="24" r="16" stroke="#1e40af" stroke-width="2.5"/>
-                        <path d="M24 14V24L30 28" stroke="#1e40af" stroke-width="2.5" stroke-linecap="round"/>
-                    </svg>
-                </div>
-                <div class="stat-value">Hızlı Teslimat</div>
-                <div class="stat-label">Aylar Değil Haftalar</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-icon">
-                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M24 8L8 16V32L24 40L40 32V16L24 8Z" stroke="#1e40af" stroke-width="2.5" stroke-linejoin="round"/>
-                        <path d="M24 24V40" stroke="#1e40af" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M8 16L24 24L40 16" stroke="#1e40af" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M20 20L16 22" stroke="#1e40af" stroke-width="1.5" stroke-linecap="round"/>
-                    </svg>
-                </div>
-                <div class="stat-value">FDA Seviyesi</div>
-                <div class="stat-label">Deneyim</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-icon">
-                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="24" cy="24" r="16" stroke="#1e40af" stroke-width="2.5"/>
-                        <path d="M16 24C16 20 20 16 24 16" stroke="#1e40af" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M32 24C32 28 28 32 24 32" stroke="#1e40af" stroke-width="2" stroke-linecap="round"/>
-                        <circle cx="24" cy="24" r="4" stroke="#1e40af" stroke-width="2"/>
-                    </svg>
-                </div>
-                <div class="stat-value">Global</div>
-                <div class="stat-label">Akademik Ağ</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FEATURES -->
-    <section class="features-section" id="features">
-        <div class="section-inner">
-            <div class="section-header">
-                <div class="section-badge">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-                    Neden Araştırmacılar Bizi Seçiyor
-                </div>
-                <h2 class="section-title">Kurumsal Fiyat Etiketi Olmadan AI Uzmanlığı</h2>
-                <p class="section-subtitle">Endoskopi için dünyanın ilk gerçek zamanlı AI koçluk sistemi SCAI'nin yaratıcısı Diagnis'ten doğdu.</p>
-            </div>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/>
-                            <path d="M12 18V6"/>
+        <section class="trust-section visible">
+            <div class="trust-inner">
+                <div class="trust-label">Ekibimiz bu kurumlarda eğitim aldı</div>
+                <div class="trust-logos">
+                    <div class="trust-logo">
+                        <svg viewBox="0 0 32 32" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="4" y="8" width="24" height="18" rx="2"/>
+                            <path d="M4 14h24"/>
+                            <path d="M12 8V6a4 4 0 0 1 8 0v2"/>
+                            <circle cx="16" cy="20" r="2"/>
                         </svg>
+                        <span class="trust-logo-text">Harvard Tıp Fakültesi</span>
                     </div>
-                    <h3>Uygun Fiyat</h3>
-                    <p>Akademik bütçelere uygun fiyatlandırma — geleneksel danışmanlık firmalarının aksine. Araştırma bütçeleri için tasarlandı.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                    <div class="trust-logo">
+                        <svg viewBox="0 0 32 32" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4L4 10v12l12 6 12-6V10L16 4z"/>
+                            <path d="M16 16v12"/>
+                            <path d="M4 10l12 6 12-6"/>
                         </svg>
+                        <span class="trust-logo-text">Hacettepe Üniversitesi</span>
                     </div>
-                    <h3>Hızlı</h3>
-                    <p>2-4 hafta teslimat. Çığır açan araştırmanız AI yetenekleri için 6+ ay beklemek zorunda değil.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
-                            <polyline points="14 2 14 8 20 8"/>
-                            <line x1="16" y1="13" x2="8" y2="13"/>
-                            <line x1="16" y1="17" x2="8" y2="17"/>
-                            <line x1="10" y1="9" x2="8" y2="9"/>
+                    <div class="trust-logo">
+                        <svg viewBox="0 0 32 32" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4v4"/>
+                            <circle cx="16" cy="12" r="4"/>
+                            <path d="M8 28v-6a8 8 0 0 1 16 0v6"/>
+                            <path d="M4 28h24"/>
                         </svg>
-                    </div>
-                    <h3>Yayına Hazır</h3>
-                    <p>Yayın için inşa edildi. IRB gereksinimlerini, doğrulama standartlarını ve tekrarlanabilirliği anlıyoruz.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- PROCESS -->
-    <section class="process-section" id="process">
-        <div class="section-inner">
-            <div class="section-header">
-                <div class="section-badge">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                    Nasıl Çalışır
-                </div>
-                <h2 class="section-title">Fikirden Yayına</h2>
-                <p class="section-subtitle">Akademik zaman çizelgeleri için tasarlanmış akıcı bir süreç.</p>
-            </div>
-
-            <div class="process-grid">
-                <div class="process-step">
-                    <div class="process-number">1</div>
-                    <h4>Keşif</h4>
-                    <p>Araştırma hedeflerinizi ve verilerinizi anlamak için 30 dk görüşme</p>
-                </div>
-                <div class="process-step">
-                    <div class="process-number">2</div>
-                    <h4>Geliştirme</h4>
-                    <p>Model mimarisi, eğitim ve optimizasyon</p>
-                </div>
-                <div class="process-step">
-                    <div class="process-number">3</div>
-                    <h4>Doğrulama</h4>
-                    <p>Yayına hazır metriklerle titiz test</p>
-                </div>
-                <div class="process-step">
-                    <div class="process-number">4</div>
-                    <h4>Teslim</h4>
-                    <p>Tam kod, dokümantasyon ve IP transferi</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- WHAT'S INCLUDED -->
-    <section class="included-section" id="included">
-        <div class="section-inner">
-            <div class="included-content">
-                <div class="included-visual">
-                    <div class="included-visual-content">
-                        <h3>Her Proje İçerir</h3>
-                        <div class="included-price">Tam Hizmet</div>
-                        <div class="included-price-note">Uçtan uca AI geliştirme</div>
+                        <span class="trust-logo-text">Brigham and Women's Hospital</span>
                     </div>
                 </div>
-                
-                <div>
-                    <h2 class="section-title" style="text-align: left; margin-bottom: 2rem;">Neler Dahil</h2>
+            </div>
+        </section>
+
+        <section id="features">
+            <div class="section-inner">
+                <div class="section-header">
+                    <div class="section-label">Neden biz</div>
+                    <h2 class="section-title">Kurumsal fiyat etiketi olmadan<br>yapay zeka uzmanlığı</h2>
+                    <p class="section-subtitle">Endoskopi için dünyanın ilk gerçek zamanlı AI koçluk sistemi SCAI'nin yaratıcısı Diagnis'ten doğdu.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/>
+                                <path d="M12 18V6"/>
+                            </svg>
+                        </div>
+                        <h3>Uygun Fiyat</h3>
+                        <p>Akademik bütçelere uygun fiyatlandırma — geleneksel danışmanlık firmaları gibi $50.000+ değil. Araştırma bütçeleri için tasarlandı.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                            </svg>
+                        </div>
+                        <h3>Hızlı</h3>
+                        <p>2–4 hafta teslimat. Çığır açan araştırmanız AI yetenekleri için 6+ ay beklemek zorunda değil.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10 9 9 9 8 9"/>
+                            </svg>
+                        </div>
+                        <h3>Yayına Hazır</h3>
+                        <p>Yayın için tasarlandı. IRB gereksinimlerini, doğrulama standartlarını ve tekrarlanabilirliği anlıyoruz.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="video-section">
+            <div class="video-inner">
+                <div class="video-card">
+                    <div class="video-decorative-lines"></div>
+                    <div class="video-content">
+                        <div class="play-button">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5.14v14l11-7-11-7z"/>
+                            </svg>
+                        </div>
+                        <span class="video-text">Nasıl çalıştığını görün</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="process">
+            <div class="section-inner">
+                <div class="section-header">
+                    <div class="section-label">Nasıl çalışır</div>
+                    <h2 class="section-title">Fikirden yayına</h2>
+                    <p class="section-subtitle">Akademik zaman çizelgeleri için tasarlanmış akıcı bir süreç.</p>
+                </div>
+                <div class="process-grid">
+                    <div class="process-card">
+                        <div class="process-icon">
+                            <svg viewBox="0 0 56 56" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="24" cy="24" r="12"/>
+                                <line x1="32" y1="32" x2="44" y2="44"/>
+                                <circle cx="24" cy="24" r="4"/>
+                            </svg>
+                        </div>
+                        <h4>Keşif</h4>
+                        <p>Araştırma hedeflerinizi ve veri gereksinimlerinizi anlamak için 30 dakikalık görüşme</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-icon">
+                            <svg viewBox="0 0 56 56" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="16 20 8 28 16 36"/>
+                                <polyline points="40 20 48 28 40 36"/>
+                                <line x1="32" y1="12" x2="24" y2="44"/>
+                            </svg>
+                        </div>
+                        <h4>Geliştirme</h4>
+                        <p>Model mimarisi seçimi, eğitim ve hiperparametre optimizasyonu</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-icon">
+                            <svg viewBox="0 0 56 56" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 28 L24 40 L44 16"/>
+                                <circle cx="28" cy="28" r="20"/>
+                            </svg>
+                        </div>
+                        <h4>Doğrulama</h4>
+                        <p>Yayına hazır performans metrikleriyle titiz test</p>
+                    </div>
+                    <div class="process-card">
+                        <div class="process-icon">
+                            <svg viewBox="0 0 56 56" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="8" y="16" width="40" height="28" rx="2"/>
+                                <polyline points="8 24 28 36 48 24"/>
+                                <line x1="28" y1="8" x2="28" y2="16"/>
+                                <circle cx="28" cy="8" r="4"/>
+                            </svg>
+                        </div>
+                        <h4>Teslim</h4>
+                        <p>Tam kod, dokümantasyon ve tam fikri mülkiyet transferi</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="pricing">
+            <div class="section-inner">
+                <div class="section-header">
+                    <div class="section-label">Fiyatlandırma</div>
+                    <h2 class="section-title">Neler dahil</h2>
+                </div>
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <div class="pricing-label">Her projede</div>
+                        <div class="pricing-value">Tam Hizmet</div>
+                        <div class="pricing-note">Uçtan uca AI geliştirme</div>
+                    </div>
                     <ul class="included-list">
                         <li class="included-item">
-                            <div class="included-check">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <div class="included-icon">
+                                <svg viewBox="0 0 24 24"><path d="M12 4v12m0 0l-4-4m4 4l4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </div>
                             <div>
-                                <h4>Keşif & Fizibilite</h4>
+                                <h5>Keşif ve fizibilite değerlendirmesi</h5>
                                 <p>Araştırma hedeflerinizi ve verilerinizi anlamak için ilk danışma</p>
                             </div>
                         </li>
                         <li class="included-item">
-                            <div class="included-check">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <div class="included-icon">
+                                <svg viewBox="0 0 24 24"><path d="M12 4v12m0 0l-4-4m4 4l4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </div>
                             <div>
-                                <h4>Veri Pipeline Kurulumu</h4>
-                                <p>Ön işleme, veri artırma ve doğrulama bölümleri</p>
+                                <h5>Veri hattı ve ön işleme</h5>
+                                <p>Veri temizleme, artırma ve eğitim/doğrulama/test bölümleri</p>
                             </div>
                         </li>
                         <li class="included-item">
-                            <div class="included-check">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <div class="included-icon">
+                                <svg viewBox="0 0 24 24"><path d="M12 4v12m0 0l-4-4m4 4l4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </div>
                             <div>
-                                <h4>Model Eğitimi & Ayarlama</h4>
-                                <p>Mimari seçimi, hiperparametre optimizasyonu</p>
+                                <h5>Model eğitimi ve optimizasyonu</h5>
+                                <p>Mimari seçimi ve hiperparametre ayarı</p>
                             </div>
                         </li>
                         <li class="included-item">
-                            <div class="included-check">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <div class="included-icon">
+                                <svg viewBox="0 0 24 24"><path d="M12 4v12m0 0l-4-4m4 4l4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </div>
                             <div>
-                                <h4>Doğrulama & Metrikler</h4>
-                                <p>Yayına hazır performans metrikleriyle titiz değerlendirme</p>
+                                <h5>Doğrulama ve yayın metrikleri</h5>
+                                <p>Standart tıbbi AI kıyaslamalarıyla titiz değerlendirme</p>
                             </div>
                         </li>
                         <li class="included-item">
-                            <div class="included-check">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <div class="included-icon">
+                                <svg viewBox="0 0 24 24"><path d="M12 4v12m0 0l-4-4m4 4l4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </div>
                             <div>
-                                <h4>Dokümantasyon & Teslim</h4>
-                                <p>Tam kod, dokümantasyon ve deployment rehberi</p>
-                            </div>
-                        </li>
-                        <li class="included-item">
-                            <div class="included-check">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                            <div>
-                                <h4>Tam IP Transferi</h4>
-                                <p>Her şey sizin — kod, model ağırlıkları, dokümantasyon</p>
+                                <h5>Tam IP transferi ve dokümantasyon</h5>
+                                <p>Her şey sizin — kod, ağırlıklar ve deployment rehberleri</p>
                             </div>
                         </li>
                     </ul>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- CTA -->
-    <section class="cta-section">
-        <div class="cta-bg"></div>
-        <div class="cta-pattern"></div>
-        <div class="cta-inner">
-            <h2>Araştırmanızı Hızlandırmaya Hazır mısınız?</h2>
-            <p>Ücretsiz 30 dakikalık keşif görüşmesi ayırtın. Taahhüt yok.</p>
-            <a href="mailto:research@diagnis.ai?subject=Keşif Görüşmesi Talebi" class="cta-btn">
-                Görüşme Ayarla
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-        </div>
-    </section>
+        <section id="comparison">
+            <div class="section-inner">
+                <div class="section-header">
+                    <div class="section-label">Karşılaştır</div>
+                    <h2 class="section-title">Biz vs Geleneksel Danışmanlık</h2>
+                    <p class="section-subtitle">Araştırmacıların neden Diagnis Research Labs'ı seçtiğini görün.</p>
+                </div>
+                <div class="comparison-grid">
+                    <div class="comparison-col highlight">
+                        <div class="comparison-header">
+                            <span class="comparison-badge ours">Diagnis Research Labs</span>
+                        </div>
+                        <ul class="comparison-list">
+                            <li class="comparison-item">
+                                <div class="comparison-icon check">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                </div>
+                                <div class="comparison-text"><strong>$3–8K</strong> <span>· Akademik uygun fiyatlandırma</span></div>
+                            </li>
+                            <li class="comparison-item">
+                                <div class="comparison-icon check">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                </div>
+                                <div class="comparison-text"><strong>2–4 hafta</strong> <span>· Hızlı teslimat</span></div>
+                            </li>
+                            <li class="comparison-item">
+                                <div class="comparison-icon check">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                </div>
+                                <div class="comparison-text"><strong>Tam IP sizin</strong> <span>· Tam sahiplik</span></div>
+                            </li>
+                            <li class="comparison-item">
+                                <div class="comparison-icon check">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                </div>
+                                <div class="comparison-text"><strong>Yayın odaklı</strong> <span>· Makaleler için tasarlandı</span></div>
+                            </li>
+                            <li class="comparison-item">
+                                <div class="comparison-icon check">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                </div>
+                                <div class="comparison-text"><strong>Doğrudan uzman erişimi</strong> <span>· Ekiple çalışın</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="comparison-col">
+                        <div class="comparison-header">
+                            <span class="comparison-badge theirs">Geleneksel Danışmanlık</span>
+                        </div>
+                        <ul class="comparison-list">
+                            <li class="comparison-item">
+                                <div class="comparison-icon x">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                </div>
+                                <div class="comparison-text"><strong>$50K+</strong> <span>· Kurumsal fiyatlandırma</span></div>
+                            </li>
+                            <li class="comparison-item">
+                                <div class="comparison-icon x">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                </div>
+                                <div class="comparison-text"><strong>6+ ay</strong> <span>· Uzun zaman çizelgeleri</span></div>
+                            </li>
+                            <li class="comparison-item">
+                                <div class="comparison-icon x">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                </div>
+                                <div class="comparison-text"><strong>Karmaşık IP koşulları</strong> <span>· Hukuki engeller</span></div>
+                            </li>
+                            <li class="comparison-item">
+                                <div class="comparison-icon x">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                </div>
+                                <div class="comparison-text"><strong>Jenerik yaklaşım</strong> <span>· Herkese aynı kalıp</span></div>
+                            </li>
+                            <li class="comparison-item">
+                                <div class="comparison-icon x">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                </div>
+                                <div class="comparison-text"><strong>Müşteri temsilcileri</strong> <span>· Katmanlı bürokrasi</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <!-- FOOTER -->
+        <section id="faq">
+            <div class="section-inner">
+                <div class="section-header">
+                    <div class="section-label">SSS</div>
+                    <h2 class="section-title">Sık sorulan sorular</h2>
+                    <p class="section-subtitle">Bizimle çalışma hakkında bilmeniz gereken her şey.</p>
+                </div>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Hangi tür AI modelleri geliştirebiliyorsunuz?
+                            <span class="faq-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                Tıbbi görüntüleme AI'da uzmanız — sınıflandırma, tespit, segmentasyon ve tahmin modelleri. Bu, radyoloji (X-ray, BT, MR), patoloji, dermatoloji, oftalmoloji ve endoskopiyi kapsar. Ayrıca yapılandırılmış klinik veriler, zaman serileri ve çoklu veri setleriyle de çalışabiliriz.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Fiyatlandırma nasıl çalışıyor?
+                            <span class="faq-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                Projeler genellikle karmaşıklık, veri seti boyutu ve model gereksinimlerine bağlı olarak $3.000-$8.000 arasında değişir. Keşif görüşmemizden sonra sabit bir teklif sunuyoruz — sürpriz yok. Ödeme, akademik fatura döngülerine uyacak şekilde yapılandırılabilir.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Fikri mülkiyet kime ait?
+                            <span class="faq-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                Size ait. %100. Proje tamamlandığında eğitilmiş model, kaynak kod ve dokümantasyon için tüm hakları size devrediyoruz. Yayınlamak, patent almak, ticarileştirmek veya paylaşmak tamamen size kalmış — lisans ücreti veya devam eden yükümlülük yok.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Hangi verileri sağlamam gerekiyor?
+                            <span class="faq-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                Araştırma sorunuzla ilgili etiketlenmiş bir veri setine ihtiyacınız olacak. Keşif görüşmemiz sırasında minimum örneklem boyutları hakkında tavsiye verebiliriz. Veriler şifreli kanallar aracılığıyla güvenli bir şekilde aktarılabilir ve kurumunuzun veri yönetim gereksinimleri dahilinde çalışıyoruz.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Makalenin yöntemler bölümüne yardımcı olabilir misiniz?
+                            <span class="faq-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                Kesinlikle. Model mimarisi, eğitim prosedürleri, hiperparametreler ve doğrulama metodolojisi dahil detaylı teknik dokümantasyon sağlıyoruz — tekrarlanabilir bir yöntemler bölümü için ihtiyacınız olan her şey. Ayrıca makalenizi inceleyip düzenleme önerileri de sunabiliriz.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta">
+            <div class="cta-content">
+                <h2>Araştırmanızı<br>hızlandırmaya hazır mısınız?</h2>
+                <p>Ücretsiz 30 dakikalık keşif görüşmesi ayırtın.<br>Taahhüt gerekmez.</p>
+                <a href="mailto:research@diagnis.ai?subject=Keşif Görüşmesi Talebi" class="btn btn-primary">
+                    İletişime geçin
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+        </section>
+    </main>
+
     <footer>
-        <div class="footer-brand">
-            <strong>Diagnis Research Labs</strong> — <a href="https://diagnis.ai">Diagnis Medical AI</a>'ın bir bölümü
-        </div>
-        <div class="footer-copy">
+        <p class="footer-text">
+            <strong>Diagnis Research Labs</strong> · <a href="https://diagnis.ai">Diagnis Medical AI</a>'ın bir bölümü<br>
             © 2026 Diagnis. Tüm hakları saklıdır.
-        </div>
+        </p>
     </footer>
+
+    <style>
+        /* Cursor Glow Effect */
+        .cursor-glow {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.08) 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+        .cursor-glow.active { opacity: 1; }
+
+        /* Magnetic Button Styles */
+        .btn, .nav-cta {
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.15s ease-out;
+        }
+
+        /* 3D Card Tilt */
+        .feature, .process-card, .pricing-card {
+            transform-style: preserve-3d;
+            transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+        }
+        .feature.tilting, .process-card.tilting, .pricing-card.tilting {
+            box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.15);
+        }
+    </style>
+
+    <script>
+        // Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('section:not(.hero)').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // ============================================
+        // 1. CURSOR GLOW EFFECT
+        // ============================================
+        const cursorGlow = document.createElement('div');
+        cursorGlow.className = 'cursor-glow';
+        document.body.appendChild(cursorGlow);
+
+        let mouseX = 0, mouseY = 0;
+        let glowX = 0, glowY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursorGlow.classList.add('active');
+        });
+
+        document.addEventListener('mouseleave', () => {
+            cursorGlow.classList.remove('active');
+        });
+
+        function animateGlow() {
+            glowX += (mouseX - glowX) * 0.1;
+            glowY += (mouseY - glowY) * 0.1;
+            cursorGlow.style.left = glowX + 'px';
+            cursorGlow.style.top = glowY + 'px';
+            requestAnimationFrame(animateGlow);
+        }
+        animateGlow();
+
+        // ============================================
+        // 2. MAGNETIC BUTTONS
+        // ============================================
+        const magneticElements = document.querySelectorAll('.btn, .nav-cta');
+
+        magneticElements.forEach(el => {
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                const magnetStrength = 0.3;
+                el.style.transform = `translate(${x * magnetStrength}px, ${y * magnetStrength}px)`;
+            });
+
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = 'translate(0, 0)';
+            });
+        });
+
+        // ============================================
+        // 3. 3D CARD TILT
+        // ============================================
+        const tiltCards = document.querySelectorAll('.feature, .process-card, .pricing-card');
+
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / centerY * -8;
+                const rotateY = (x - centerX) / centerX * 8;
+                
+                card.classList.add('tilting');
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('tilting');
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+            });
+        });
+
+        // ============================================
+        // 4. TEXT REVEAL ANIMATION (Hero Headline)
+        // ============================================
+        (function() {
+            const heroH1 = document.querySelector('.hero h1');
+            if (!heroH1) return;
+            
+            const html = heroH1.innerHTML;
+            const words = [];
+            let buffer = '';
+            let inTag = false;
+            
+            for (let i = 0; i < html.length; i++) {
+                const char = html[i];
+                if (char === '<') inTag = true;
+                if (char === '>') { inTag = false; buffer += char; continue; }
+                
+                if (!inTag && char === ' ') {
+                    if (buffer) words.push(buffer);
+                    words.push(' ');
+                    buffer = '';
+                } else {
+                    buffer += char;
+                }
+            }
+            if (buffer) words.push(buffer);
+            
+            let wordIndex = 0;
+            heroH1.innerHTML = words.map(w => {
+                if (w === ' ') return ' ';
+                const delay = wordIndex * 0.1;
+                wordIndex++;
+                return `<span class="word" style="animation-delay: ${delay}s">${w}</span>`;
+            }).join('');
+        })();
+
+        // ============================================
+        // 5. ANIMATED STATS COUNTER
+        // ============================================
+        (function() {
+            const statValues = document.querySelectorAll('.stat-value');
+            let statsAnimated = false;
+            
+            function parseStatValue(text) {
+                const cleaned = text.trim();
+                if (cleaned.includes('–') || cleaned.includes('-')) {
+                    const parts = cleaned.split(/[–-]/);
+                    return { type: 'range', start: parseInt(parts[0]), end: parseInt(parts[1]), separator: cleaned.includes('–') ? '–' : '-' };
+                } else if (cleaned.includes('%')) {
+                    return { type: 'percent', value: parseInt(cleaned) };
+                } else if (cleaned.includes('+')) {
+                    return { type: 'plus', value: parseInt(cleaned) };
+                } else {
+                    return { type: 'number', value: parseInt(cleaned) };
+                }
+            }
+            
+            function animateCounter(element, parsed, duration = 1500) {
+                const startTime = performance.now();
+                
+                function easeOutCubic(t) {
+                    return 1 - Math.pow(1 - t, 3);
+                }
+                
+                function update(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const eased = easeOutCubic(progress);
+                    
+                    if (parsed.type === 'range') {
+                        const currentStart = Math.round(eased * parsed.start);
+                        const currentEnd = Math.round(eased * parsed.end);
+                        element.textContent = `${currentStart}${parsed.separator}${currentEnd}`;
+                    } else if (parsed.type === 'percent') {
+                        element.textContent = `${Math.round(eased * parsed.value)}%`;
+                    } else if (parsed.type === 'plus') {
+                        element.textContent = `${Math.round(eased * parsed.value)}+`;
+                    } else {
+                        element.textContent = Math.round(eased * parsed.value);
+                    }
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(update);
+                    }
+                }
+                
+                requestAnimationFrame(update);
+            }
+            
+            statValues.forEach(el => {
+                el.dataset.original = el.textContent;
+                el.textContent = '0';
+            });
+            
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !statsAnimated) {
+                        statsAnimated = true;
+                        statValues.forEach((el, index) => {
+                            const parsed = parseStatValue(el.dataset.original);
+                            setTimeout(() => {
+                                animateCounter(el, parsed, 1800);
+                            }, index * 200);
+                        });
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            const heroStats = document.querySelector('.hero-stats');
+            if (heroStats) statsObserver.observe(heroStats);
+        })();
+
+        // ============================================
+        // 6. PARALLAX SCROLL (Background Elements)
+        // ============================================
+        (function() {
+            const gridBg = document.querySelector('.grid-bg');
+            const glow1 = document.querySelector('.glow-1');
+            const glow2 = document.querySelector('.glow-2');
+            
+            let ticking = false;
+            
+            function updateParallax() {
+                const scrollY = window.scrollY;
+                
+                if (gridBg) {
+                    gridBg.style.transform = `translateY(${scrollY * 0.3}px)`;
+                }
+                if (glow1) {
+                    glow1.style.transform = `translateX(-50%) translateY(${scrollY * 0.15}px)`;
+                }
+                if (glow2) {
+                    glow2.style.transform = `translateY(${scrollY * -0.1}px)`;
+                }
+                
+                ticking = false;
+            }
+            
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    requestAnimationFrame(updateParallax);
+                    ticking = true;
+                }
+            }, { passive: true });
+        })();
+
+        // ============================================
+        // 7. FAQ ACCORDION
+        // ============================================
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const item = button.parentElement;
+                const isActive = item.classList.contains('active');
+                
+                // Close all other items
+                document.querySelectorAll('.faq-item.active').forEach(activeItem => {
+                    if (activeItem !== item) {
+                        activeItem.classList.remove('active');
+                    }
+                });
+                
+                // Toggle current item
+                item.classList.toggle('active', !isActive);
+            });
+        });
+    </script>
 </body>
 </html>
