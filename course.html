@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sıfırdan AI Paper'a - Diagnis AI Lab</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Sıfırdan AI Paper'a - Ücretsiz Kurs | Diagnis AI Lab</title>
+    <meta name="description" content="Araştırmacılar için kapsamlı yapay zeka eğitimi. 8 modül, 2+ saat içerik, quiz'ler ve sertifika.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #000000;
@@ -30,30 +31,49 @@
             background: var(--bg);
             color: var(--text);
             line-height: 1.6;
-            min-height: 100vh;
         }
 
         /* Background Effects */
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: 
+                linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,1) 100%),
+                url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1920&q=80') center/cover;
+            z-index: 0;
+        }
+
         .grid-bg {
             position: fixed;
             inset: 0;
             background-image: 
-                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-            background-size: 80px 80px;
-            mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
             pointer-events: none;
-            z-index: 0;
+            z-index: 1;
         }
 
-        .gradient-mesh {
-            position: fixed;
-            inset: 0;
-            background: 
-                radial-gradient(ellipse at 20% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 100%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+        .gradient-orb {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.3;
             pointer-events: none;
-            z-index: 0;
+        }
+
+        .orb-1 {
+            top: -200px;
+            right: -100px;
+            background: var(--accent);
+        }
+
+        .orb-2 {
+            bottom: -200px;
+            left: -100px;
+            background: var(--accent-secondary);
         }
 
         /* Header */
@@ -113,126 +133,385 @@
 
         .nav-links a:hover { color: var(--text); }
 
-        /* Main Container */
-        .container {
+        .nav-cta {
+            padding: 8px 16px;
+            background: var(--text);
+            color: var(--bg) !important;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        /* Hero Section */
+        .hero {
             position: relative;
-            z-index: 1;
-            max-width: 1000px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 120px 2rem 80px;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 100px 2rem 60px;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 60px;
+            align-items: center;
         }
 
-        /* Course Header */
-        .course-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .course-badge {
+        .hero-badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 6px 14px;
-            background: rgba(99, 102, 241, 0.1);
-            border: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 8px 16px;
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.3);
             border-radius: 100px;
             font-size: 13px;
-            color: var(--accent);
-            margin-bottom: 20px;
+            font-weight: 500;
+            color: var(--green);
+            margin-bottom: 24px;
         }
 
-        .course-title {
-            font-size: clamp(32px, 5vw, 48px);
-            font-weight: 600;
+        .hero-title {
+            font-size: clamp(40px, 6vw, 64px);
+            font-weight: 800;
             letter-spacing: -0.03em;
-            margin-bottom: 16px;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        .hero-title span {
             background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .course-subtitle {
+        .hero-description {
             font-size: 18px;
             color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 30px;
+            line-height: 1.7;
+            margin-bottom: 32px;
+            max-width: 520px;
         }
 
-        /* Progress Bar */
-        .progress-container {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
+        .hero-stats {
+            display: flex;
+            gap: 40px;
             margin-bottom: 40px;
         }
 
-        .progress-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
+        .stat {
+            text-align: left;
         }
 
-        .progress-text {
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-tertiary);
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 32px;
+            background: var(--gradient);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 32px;
+            background: transparent;
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 16px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--border-hover);
+            background: rgba(255,255,255,0.03);
+        }
+
+        /* Course Preview Card */
+        .course-preview {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+        }
+
+        .preview-header {
+            position: relative;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+        }
+
+        .preview-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 6px 12px;
+            background: var(--green);
+            color: #000;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 6px;
+        }
+
+        .preview-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--gradient);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .preview-icon svg {
+            width: 32px;
+            height: 32px;
+            color: white;
+        }
+
+        .preview-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .preview-meta {
             font-size: 14px;
             color: var(--text-secondary);
         }
 
-        .progress-percent {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--accent);
+        .preview-body {
+            padding: 24px 30px;
         }
 
-        .progress-bar {
-            height: 8px;
-            background: var(--bg-elevated);
-            border-radius: 4px;
-            overflow: hidden;
+        .preview-includes {
+            list-style: none;
         }
 
-        .progress-fill {
-            height: 100%;
-            background: var(--gradient);
-            border-radius: 4px;
-            transition: width 0.5s ease;
-        }
-
-        /* Module Cards */
-        .modules-grid {
+        .preview-includes li {
             display: flex;
-            flex-direction: column;
-            gap: 16px;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
         }
 
-        .module-card {
+        .preview-includes li:last-child {
+            border-bottom: none;
+        }
+
+        .preview-includes li svg {
+            width: 18px;
+            height: 18px;
+            color: var(--green);
+        }
+
+        /* Sections */
+        section {
+            position: relative;
+            z-index: 2;
+            padding: 100px 2rem;
+        }
+
+        .section-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Instructors */
+        .instructors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .instructor-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .instructor-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+        }
+
+        .instructor-avatar {
+            width: 100px;
+            height: 100px;
+            background: var(--gradient);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .instructor-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .instructor-role {
+            font-size: 14px;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        .instructor-bio {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Learning Objectives */
+        .objectives-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .objective-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 16px;
             padding: 24px;
             display: flex;
+            gap: 16px;
+            transition: all 0.3s;
+        }
+
+        .objective-card:hover {
+            border-color: var(--accent);
+        }
+
+        .objective-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 24px;
+        }
+
+        .objective-content h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .objective-content p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Curriculum */
+        .curriculum-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .curriculum-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .curriculum-item:hover {
+            border-color: var(--border-hover);
+        }
+
+        .curriculum-header {
+            display: flex;
             align-items: center;
             gap: 20px;
+            padding: 24px;
             cursor: pointer;
-            transition: all 0.3s ease;
         }
 
-        .module-card:hover:not(.locked) {
-            border-color: var(--border-hover);
-            transform: translateY(-2px);
-        }
-
-        .module-card.locked {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .module-card.completed {
-            border-color: rgba(34, 197, 94, 0.3);
-        }
-
-        .module-number {
+        .curriculum-number {
             width: 48px;
             height: 48px;
             background: var(--bg-elevated);
@@ -242,379 +521,133 @@
             justify-content: center;
             font-size: 18px;
             font-weight: 600;
+            color: var(--accent);
             flex-shrink: 0;
         }
 
-        .module-card.completed .module-number {
-            background: rgba(34, 197, 94, 0.1);
-            color: var(--green);
-        }
-
-        .module-card.active .module-number {
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--accent);
-        }
-
-        .module-info {
+        .curriculum-info {
             flex: 1;
         }
 
-        .module-title {
-            font-size: 16px;
-            font-weight: 500;
+        .curriculum-title {
+            font-size: 17px;
+            font-weight: 600;
             margin-bottom: 4px;
         }
 
-        .module-meta {
+        .curriculum-meta {
             font-size: 13px;
             color: var(--text-tertiary);
-        }
-
-        .module-status {
-            font-size: 24px;
-        }
-
-        /* Modal */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.9);
-            z-index: 200;
-            overflow-y: auto;
-        }
-
-        .modal-overlay.active {
-            display: block;
-        }
-
-        .modal {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 40px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-        }
-
-        .modal-header {
             display: flex;
-            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .curriculum-meta span {
+            display: flex;
             align-items: center;
-            margin-bottom: 30px;
+            gap: 4px;
         }
 
-        .modal-title {
-            font-size: 24px;
-            font-weight: 600;
-        }
-
-        .modal-close {
-            width: 40px;
-            height: 40px;
+        .curriculum-expand {
+            width: 32px;
+            height: 32px;
             background: var(--bg-elevated);
-            border: none;
-            border-radius: 10px;
-            color: var(--text);
-            cursor: pointer;
-            font-size: 20px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .modal-close:hover {
-            background: var(--border-hover);
-        }
-
-        /* Module Content */
-        .module-content {
-            margin-bottom: 40px;
-        }
-
-        .module-section-title {
-            font-size: 14px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
             color: var(--text-tertiary);
-            margin-bottom: 16px;
+            transition: transform 0.3s;
         }
 
-        .video-placeholder {
-            background: var(--bg-elevated);
-            border-radius: 12px;
-            padding: 60px 20px;
-            text-align: center;
-            margin-bottom: 20px;
+        .curriculum-item.open .curriculum-expand {
+            transform: rotate(180deg);
         }
 
-        .video-placeholder svg {
-            width: 48px;
-            height: 48px;
-            color: var(--text-tertiary);
-            margin-bottom: 16px;
-        }
-
-        .video-placeholder p {
-            color: var(--text-tertiary);
-            font-size: 14px;
-        }
-
-        .content-text {
-            background: var(--bg-elevated);
-            border-radius: 12px;
-            padding: 20px;
-            max-height: 300px;
-            overflow-y: auto;
-            font-size: 14px;
-            line-height: 1.8;
-            color: var(--text-secondary);
-        }
-
-        .content-text h2 {
-            font-size: 18px;
-            color: var(--text);
-            margin: 24px 0 12px;
-        }
-
-        .content-text h2:first-child {
-            margin-top: 0;
-        }
-
-        .content-text p {
-            margin-bottom: 12px;
-        }
-
-        .content-text strong {
-            color: var(--text);
-        }
-
-        .mark-complete-btn {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            background: var(--gradient);
-            border: none;
-            border-radius: 10px;
-            color: white;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: opacity 0.2s;
-        }
-
-        .mark-complete-btn:hover {
-            opacity: 0.9;
-        }
-
-        .mark-complete-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Quiz Section */
-        .quiz-section {
+        .curriculum-content {
             display: none;
-            margin-top: 40px;
-            padding-top: 40px;
-            border-top: 1px solid var(--border);
+            padding: 0 24px 24px;
+            padding-left: 92px;
         }
 
-        .quiz-section.active {
+        .curriculum-item.open .curriculum-content {
             display: block;
         }
 
-        .quiz-question {
-            font-size: 18px;
-            font-weight: 500;
-            margin-bottom: 20px;
+        .curriculum-topics {
+            list-style: none;
         }
 
-        .quiz-options {
+        .curriculum-topics li {
             display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .quiz-option {
-            padding: 16px 20px;
-            background: var(--bg-elevated);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 14px;
-        }
-
-        .quiz-option:hover:not(.disabled) {
-            border-color: var(--border-hover);
-        }
-
-        .quiz-option.selected {
-            border-color: var(--accent);
-            background: rgba(99, 102, 241, 0.1);
-        }
-
-        .quiz-option.correct {
-            border-color: var(--green);
-            background: rgba(34, 197, 94, 0.1);
-        }
-
-        .quiz-option.wrong {
-            border-color: var(--red);
-            background: rgba(239, 68, 68, 0.1);
-        }
-
-        .quiz-option.disabled {
-            cursor: not-allowed;
-        }
-
-        .quiz-explanation {
-            display: none;
-            margin-top: 20px;
-            padding: 16px;
-            background: rgba(99, 102, 241, 0.1);
-            border-radius: 10px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .quiz-explanation.show {
-            display: block;
-        }
-
-        .quiz-nav {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-top: 30px;
-        }
-
-        .quiz-progress {
+            gap: 10px;
+            padding: 8px 0;
             font-size: 14px;
-            color: var(--text-tertiary);
-        }
-
-        .quiz-btn {
-            padding: 12px 24px;
-            background: var(--text);
-            color: var(--bg);
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        .quiz-btn:hover { opacity: 0.9; }
-        .quiz-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-
-        /* Quiz Result */
-        .quiz-result {
-            display: none;
-            text-align: center;
-            padding: 40px 20px;
-        }
-
-        .quiz-result.show {
-            display: block;
-        }
-
-        .result-icon {
-            font-size: 64px;
-            margin-bottom: 20px;
-        }
-
-        .result-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-
-        .result-text {
-            font-size: 16px;
             color: var(--text-secondary);
-            margin-bottom: 30px;
         }
 
-        .result-score {
-            font-size: 48px;
-            font-weight: 700;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 30px;
+        .curriculum-topics li svg {
+            width: 16px;
+            height: 16px;
+            color: var(--green);
         }
 
-        /* Certificate */
-        .certificate-section {
-            display: none;
-            margin-top: 60px;
+        /* Who Is This For */
+        .audience-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .audience-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
             text-align: center;
         }
 
-        .certificate-section.show {
-            display: block;
-        }
-
-        .certificate-card {
-            background: var(--bg-card);
-            border: 2px solid var(--green);
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .certificate-icon {
-            font-size: 64px;
+        .audience-icon {
+            font-size: 48px;
             margin-bottom: 20px;
         }
 
-        .certificate-title {
-            font-size: 24px;
+        .audience-title {
+            font-size: 18px;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
-        .certificate-input {
-            width: 100%;
-            max-width: 300px;
-            padding: 12px 16px;
-            background: var(--bg-elevated);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            font-size: 16px;
+        .audience-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 24px;
+            padding: 60px;
             text-align: center;
-            margin: 20px auto;
-            display: block;
+            border: 1px solid rgba(99, 102, 241, 0.2);
         }
 
-        .certificate-input:focus {
-            outline: none;
-            border-color: var(--accent);
+        .cta-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
         }
 
-        .certificate-btn {
-            padding: 14px 32px;
-            background: var(--gradient);
-            border: none;
-            border-radius: 10px;
-            color: white;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
+        .cta-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
         }
 
         /* Footer */
         footer {
-            position: relative;
-            z-index: 1;
-            padding: 32px 2rem;
+            padding: 40px 2rem;
             border-top: 1px solid var(--border);
             text-align: center;
         }
@@ -624,16 +657,39 @@
             color: var(--text-tertiary);
         }
 
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .hero-stats {
+                justify-content: center;
+            }
+            .hero-cta {
+                justify-content: center;
+            }
+            .hero-description {
+                margin: 0 auto 32px;
+            }
+            .course-preview {
+                max-width: 400px;
+                margin: 0 auto;
+            }
+        }
+
         @media (max-width: 768px) {
-            .container { padding: 80px 1rem 40px; }
-            .modal { margin: 20px; padding: 24px; }
             .nav-links { display: none; }
+            section { padding: 60px 1rem; }
+            .hero { padding: 100px 1rem 60px; }
+            .hero-stats { flex-direction: column; gap: 20px; }
+            .cta-section { padding: 40px 24px; }
+            .curriculum-content { padding-left: 24px; }
         }
     </style>
 </head>
 <body>
     <div class="grid-bg"></div>
-    <div class="gradient-mesh"></div>
 
     <header>
         <div class="header-inner">
@@ -647,372 +703,436 @@
             </a>
             <nav class="nav-links">
                 <a href="tr.html">Ana Sayfa</a>
-                <a href="guide-tr.html">AI Rehberi</a>
-                <a href="calculator-tr.html">Hesaplayıcı</a>
-                <a href="research-finder-tr.html">Araştırma Bulucu</a>
+                <a href="why-ai-tr.html">Neden AI?</a>
+                <a href="team-tr.html">Ekip</a>
+                <a href="#curriculum">Müfredat</a>
+                <a href="#start" class="nav-cta">Kursa Başla</a>
             </nav>
         </div>
     </header>
 
-    <div class="container">
-        <div class="course-header">
-            <div class="course-badge">
-                <span>🎓</span>
-                <span>Ücretsiz Kurs</span>
-            </div>
-            <h1 class="course-title">Sıfırdan AI Paper'a</h1>
-            <p class="course-subtitle">Araştırmacılar için kapsamlı yapay zeka eğitimi. 8 modül, ~2 saat, quiz'ler ve sertifika.</p>
-        </div>
-
-        <div class="progress-container">
-            <div class="progress-header">
-                <span class="progress-text">Kurs İlerlemesi</span>
-                <span class="progress-percent" id="progressPercent">0%</span>
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-            </div>
-        </div>
-
-        <div class="modules-grid" id="modulesGrid">
-            <!-- Modules will be rendered here -->
-        </div>
-
-        <div class="certificate-section" id="certificateSection">
-            <div class="certificate-card">
-                <div class="certificate-icon">🏆</div>
-                <h2 class="certificate-title">Tebrikler!</h2>
-                <p style="color: var(--text-secondary);">Kursu başarıyla tamamladınız. Sertifikanızı almak için adınızı girin:</p>
-                <input type="text" class="certificate-input" id="certificateName" placeholder="Adınız Soyadınız">
-                <br>
-                <button class="certificate-btn" onclick="generateCertificate()">Sertifikayı İndir</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Module Modal -->
-    <div class="modal-overlay" id="moduleModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 class="modal-title" id="modalTitle">Modül 1</h2>
-                <button class="modal-close" onclick="closeModal()">×</button>
-            </div>
-
-            <div class="module-content" id="moduleContent">
-                <p class="module-section-title">Video</p>
-                <div class="video-placeholder">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                    </svg>
-                    <p>NotebookLM'den oluşturulan sesi buraya ekleyin</p>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="hero-badge">
+                    <span>✨</span>
+                    <span>Ücretsiz Eğitim</span>
                 </div>
-
-                <p class="module-section-title">Ders İçeriği</p>
-                <div class="content-text" id="contentText">
-                    <!-- Content loaded here -->
-                </div>
-
-                <button class="mark-complete-btn" id="markCompleteBtn" onclick="markVideoComplete()">
-                    İçeriği Okudum, Quiz'e Geç
-                </button>
-            </div>
-
-            <div class="quiz-section" id="quizSection">
-                <p class="module-section-title">Quiz</p>
-                <div id="quizContainer">
-                    <p class="quiz-question" id="quizQuestion"></p>
-                    <div class="quiz-options" id="quizOptions"></div>
-                    <div class="quiz-explanation" id="quizExplanation"></div>
-                    <div class="quiz-nav">
-                        <span class="quiz-progress" id="quizProgress">Soru 1/5</span>
-                        <button class="quiz-btn" id="nextBtn" onclick="nextQuestion()" disabled>Sonraki →</button>
+                <h1 class="hero-title">
+                    Sıfırdan <span>AI Paper'a</span>
+                </h1>
+                <p class="hero-description">
+                    Tıbbi araştırmacılar için tasarlanmış kapsamlı yapay zeka eğitimi. 
+                    Veri hazırlığından yayına kadar tüm süreci öğrenin. 
+                    Quiz'lerle pekiştirin, sertifikanızı alın.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-value">8</div>
+                        <div class="stat-label">Modül</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">2+</div>
+                        <div class="stat-label">Saat İçerik</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">40</div>
+                        <div class="stat-label">Quiz Sorusu</div>
                     </div>
                 </div>
-                <div class="quiz-result" id="quizResult">
-                    <div class="result-icon" id="resultIcon">🎉</div>
-                    <h3 class="result-title" id="resultTitle">Tebrikler!</h3>
-                    <div class="result-score" id="resultScore">5/5</div>
-                    <p class="result-text" id="resultText">Sonraki modül açıldı.</p>
-                    <button class="quiz-btn" onclick="closeModal()">Devam Et</button>
+                <div class="hero-cta">
+                    <a href="course-app.html" class="btn-primary">
+                        Hemen Başla
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                    <a href="#curriculum" class="btn-secondary">
+                        Müfredatı İncele
+                    </a>
+                </div>
+            </div>
+
+            <div class="course-preview">
+                <div class="preview-header">
+                    <span class="preview-badge">ÜCRETSİZ</span>
+                    <div class="preview-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+                        </svg>
+                    </div>
+                    <h3 class="preview-title">Araştırmacılar için AI Kursu</h3>
+                    <p class="preview-meta">Diagnis AI Lab Eğitim Programı</p>
+                </div>
+                <div class="preview-body">
+                    <ul class="preview-includes">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            8 kapsamlı video modülü
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Her modül sonunda quiz
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            İnteraktif ilerleme takibi
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Tamamlama sertifikası
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Ömür boyu erişim
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Instructors -->
+    <section id="instructors">
+        <div class="section-inner">
+            <div class="section-header">
+                <span class="section-label">Eğitmenler</span>
+                <h2 class="section-title">Diagnis AI Lab Ekibi</h2>
+                <p class="section-subtitle">Alanında uzman akademisyenler ve mühendisler tarafından hazırlandı</p>
+            </div>
+
+            <div class="instructors-grid">
+                <div class="instructor-card">
+                    <div class="instructor-avatar">👨‍⚕️</div>
+                    <h3 class="instructor-name">Doç. Dr. Cem Şimşek</h3>
+                    <p class="instructor-role">Kurucu & Direktör</p>
+                    <p class="instructor-bio">Hacettepe Üniversitesi Gastroenteroloji, Harvard Medical School/BWH ileri eğitim. AI destekli endoskopi sistemleri uzmanı.</p>
+                </div>
+                <div class="instructor-card">
+                    <div class="instructor-avatar">👨‍💻</div>
+                    <h3 class="instructor-name">Ataberk Urfalı</h3>
+                    <p class="instructor-role">AI Mühendisi</p>
+                    <p class="instructor-bio">Derin öğrenme ve bilgisayarlı görü uzmanı. Tıbbi görüntüleme AI sistemleri geliştirme deneyimi.</p>
+                </div>
+                <div class="instructor-card">
+                    <div class="instructor-avatar">🔬</div>
+                    <h3 class="instructor-name">Ahmet Enes Kılıç</h3>
+                    <p class="instructor-role">ML Araştırmacı</p>
+                    <p class="instructor-bio">Makine öğrenmesi ve veri bilimi. Klinik karar destek sistemleri ve prediktif modelleme.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Learning Objectives -->
+    <section>
+        <div class="section-inner">
+            <div class="section-header">
+                <span class="section-label">Öğrenme Hedefleri</span>
+                <h2 class="section-title">Bu Kursta Ne Öğreneceksiniz?</h2>
+                <p class="section-subtitle">Kurs sonunda yapay zeka araştırmasının tüm aşamalarını anlayacaksınız</p>
+            </div>
+
+            <div class="objectives-grid">
+                <div class="objective-card">
+                    <div class="objective-icon">🎯</div>
+                    <div class="objective-content">
+                        <h4>AI Temellerini Anlama</h4>
+                        <p>ML, DL ve AI kavramlarını, hangi problemlerin AI'a uygun olduğunu öğrenin.</p>
+                    </div>
+                </div>
+                <div class="objective-card">
+                    <div class="objective-icon">📊</div>
+                    <div class="objective-content">
+                        <h4>Veri Hazırlığı</h4>
+                        <p>Veri toplama, annotation, augmentation ve kalite kontrol süreçlerini kavrayın.</p>
+                    </div>
+                </div>
+                <div class="objective-card">
+                    <div class="objective-icon">🧠</div>
+                    <div class="objective-content">
+                        <h4>Model Seçimi</h4>
+                        <p>Probleminize uygun model mimarisini seçmeyi ve transfer learning'i öğrenin.</p>
+                    </div>
+                </div>
+                <div class="objective-card">
+                    <div class="objective-icon">⚙️</div>
+                    <div class="objective-content">
+                        <h4>Model Eğitimi</h4>
+                        <p>Training, validation, overfitting ve hyperparameter tuning konularında ustalaşın.</p>
+                    </div>
+                </div>
+                <div class="objective-card">
+                    <div class="objective-icon">📈</div>
+                    <div class="objective-content">
+                        <h4>Performans Değerlendirme</h4>
+                        <p>AUC, F1, sensitivity, specificity gibi metrikleri doğru yorumlamayı öğrenin.</p>
+                    </div>
+                </div>
+                <div class="objective-card">
+                    <div class="objective-icon">📝</div>
+                    <div class="objective-content">
+                        <h4>Yayın Hazırlığı</h4>
+                        <p>TRIPOD/CLAIM guidelines, external validation ve methods section yazımını kavrayın.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Curriculum -->
+    <section id="curriculum">
+        <div class="section-inner">
+            <div class="section-header">
+                <span class="section-label">Müfredat</span>
+                <h2 class="section-title">8 Modüllük Kapsamlı Eğitim</h2>
+                <p class="section-subtitle">Her modül ~15 dakika, toplam 2+ saat içerik</p>
+            </div>
+
+            <div class="curriculum-list">
+                <div class="curriculum-item open">
+                    <div class="curriculum-header" onclick="toggleCurriculum(this)">
+                        <div class="curriculum-number">1</div>
+                        <div class="curriculum-info">
+                            <h4 class="curriculum-title">AI Nedir, Neden Şimdi?</h4>
+                            <div class="curriculum-meta">
+                                <span>⏱️ 15 dk</span>
+                                <span>📝 5 soru</span>
+                            </div>
+                        </div>
+                        <div class="curriculum-expand">▼</div>
+                    </div>
+                    <div class="curriculum-content">
+                        <ul class="curriculum-topics">
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Yapay zeka, makine öğrenmesi ve derin öğrenme farkları</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> AI'ın tıbbi araştırmadaki yükselişi</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Hangi araştırma soruları AI'a uygun?</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Başarılı AI paper örnekleri</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="curriculum-item">
+                    <div class="curriculum-header" onclick="toggleCurriculum(this)">
+                        <div class="curriculum-number">2</div>
+                        <div class="curriculum-info">
+                            <h4 class="curriculum-title">Veri - Her Şeyin Temeli</h4>
+                            <div class="curriculum-meta">
+                                <span>⏱️ 15 dk</span>
+                                <span>📝 5 soru</span>
+                            </div>
+                        </div>
+                        <div class="curriculum-expand">▼</div>
+                    </div>
+                    <div class="curriculum-content">
+                        <ul class="curriculum-topics">
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Veri tipleri: görüntü, tablo, metin, sinyal</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Örnek boyutu ve veri kalitesi</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Annotation ve etiketleme temelleri</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Data augmentation teknikleri</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="curriculum-item">
+                    <div class="curriculum-header" onclick="toggleCurriculum(this)">
+                        <div class="curriculum-number">3</div>
+                        <div class="curriculum-info">
+                            <h4 class="curriculum-title">Doğru Model Seçimi</h4>
+                            <div class="curriculum-meta">
+                                <span>⏱️ 15 dk</span>
+                                <span>📝 5 soru</span>
+                            </div>
+                        </div>
+                        <div class="curriculum-expand">▼</div>
+                    </div>
+                    <div class="curriculum-content">
+                        <ul class="curriculum-topics">
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Görüntü için: CNN, ResNet, EfficientNet, ViT</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Tablo için: XGBoost, Random Forest</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Metin için: BERT, Transformer</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Transfer learning avantajları</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="curriculum-item">
+                    <div class="curriculum-header" onclick="toggleCurriculum(this)">
+                        <div class="curriculum-number">4</div>
+                        <div class="curriculum-info">
+                            <h4 class="curriculum-title">Model Eğitimi Temelleri</h4>
+                            <div class="curriculum-meta">
+                                <span>⏱️ 15 dk</span>
+                                <span>📝 5 soru</span>
+                            </div>
+                        </div>
+                        <div class="curriculum-expand">▼</div>
+                    </div>
+                    <div class="curriculum-content">
+                        <ul class="curriculum-topics">
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Train/Validation/Test split mantığı</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Overfitting nedir, nasıl önlenir?</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Learning rate ve batch size</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Regularization teknikleri</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="curriculum-item">
+                    <div class="curriculum-header" onclick="toggleCurriculum(this)">
+                        <div class="curriculum-number">5</div>
+                        <div class="curriculum-info">
+                            <h4 class="curriculum-title">Değerlendirme Metrikleri</h4>
+                            <div class="curriculum-meta">
+                                <span>⏱️ 15 dk</span>
+                                <span>📝 5 soru</span>
+                            </div>
+                        </div>
+                        <div class="curriculum-expand">▼</div>
+                    </div>
+                    <div class="curriculum-content">
+                        <ul class="curriculum-topics">
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Accuracy neden yanıltıcı olabilir?</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Sensitivity, Specificity, F1-Score</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> AUC-ROC eğrisi yorumlama</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Confusion matrix okuma</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="curriculum-item">
+                    <div class="curriculum-header" onclick="toggleCurriculum(this)">
+                        <div class="curriculum-number">6</div>
+                        <div class="curriculum-info">
+                            <h4 class="curriculum-title">Yayına Hazırlık</h4>
+                            <div class="curriculum-meta">
+                                <span>⏱️ 15 dk</span>
+                                <span>📝 5 soru</span>
+                            </div>
+                        </div>
+                        <div class="curriculum-expand">▼</div>
+                    </div>
+                    <div class="curriculum-content">
+                        <ul class="curriculum-topics">
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> TRIPOD ve CLAIM guidelines</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> External validation zorunluluğu</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Methods section nasıl yazılır?</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Reproducibility checklist</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="curriculum-item">
+                    <div class="curriculum-header" onclick="toggleCurriculum(this)">
+                        <div class="curriculum-number">7</div>
+                        <div class="curriculum-info">
+                            <h4 class="curriculum-title">Yaygın Hatalar ve Çözümleri</h4>
+                            <div class="curriculum-meta">
+                                <span>⏱️ 15 dk</span>
+                                <span>📝 5 soru</span>
+                            </div>
+                        </div>
+                        <div class="curriculum-expand">▼</div>
+                    </div>
+                    <div class="curriculum-content">
+                        <ul class="curriculum-topics">
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Data leakage faciaları</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Imbalanced data tuzakları</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Explainability eksikliği</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Gerçek dünya örnekleri</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="curriculum-item">
+                    <div class="curriculum-header" onclick="toggleCurriculum(this)">
+                        <div class="curriculum-number">8</div>
+                        <div class="curriculum-info">
+                            <h4 class="curriculum-title">Sonraki Adımlar</h4>
+                            <div class="curriculum-meta">
+                                <span>⏱️ 15 dk</span>
+                                <span>📝 5 soru</span>
+                            </div>
+                        </div>
+                        <div class="curriculum-expand">▼</div>
+                    </div>
+                    <div class="curriculum-content">
+                        <ul class="curriculum-topics">
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Kendin yap vs uzman desteği</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Zaman ve maliyet karşılaştırması</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Araçlar ve kaynaklar</li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Diagnis AI Lab hizmetleri</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Who Is This For -->
+    <section>
+        <div class="section-inner">
+            <div class="section-header">
+                <span class="section-label">Hedef Kitle</span>
+                <h2 class="section-title">Bu Kurs Kime Uygun?</h2>
+            </div>
+
+            <div class="audience-grid">
+                <div class="audience-card">
+                    <div class="audience-icon">👨‍⚕️</div>
+                    <h4 class="audience-title">Akademisyenler</h4>
+                    <p class="audience-desc">Araştırmalarında AI kullanmak isteyen tıp fakültesi öğretim üyeleri</p>
+                </div>
+                <div class="audience-card">
+                    <div class="audience-icon">🎓</div>
+                    <h4 class="audience-title">Doktora Öğrencileri</h4>
+                    <p class="audience-desc">Tez projelerinde AI entegre etmek isteyen lisansüstü öğrenciler</p>
+                </div>
+                <div class="audience-card">
+                    <div class="audience-icon">🔬</div>
+                    <h4 class="audience-title">Araştırmacılar</h4>
+                    <p class="audience-desc">Klinik verileri AI ile analiz etmek isteyen araştırma görevlileri</p>
+                </div>
+                <div class="audience-card">
+                    <div class="audience-icon">🏥</div>
+                    <h4 class="audience-title">Klinisyenler</h4>
+                    <p class="audience-desc">AI'ın tıbbi pratiğe etkisini anlamak isteyen hekimler</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="start">
+        <div class="section-inner">
+            <div class="cta-section">
+                <h2 class="cta-title">Ücretsiz Eğitime Başla</h2>
+                <p class="cta-subtitle">8 modül, 40+ quiz sorusu, sertifika. Tamamen ücretsiz.</p>
+                <a href="course-app.html" class="btn-primary">
+                    Kursa Başla
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
 
     <footer>
         <p class="footer-text">© 2025 Diagnis AI Lab. Tüm hakları saklıdır.</p>
     </footer>
 
     <script>
-        // Course Data
-        const modules = [
-            { id: 1, title: "AI Nedir, Neden Şimdi?", duration: "~15 dk", file: "modul-1-ai-nedir.md" },
-            { id: 2, title: "Veri - Her Şeyin Temeli", duration: "~15 dk", file: "modul-2-veri-temelleri.md" },
-            { id: 3, title: "Doğru Model Seçimi", duration: "~15 dk", file: "modul-3-model-secimi.md" },
-            { id: 4, title: "Model Eğitimi Temelleri", duration: "~15 dk", file: "modul-4-model-egitimi.md" },
-            { id: 5, title: "Değerlendirme Metrikleri", duration: "~15 dk", file: "modul-5-metrikler.md" },
-            { id: 6, title: "Yayına Hazırlık", duration: "~15 dk", file: "modul-6-yayin-hazirligi.md" },
-            { id: 7, title: "Yaygın Hatalar ve Çözümleri", duration: "~15 dk", file: "modul-7-hatalar.md" },
-            { id: 8, title: "Sonraki Adımlar", duration: "~15 dk", file: "modul-8-sonraki-adimlar.md" }
-        ];
-
-        let quizData = null;
-        let currentModule = null;
-        let currentQuestion = 0;
-        let correctAnswers = 0;
-        let answered = false;
-
-        // Progress Management
-        function getProgress() {
-            const saved = localStorage.getItem('diagnis_course_progress');
-            return saved ? JSON.parse(saved) : { completed: [], unlocked: [1] };
+        function toggleCurriculum(header) {
+            const item = header.parentElement;
+            item.classList.toggle('open');
         }
-
-        function saveProgress(progress) {
-            localStorage.setItem('diagnis_course_progress', JSON.stringify(progress));
-        }
-
-        function updateProgressBar() {
-            const progress = getProgress();
-            const percent = Math.round((progress.completed.length / modules.length) * 100);
-            document.getElementById('progressPercent').textContent = percent + '%';
-            document.getElementById('progressFill').style.width = percent + '%';
-
-            if (progress.completed.length === modules.length) {
-                document.getElementById('certificateSection').classList.add('show');
-            }
-        }
-
-        // Render Modules
-        function renderModules() {
-            const progress = getProgress();
-            const grid = document.getElementById('modulesGrid');
-            
-            grid.innerHTML = modules.map(m => {
-                const isCompleted = progress.completed.includes(m.id);
-                const isUnlocked = progress.unlocked.includes(m.id);
-                const isActive = isUnlocked && !isCompleted;
-
-                let statusClass = '';
-                let statusIcon = '🔒';
-                
-                if (isCompleted) {
-                    statusClass = 'completed';
-                    statusIcon = '✅';
-                } else if (isUnlocked) {
-                    statusClass = 'active';
-                    statusIcon = '▶️';
-                } else {
-                    statusClass = 'locked';
-                }
-
-                return `
-                    <div class="module-card ${statusClass}" onclick="${isUnlocked ? `openModule(${m.id})` : ''}">
-                        <div class="module-number">${m.id}</div>
-                        <div class="module-info">
-                            <h3 class="module-title">${m.title}</h3>
-                            <span class="module-meta">${m.duration} • 5 soru</span>
-                        </div>
-                        <span class="module-status">${statusIcon}</span>
-                    </div>
-                `;
-            }).join('');
-
-            updateProgressBar();
-        }
-
-        // Load Quiz Data
-        async function loadQuizData() {
-            try {
-                const response = await fetch('course-content/quizzes.json');
-                quizData = await response.json();
-            } catch (e) {
-                console.error('Quiz data load error:', e);
-            }
-        }
-
-        // Open Module
-        async function openModule(moduleId) {
-            currentModule = moduleId;
-            currentQuestion = 0;
-            correctAnswers = 0;
-            answered = false;
-
-            const module = modules.find(m => m.id === moduleId);
-            document.getElementById('modalTitle').textContent = `Modül ${moduleId}: ${module.title}`;
-
-            // Load content
-            try {
-                const response = await fetch(`course-content/${module.file}`);
-                const text = await response.text();
-                // Simple markdown to HTML
-                const html = text
-                    .replace(/^# (.+)$/gm, '<h2>$1</h2>')
-                    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-                    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/\n\n/g, '</p><p>')
-                    .replace(/^/g, '<p>')
-                    .replace(/$/g, '</p>');
-                document.getElementById('contentText').innerHTML = html;
-            } catch (e) {
-                document.getElementById('contentText').innerHTML = '<p>İçerik yüklenemedi.</p>';
-            }
-
-            // Reset UI
-            document.getElementById('moduleContent').style.display = 'block';
-            document.getElementById('quizSection').classList.remove('active');
-            document.getElementById('quizContainer').style.display = 'block';
-            document.getElementById('quizResult').classList.remove('show');
-            document.getElementById('markCompleteBtn').disabled = false;
-
-            document.getElementById('moduleModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            document.getElementById('moduleModal').classList.remove('active');
-            document.body.style.overflow = '';
-            renderModules();
-        }
-
-        function markVideoComplete() {
-            document.getElementById('moduleContent').style.display = 'none';
-            document.getElementById('quizSection').classList.add('active');
-            loadQuestion();
-        }
-
-        function loadQuestion() {
-            if (!quizData) return;
-
-            const moduleQuiz = quizData.modules.find(m => m.id === currentModule);
-            if (!moduleQuiz) return;
-
-            const q = moduleQuiz.questions[currentQuestion];
-            document.getElementById('quizQuestion').textContent = q.q;
-            document.getElementById('quizProgress').textContent = `Soru ${currentQuestion + 1}/5`;
-            document.getElementById('quizExplanation').classList.remove('show');
-            document.getElementById('nextBtn').disabled = true;
-            answered = false;
-
-            const optionsHtml = q.options.map((opt, i) => `
-                <div class="quiz-option" onclick="selectOption(${i})" data-index="${i}">
-                    ${opt}
-                </div>
-            `).join('');
-            document.getElementById('quizOptions').innerHTML = optionsHtml;
-        }
-
-        function selectOption(index) {
-            if (answered) return;
-            answered = true;
-
-            const moduleQuiz = quizData.modules.find(m => m.id === currentModule);
-            const q = moduleQuiz.questions[currentQuestion];
-            const isCorrect = index === q.correct;
-
-            if (isCorrect) correctAnswers++;
-
-            const options = document.querySelectorAll('.quiz-option');
-            options.forEach((opt, i) => {
-                opt.classList.add('disabled');
-                if (i === q.correct) opt.classList.add('correct');
-                if (i === index && !isCorrect) opt.classList.add('wrong');
-            });
-
-            document.getElementById('quizExplanation').textContent = q.explanation;
-            document.getElementById('quizExplanation').classList.add('show');
-            document.getElementById('nextBtn').disabled = false;
-            document.getElementById('nextBtn').textContent = currentQuestion === 4 ? 'Sonuçları Gör' : 'Sonraki →';
-        }
-
-        function nextQuestion() {
-            currentQuestion++;
-            
-            if (currentQuestion >= 5) {
-                showResult();
-            } else {
-                loadQuestion();
-            }
-        }
-
-        function showResult() {
-            document.getElementById('quizContainer').style.display = 'none';
-            document.getElementById('quizResult').classList.add('show');
-            
-            document.getElementById('resultScore').textContent = `${correctAnswers}/5`;
-
-            const passed = correctAnswers >= 4;
-            
-            if (passed) {
-                document.getElementById('resultIcon').textContent = '🎉';
-                document.getElementById('resultTitle').textContent = 'Tebrikler!';
-                document.getElementById('resultText').textContent = currentModule < 8 
-                    ? 'Sonraki modül açıldı.' 
-                    : 'Kursu tamamladınız!';
-
-                // Update progress
-                const progress = getProgress();
-                if (!progress.completed.includes(currentModule)) {
-                    progress.completed.push(currentModule);
-                }
-                if (currentModule < 8 && !progress.unlocked.includes(currentModule + 1)) {
-                    progress.unlocked.push(currentModule + 1);
-                }
-                saveProgress(progress);
-            } else {
-                document.getElementById('resultIcon').textContent = '😅';
-                document.getElementById('resultTitle').textContent = 'Tekrar Deneyin';
-                document.getElementById('resultText').textContent = 'Geçmek için en az 4/5 doğru gerekli.';
-            }
-        }
-
-        function generateCertificate() {
-            const name = document.getElementById('certificateName').value.trim();
-            if (!name) {
-                alert('Lütfen adınızı girin.');
-                return;
-            }
-
-            const today = new Date().toLocaleDateString('tr-TR');
-            
-            const certHtml = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Sertifika - ${name}</title>
-                    <style>
-                        body { font-family: Georgia, serif; text-align: center; padding: 60px; background: #fafafa; }
-                        .cert { background: white; padding: 60px; border: 3px solid #6366f1; max-width: 800px; margin: 0 auto; }
-                        h1 { font-size: 36px; color: #6366f1; margin-bottom: 10px; }
-                        h2 { font-size: 24px; font-weight: normal; color: #333; margin-bottom: 40px; }
-                        .name { font-size: 32px; font-weight: bold; color: #111; margin: 40px 0; }
-                        .course { font-size: 18px; color: #666; margin-bottom: 40px; }
-                        .date { font-size: 14px; color: #999; }
-                        .logo { font-size: 20px; font-weight: bold; color: #6366f1; margin-top: 40px; }
-                    </style>
-                </head>
-                <body>
-                    <div class="cert">
-                        <h1>🏆 Başarı Sertifikası</h1>
-                        <h2>Bu belge</h2>
-                        <p class="name">${name}</p>
-                        <p class="course">"Sıfırdan AI Paper'a: Araştırmacılar için Pratik Rehber"<br>kursunu başarıyla tamamladığını onaylar.</p>
-                        <p class="date">Tarih: ${today}</p>
-                        <p class="logo">Diagnis AI Lab</p>
-                    </div>
-                    <script>window.print();<\/script>
-                </body>
-                </html>
-            `;
-
-            const win = window.open('', '_blank');
-            win.document.write(certHtml);
-            win.document.close();
-        }
-
-        // Initialize
-        loadQuizData();
-        renderModules();
     </script>
 </body>
 </html>
