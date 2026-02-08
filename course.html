@@ -9,8 +9,8 @@
     <style>
         :root {
             --bg: #000000;
-            --bg-card: #0a0a0a;
-            --bg-elevated: #111111;
+            --bg-card: rgba(255,255,255,0.03);
+            --bg-glass: rgba(255,255,255,0.05);
             --border: rgba(255,255,255,0.08);
             --border-hover: rgba(255,255,255,0.15);
             --text: #ffffff;
@@ -20,8 +20,6 @@
             --accent-secondary: #8b5cf6;
             --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
             --green: #22c55e;
-            --red: #ef4444;
-            --yellow: #eab308;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,7 +36,7 @@
             position: absolute;
             inset: 0;
             background: 
-                linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,1) 100%),
+                linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,1) 100%),
                 url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1920&q=80') center/cover;
             z-index: 0;
         }
@@ -47,8 +45,8 @@
             position: fixed;
             inset: 0;
             background-image: 
-                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+                linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
             background-size: 60px 60px;
             pointer-events: none;
             z-index: 1;
@@ -56,24 +54,23 @@
 
         .gradient-orb {
             position: absolute;
-            width: 600px;
-            height: 600px;
+            width: 800px;
+            height: 800px;
             border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.3;
+            filter: blur(150px);
+            opacity: 0.15;
             pointer-events: none;
         }
 
-        .orb-1 {
-            top: -200px;
-            right: -100px;
-            background: var(--accent);
-        }
+        .orb-1 { top: -300px; right: -200px; background: var(--accent); }
+        .orb-2 { bottom: -300px; left: -200px; background: var(--accent-secondary); }
 
-        .orb-2 {
-            bottom: -200px;
-            left: -100px;
-            background: var(--accent-secondary);
+        /* Glass Effect */
+        .glass {
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
         }
 
         /* Header */
@@ -84,7 +81,7 @@
             right: 0;
             z-index: 100;
             padding: 0 2rem;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.6);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
         }
@@ -167,13 +164,18 @@
             align-items: center;
             gap: 8px;
             padding: 8px 16px;
-            background: rgba(34, 197, 94, 0.15);
-            border: 1px solid rgba(34, 197, 94, 0.3);
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
             border-radius: 100px;
             font-size: 13px;
             font-weight: 500;
             color: var(--green);
             margin-bottom: 24px;
+        }
+
+        .hero-badge svg {
+            width: 16px;
+            height: 16px;
         }
 
         .hero-title {
@@ -204,20 +206,9 @@
             margin-bottom: 40px;
         }
 
-        .stat {
-            text-align: left;
-        }
-
-        .stat-value {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--text);
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: var(--text-tertiary);
-        }
+        .stat { text-align: left; }
+        .stat-value { font-size: 32px; font-weight: 700; color: var(--text); }
+        .stat-label { font-size: 14px; color: var(--text-tertiary); }
 
         .hero-cta {
             display: flex;
@@ -251,7 +242,8 @@
             align-items: center;
             gap: 8px;
             padding: 16px 32px;
-            background: transparent;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
             color: var(--text);
             text-decoration: none;
             border-radius: 12px;
@@ -263,12 +255,13 @@
 
         .btn-secondary:hover {
             border-color: var(--border-hover);
-            background: rgba(255,255,255,0.03);
+            background: rgba(255,255,255,0.08);
         }
 
         /* Course Preview Card */
         .course-preview {
-            background: var(--bg-card);
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(30px);
             border: 1px solid var(--border);
             border-radius: 24px;
             overflow: hidden;
@@ -278,7 +271,7 @@
         .preview-header {
             position: relative;
             padding: 30px;
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
         }
 
         .preview-badge {
@@ -304,30 +297,13 @@
             margin-bottom: 20px;
         }
 
-        .preview-icon svg {
-            width: 32px;
-            height: 32px;
-            color: white;
-        }
+        .preview-icon svg { width: 32px; height: 32px; color: white; }
+        .preview-title { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+        .preview-meta { font-size: 14px; color: var(--text-secondary); }
 
-        .preview-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
+        .preview-body { padding: 24px 30px; }
 
-        .preview-meta {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .preview-body {
-            padding: 24px 30px;
-        }
-
-        .preview-includes {
-            list-style: none;
-        }
+        .preview-includes { list-style: none; }
 
         .preview-includes li {
             display: flex;
@@ -338,15 +314,8 @@
             font-size: 14px;
         }
 
-        .preview-includes li:last-child {
-            border-bottom: none;
-        }
-
-        .preview-includes li svg {
-            width: 18px;
-            height: 18px;
-            color: var(--green);
-        }
+        .preview-includes li:last-child { border-bottom: none; }
+        .preview-includes li svg { width: 18px; height: 18px; color: var(--green); flex-shrink: 0; }
 
         /* Sections */
         section {
@@ -355,15 +324,9 @@
             padding: 100px 2rem;
         }
 
-        .section-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        .section-inner { max-width: 1200px; margin: 0 auto; }
 
-        .section-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
+        .section-header { text-align: center; margin-bottom: 60px; }
 
         .section-label {
             display: inline-block;
@@ -397,7 +360,8 @@
         }
 
         .instructor-card {
-            background: var(--bg-card);
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(20px);
             border: 1px solid var(--border);
             border-radius: 20px;
             padding: 32px;
@@ -408,6 +372,7 @@
         .instructor-card:hover {
             border-color: var(--border-hover);
             transform: translateY(-4px);
+            background: rgba(255,255,255,0.05);
         }
 
         .instructor-avatar {
@@ -419,26 +384,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
         }
 
-        .instructor-name {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .instructor-role {
-            font-size: 14px;
-            color: var(--accent);
-            margin-bottom: 12px;
-        }
-
-        .instructor-bio {
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
+        .instructor-avatar svg { width: 48px; height: 48px; color: white; }
+        .instructor-name { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+        .instructor-role { font-size: 14px; color: var(--accent); margin-bottom: 12px; }
+        .instructor-bio { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
 
         /* Learning Objectives */
         .objectives-grid {
@@ -448,7 +399,8 @@
         }
 
         .objective-card {
-            background: var(--bg-card);
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(20px);
             border: 1px solid var(--border);
             border-radius: 16px;
             padding: 24px;
@@ -459,81 +411,64 @@
 
         .objective-card:hover {
             border-color: var(--accent);
+            background: rgba(255,255,255,0.05);
         }
 
         .objective-icon {
             width: 48px;
             height: 48px;
             background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            font-size: 24px;
         }
 
-        .objective-content h4 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-
-        .objective-content p {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
+        .objective-icon svg { width: 24px; height: 24px; color: var(--accent); }
+        .objective-content h4 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+        .objective-content p { font-size: 14px; color: var(--text-secondary); }
 
         /* Curriculum */
-        .curriculum-list {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
+        .curriculum-list { display: flex; flex-direction: column; gap: 12px; }
 
         .curriculum-item {
-            background: var(--bg-card);
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(20px);
             border: 1px solid var(--border);
             border-radius: 16px;
             overflow: hidden;
             transition: all 0.3s;
         }
 
-        .curriculum-item:hover {
-            border-color: var(--border-hover);
-        }
+        .curriculum-item:hover { border-color: var(--border-hover); }
 
         .curriculum-header {
             display: flex;
             align-items: center;
             gap: 20px;
-            padding: 24px;
+            padding: 20px 24px;
             cursor: pointer;
         }
 
         .curriculum-number {
-            width: 48px;
-            height: 48px;
-            background: var(--bg-elevated);
+            width: 44px;
+            height: 44px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             color: var(--accent);
             flex-shrink: 0;
         }
 
-        .curriculum-info {
-            flex: 1;
-        }
-
-        .curriculum-title {
-            font-size: 17px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
+        .curriculum-info { flex: 1; }
+        .curriculum-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
 
         .curriculum-meta {
             font-size: 13px;
@@ -542,41 +477,33 @@
             gap: 16px;
         }
 
-        .curriculum-meta span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
+        .curriculum-meta span { display: flex; align-items: center; gap: 6px; }
+        .curriculum-meta svg { width: 14px; height: 14px; }
 
         .curriculum-expand {
             width: 32px;
             height: 32px;
-            background: var(--bg-elevated);
+            background: rgba(255,255,255,0.05);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--text-tertiary);
-            transition: transform 0.3s;
+            transition: all 0.3s;
         }
 
-        .curriculum-item.open .curriculum-expand {
-            transform: rotate(180deg);
-        }
+        .curriculum-expand svg { width: 16px; height: 16px; transition: transform 0.3s; }
+        .curriculum-item.open .curriculum-expand svg { transform: rotate(180deg); }
 
         .curriculum-content {
             display: none;
             padding: 0 24px 24px;
-            padding-left: 92px;
+            padding-left: 88px;
         }
 
-        .curriculum-item.open .curriculum-content {
-            display: block;
-        }
+        .curriculum-item.open .curriculum-content { display: block; }
 
-        .curriculum-topics {
-            list-style: none;
-        }
+        .curriculum-topics { list-style: none; }
 
         .curriculum-topics li {
             display: flex;
@@ -587,11 +514,7 @@
             color: var(--text-secondary);
         }
 
-        .curriculum-topics li svg {
-            width: 16px;
-            height: 16px;
-            color: var(--green);
-        }
+        .curriculum-topics li svg { width: 16px; height: 16px; color: var(--green); flex-shrink: 0; }
 
         /* Who Is This For */
         .audience-grid {
@@ -601,49 +524,48 @@
         }
 
         .audience-card {
-            background: var(--bg-card);
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(20px);
             border: 1px solid var(--border);
             border-radius: 16px;
             padding: 32px;
             text-align: center;
+            transition: all 0.3s;
+        }
+
+        .audience-card:hover {
+            border-color: var(--border-hover);
+            background: rgba(255,255,255,0.05);
         }
 
         .audience-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
+            width: 64px;
+            height: 64px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 16px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .audience-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .audience-desc {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
+        .audience-icon svg { width: 32px; height: 32px; color: var(--accent); }
+        .audience-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+        .audience-desc { font-size: 14px; color: var(--text-secondary); }
 
         /* CTA Section */
         .cta-section {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            background: rgba(99, 102, 241, 0.05);
+            backdrop-filter: blur(20px);
             border-radius: 24px;
             padding: 60px;
             text-align: center;
-            border: 1px solid rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.15);
         }
 
-        .cta-title {
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .cta-subtitle {
-            font-size: 18px;
-            color: var(--text-secondary);
-            margin-bottom: 32px;
-        }
+        .cta-title { font-size: 36px; font-weight: 700; margin-bottom: 16px; }
+        .cta-subtitle { font-size: 18px; color: var(--text-secondary); margin-bottom: 32px; }
 
         /* Footer */
         footer {
@@ -652,30 +574,15 @@
             text-align: center;
         }
 
-        .footer-text {
-            font-size: 14px;
-            color: var(--text-tertiary);
-        }
+        .footer-text { font-size: 14px; color: var(--text-tertiary); }
 
         /* Responsive */
         @media (max-width: 1024px) {
-            .hero-content {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            .hero-stats {
-                justify-content: center;
-            }
-            .hero-cta {
-                justify-content: center;
-            }
-            .hero-description {
-                margin: 0 auto 32px;
-            }
-            .course-preview {
-                max-width: 400px;
-                margin: 0 auto;
-            }
+            .hero-content { grid-template-columns: 1fr; text-align: center; }
+            .hero-stats { justify-content: center; }
+            .hero-cta { justify-content: center; }
+            .hero-description { margin: 0 auto 32px; }
+            .course-preview { max-width: 400px; margin: 0 auto; }
         }
 
         @media (max-width: 768px) {
@@ -720,7 +627,7 @@
         <div class="hero-content">
             <div class="hero-text">
                 <div class="hero-badge">
-                    <span>✨</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                     <span>Ücretsiz Eğitim</span>
                 </div>
                 <h1 class="hero-title">
@@ -748,9 +655,7 @@
                 <div class="hero-cta">
                     <a href="course-app.html" class="btn-primary">
                         Hemen Başla
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                     </a>
                     <a href="#curriculum" class="btn-secondary">
                         Müfredatı İncele
@@ -809,19 +714,38 @@
 
             <div class="instructors-grid">
                 <div class="instructor-card">
-                    <div class="instructor-avatar">👨‍⚕️</div>
+                    <div class="instructor-avatar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                            <path d="M16 11l2 2 4-4"/>
+                        </svg>
+                    </div>
                     <h3 class="instructor-name">Doç. Dr. Cem Şimşek</h3>
                     <p class="instructor-role">Kurucu & Direktör</p>
                     <p class="instructor-bio">Hacettepe Üniversitesi Gastroenteroloji, Harvard Medical School/BWH ileri eğitim. AI destekli endoskopi sistemleri uzmanı.</p>
                 </div>
                 <div class="instructor-card">
-                    <div class="instructor-avatar">👨‍💻</div>
+                    <div class="instructor-avatar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8"/>
+                            <path d="M12 17v4"/>
+                            <path d="M7 8h.01M12 8h.01M17 8h.01"/>
+                        </svg>
+                    </div>
                     <h3 class="instructor-name">Ataberk Urfalı</h3>
                     <p class="instructor-role">AI Mühendisi</p>
                     <p class="instructor-bio">Derin öğrenme ve bilgisayarlı görü uzmanı. Tıbbi görüntüleme AI sistemleri geliştirme deneyimi.</p>
                 </div>
                 <div class="instructor-card">
-                    <div class="instructor-avatar">🔬</div>
+                    <div class="instructor-avatar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                            <path d="M16 16l2 2"/>
+                        </svg>
+                    </div>
                     <h3 class="instructor-name">Ahmet Enes Kılıç</h3>
                     <p class="instructor-role">ML Araştırmacı</p>
                     <p class="instructor-bio">Makine öğrenmesi ve veri bilimi. Klinik karar destek sistemleri ve prediktif modelleme.</p>
@@ -841,42 +765,54 @@
 
             <div class="objectives-grid">
                 <div class="objective-card">
-                    <div class="objective-icon">🎯</div>
+                    <div class="objective-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                    </div>
                     <div class="objective-content">
                         <h4>AI Temellerini Anlama</h4>
                         <p>ML, DL ve AI kavramlarını, hangi problemlerin AI'a uygun olduğunu öğrenin.</p>
                     </div>
                 </div>
                 <div class="objective-card">
-                    <div class="objective-icon">📊</div>
+                    <div class="objective-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+                    </div>
                     <div class="objective-content">
                         <h4>Veri Hazırlığı</h4>
                         <p>Veri toplama, annotation, augmentation ve kalite kontrol süreçlerini kavrayın.</p>
                     </div>
                 </div>
                 <div class="objective-card">
-                    <div class="objective-icon">🧠</div>
+                    <div class="objective-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93L12 22l-.75-12.07A4.001 4.001 0 0 1 12 2Z"/><path d="M12 10a6 6 0 0 0 6 6"/><path d="M12 10a6 6 0 0 1-6 6"/></svg>
+                    </div>
                     <div class="objective-content">
                         <h4>Model Seçimi</h4>
                         <p>Probleminize uygun model mimarisini seçmeyi ve transfer learning'i öğrenin.</p>
                     </div>
                 </div>
                 <div class="objective-card">
-                    <div class="objective-icon">⚙️</div>
+                    <div class="objective-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                    </div>
                     <div class="objective-content">
                         <h4>Model Eğitimi</h4>
                         <p>Training, validation, overfitting ve hyperparameter tuning konularında ustalaşın.</p>
                     </div>
                 </div>
                 <div class="objective-card">
-                    <div class="objective-icon">📈</div>
+                    <div class="objective-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                    </div>
                     <div class="objective-content">
                         <h4>Performans Değerlendirme</h4>
                         <p>AUC, F1, sensitivity, specificity gibi metrikleri doğru yorumlamayı öğrenin.</p>
                     </div>
                 </div>
                 <div class="objective-card">
-                    <div class="objective-icon">📝</div>
+                    <div class="objective-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </div>
                     <div class="objective-content">
                         <h4>Yayın Hazırlığı</h4>
                         <p>TRIPOD/CLAIM guidelines, external validation ve methods section yazımını kavrayın.</p>
@@ -892,7 +828,7 @@
             <div class="section-header">
                 <span class="section-label">Müfredat</span>
                 <h2 class="section-title">8 Modüllük Kapsamlı Eğitim</h2>
-                <p class="section-subtitle">Her modül ~15 dakika, toplam 2+ saat içerik</p>
+                <p class="section-subtitle">Her modül yaklaşık 15 dakika, toplam 2+ saat içerik</p>
             </div>
 
             <div class="curriculum-list">
@@ -902,11 +838,13 @@
                         <div class="curriculum-info">
                             <h4 class="curriculum-title">AI Nedir, Neden Şimdi?</h4>
                             <div class="curriculum-meta">
-                                <span>⏱️ 15 dk</span>
-                                <span>📝 5 soru</span>
+                                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 15 dk</span>
+                                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> 5 soru</span>
                             </div>
                         </div>
-                        <div class="curriculum-expand">▼</div>
+                        <div class="curriculum-expand">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
                     </div>
                     <div class="curriculum-content">
                         <ul class="curriculum-topics">
@@ -924,11 +862,11 @@
                         <div class="curriculum-info">
                             <h4 class="curriculum-title">Veri - Her Şeyin Temeli</h4>
                             <div class="curriculum-meta">
-                                <span>⏱️ 15 dk</span>
-                                <span>📝 5 soru</span>
+                                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 15 dk</span>
+                                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> 5 soru</span>
                             </div>
                         </div>
-                        <div class="curriculum-expand">▼</div>
+                        <div class="curriculum-expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
                     </div>
                     <div class="curriculum-content">
                         <ul class="curriculum-topics">
@@ -946,11 +884,11 @@
                         <div class="curriculum-info">
                             <h4 class="curriculum-title">Doğru Model Seçimi</h4>
                             <div class="curriculum-meta">
-                                <span>⏱️ 15 dk</span>
-                                <span>📝 5 soru</span>
+                                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 15 dk</span>
+                                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> 5 soru</span>
                             </div>
                         </div>
-                        <div class="curriculum-expand">▼</div>
+                        <div class="curriculum-expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
                     </div>
                     <div class="curriculum-content">
                         <ul class="curriculum-topics">
@@ -968,11 +906,11 @@
                         <div class="curriculum-info">
                             <h4 class="curriculum-title">Model Eğitimi Temelleri</h4>
                             <div class="curriculum-meta">
-                                <span>⏱️ 15 dk</span>
-                                <span>📝 5 soru</span>
+                                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 15 dk</span>
+                                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> 5 soru</span>
                             </div>
                         </div>
-                        <div class="curriculum-expand">▼</div>
+                        <div class="curriculum-expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
                     </div>
                     <div class="curriculum-content">
                         <ul class="curriculum-topics">
@@ -990,11 +928,11 @@
                         <div class="curriculum-info">
                             <h4 class="curriculum-title">Değerlendirme Metrikleri</h4>
                             <div class="curriculum-meta">
-                                <span>⏱️ 15 dk</span>
-                                <span>📝 5 soru</span>
+                                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 15 dk</span>
+                                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> 5 soru</span>
                             </div>
                         </div>
-                        <div class="curriculum-expand">▼</div>
+                        <div class="curriculum-expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
                     </div>
                     <div class="curriculum-content">
                         <ul class="curriculum-topics">
@@ -1012,11 +950,11 @@
                         <div class="curriculum-info">
                             <h4 class="curriculum-title">Yayına Hazırlık</h4>
                             <div class="curriculum-meta">
-                                <span>⏱️ 15 dk</span>
-                                <span>📝 5 soru</span>
+                                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 15 dk</span>
+                                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> 5 soru</span>
                             </div>
                         </div>
-                        <div class="curriculum-expand">▼</div>
+                        <div class="curriculum-expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
                     </div>
                     <div class="curriculum-content">
                         <ul class="curriculum-topics">
@@ -1034,11 +972,11 @@
                         <div class="curriculum-info">
                             <h4 class="curriculum-title">Yaygın Hatalar ve Çözümleri</h4>
                             <div class="curriculum-meta">
-                                <span>⏱️ 15 dk</span>
-                                <span>📝 5 soru</span>
+                                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 15 dk</span>
+                                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> 5 soru</span>
                             </div>
                         </div>
-                        <div class="curriculum-expand">▼</div>
+                        <div class="curriculum-expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
                     </div>
                     <div class="curriculum-content">
                         <ul class="curriculum-topics">
@@ -1056,11 +994,11 @@
                         <div class="curriculum-info">
                             <h4 class="curriculum-title">Sonraki Adımlar</h4>
                             <div class="curriculum-meta">
-                                <span>⏱️ 15 dk</span>
-                                <span>📝 5 soru</span>
+                                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 15 dk</span>
+                                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> 5 soru</span>
                             </div>
                         </div>
-                        <div class="curriculum-expand">▼</div>
+                        <div class="curriculum-expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
                     </div>
                     <div class="curriculum-content">
                         <ul class="curriculum-topics">
@@ -1085,22 +1023,45 @@
 
             <div class="audience-grid">
                 <div class="audience-card">
-                    <div class="audience-icon">👨‍⚕️</div>
+                    <div class="audience-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                    </div>
                     <h4 class="audience-title">Akademisyenler</h4>
                     <p class="audience-desc">Araştırmalarında AI kullanmak isteyen tıp fakültesi öğretim üyeleri</p>
                 </div>
                 <div class="audience-card">
-                    <div class="audience-icon">🎓</div>
+                    <div class="audience-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+                        </svg>
+                    </div>
                     <h4 class="audience-title">Doktora Öğrencileri</h4>
                     <p class="audience-desc">Tez projelerinde AI entegre etmek isteyen lisansüstü öğrenciler</p>
                 </div>
                 <div class="audience-card">
-                    <div class="audience-icon">🔬</div>
+                    <div class="audience-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                        </svg>
+                    </div>
                     <h4 class="audience-title">Araştırmacılar</h4>
                     <p class="audience-desc">Klinik verileri AI ile analiz etmek isteyen araştırma görevlileri</p>
                 </div>
                 <div class="audience-card">
-                    <div class="audience-icon">🏥</div>
+                    <div class="audience-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+                            <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+                            <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+                            <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+                        </svg>
+                    </div>
                     <h4 class="audience-title">Klinisyenler</h4>
                     <p class="audience-desc">AI'ın tıbbi pratiğe etkisini anlamak isteyen hekimler</p>
                 </div>
@@ -1116,9 +1077,7 @@
                 <p class="cta-subtitle">8 modül, 40+ quiz sorusu, sertifika. Tamamen ücretsiz.</p>
                 <a href="course-app.html" class="btn-primary">
                     Kursa Başla
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </a>
             </div>
         </div>
