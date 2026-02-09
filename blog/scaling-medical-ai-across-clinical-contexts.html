@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Medical AI Fails in the Real World: The Context Problem – Diagnis AI Lab</title>
+    <meta name="description" content="Analysis of the landmark Nature Medicine paper on scaling medical AI across clinical contexts. Why contextual errors are the biggest barrier to clinical AI deployment.">
+    <meta property="og:title" content="Why Medical AI Fails in the Real World: The Context Problem">
+    <meta property="og:description" content="A landmark Nature Medicine paper reveals why thousands of medical AI models never make it to clinical practice.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://cem2im.github.io/diagnis-research-labs/blog/scaling-medical-ai-across-clinical-contexts.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="article:published_time" content="2026-02-09">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #000000;
+            --bg-card: #0a0a0a;
+            --bg-elevated: #111111;
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.15);
+            --text: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #71717a;
+            --accent: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg); color: var(--text); line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        ::selection { background: var(--accent); color: white; }
+        a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+        a:hover { color: var(--accent-secondary); }
+
+        /* Reading Progress Bar */
+        .progress-bar {
+            position: fixed; top: 0; left: 0; height: 3px; z-index: 200;
+            background: var(--gradient); width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .grid-bg {
+            position: fixed; inset: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 80px 80px;
+            mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+            pointer-events: none; z-index: 0;
+        }
+        .gradient-mesh {
+            position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
+        }
+        .gradient-mesh::before {
+            content: ''; position: absolute; width: 150%; height: 150%; top: -25%; left: -25%;
+            background: radial-gradient(ellipse 80% 50% at 20% 40%, rgba(99,102,241,0.12) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 80% at 80% 20%, rgba(139,92,246,0.08) 0%, transparent 50%);
+            animation: meshMove 25s ease-in-out infinite;
+        }
+        @keyframes meshMove {
+            0%, 100% { transform: translate(0,0) scale(1); }
+            50% { transform: translate(-3%,5%) scale(0.98); }
+        }
+
+        header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 0 2rem; background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .header-inner {
+            max-width: 1200px; margin: 0 auto; height: 64px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; color: var(--text); }
+        .logo-mark {
+            width: 32px; height: 32px; background: var(--gradient);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+        }
+        .logo-mark svg { width: 18px; height: 18px; color: white; }
+        nav { display: flex; align-items: center; gap: 32px; }
+        .nav-link { font-size: 14px; color: var(--text-secondary); transition: color 0.2s; }
+        .nav-link:hover { color: var(--text); }
+        .nav-link.active { color: var(--text); }
+        .nav-cta {
+            font-size: 14px; font-weight: 500; padding: 8px 16px;
+            background: var(--text); color: var(--bg); border-radius: 8px; transition: all 0.2s;
+        }
+        .nav-cta:hover { opacity: 0.9; }
+
+        main { position: relative; z-index: 1; }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            max-width: 760px; margin: 0 auto; padding: 100px 2rem 0;
+            font-size: 13px; color: var(--text-tertiary);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .breadcrumb a { color: var(--text-tertiary); }
+        .breadcrumb a:hover { color: var(--text-secondary); }
+        .breadcrumb svg { width: 12px; height: 12px; }
+
+        /* Article Header */
+        .article-header {
+            max-width: 760px; margin: 0 auto; padding: 32px 2rem 0;
+        }
+        .article-tag {
+            display: inline-flex; padding: 4px 10px; border-radius: 6px;
+            font-size: 12px; font-weight: 500; text-transform: uppercase;
+            letter-spacing: 0.05em; color: var(--accent);
+            background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2);
+            margin-bottom: 20px;
+        }
+        .article-header h1 {
+            font-size: clamp(32px, 5vw, 48px); font-weight: 600;
+            letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 20px;
+        }
+        .article-header .subtitle {
+            font-size: 20px; color: var(--text-secondary); line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        .article-meta {
+            display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+            padding: 20px 0; border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            font-size: 14px; color: var(--text-tertiary);
+        }
+        .article-meta span { display: flex; align-items: center; gap: 6px; }
+        .article-meta svg { width: 16px; height: 16px; }
+
+        /* Article Layout */
+        .article-layout {
+            max-width: 1200px; margin: 0 auto; padding: 48px 2rem 120px;
+            display: grid; grid-template-columns: 1fr 200px; gap: 64px;
+        }
+
+        /* TOC Sidebar */
+        .toc {
+            position: sticky; top: 100px; align-self: start;
+        }
+        .toc-title {
+            font-size: 12px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.1em; color: var(--text-tertiary); margin-bottom: 16px;
+        }
+        .toc-list { list-style: none; }
+        .toc-list li { margin-bottom: 8px; }
+        .toc-list a {
+            font-size: 13px; color: var(--text-tertiary);
+            line-height: 1.4; display: block;
+            padding-left: 12px; border-left: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+        .toc-list a:hover, .toc-list a.active {
+            color: var(--accent); border-color: var(--accent);
+        }
+
+        /* Article Content */
+        .article-content { max-width: 760px; }
+        .article-content h2 {
+            font-size: 28px; font-weight: 600; letter-spacing: -0.02em;
+            margin: 48px 0 16px; scroll-margin-top: 80px;
+        }
+        .article-content h3 {
+            font-size: 22px; font-weight: 600; letter-spacing: -0.01em;
+            margin: 36px 0 12px; scroll-margin-top: 80px;
+        }
+        .article-content p {
+            font-size: 17px; line-height: 1.8; color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        .article-content strong { color: var(--text); font-weight: 600; }
+        .article-content ul, .article-content ol {
+            margin: 0 0 20px 24px; color: var(--text-secondary);
+        }
+        .article-content li {
+            font-size: 17px; line-height: 1.8; margin-bottom: 8px;
+        }
+        .article-content blockquote {
+            border-left: 3px solid var(--accent); padding: 16px 24px;
+            margin: 24px 0; background: rgba(99,102,241,0.05);
+            border-radius: 0 8px 8px 0;
+        }
+        .article-content blockquote p {
+            color: var(--text); font-style: italic; margin-bottom: 0;
+        }
+
+        .callout {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 24px; margin: 32px 0;
+        }
+        .callout-title {
+            font-size: 14px; font-weight: 600; color: var(--accent);
+            text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;
+        }
+        .callout p { margin-bottom: 0; }
+
+        .citation {
+            font-size: 14px; color: var(--text-tertiary);
+            padding: 16px 20px; background: var(--bg-elevated);
+            border-radius: 8px; margin: 12px 0; line-height: 1.6;
+            border-left: 3px solid var(--accent);
+        }
+
+        /* Share */
+        .share-section {
+            margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border);
+        }
+        .share-title {
+            font-size: 14px; font-weight: 500; color: var(--text-tertiary);
+            margin-bottom: 12px;
+        }
+        .share-buttons { display: flex; gap: 12px; }
+        .share-btn {
+            display: flex; align-items: center; justify-content: center;
+            width: 40px; height: 40px; border-radius: 8px;
+            background: var(--bg-elevated); border: 1px solid var(--border);
+            color: var(--text-secondary); transition: all 0.2s; cursor: pointer;
+        }
+        .share-btn:hover { border-color: var(--border-hover); color: var(--text); }
+        .share-btn svg { width: 18px; height: 18px; }
+
+        /* Related */
+        .related-section {
+            max-width: 760px; margin: 0 auto; padding: 0 2rem 80px;
+        }
+        .related-title {
+            font-size: 13px; font-weight: 600; color: var(--accent);
+            text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 24px;
+        }
+        .related-empty {
+            font-size: 15px; color: var(--text-tertiary);
+            padding: 32px; text-align: center;
+            border: 1px dashed var(--border); border-radius: 12px;
+        }
+
+        footer {
+            padding: 32px 2rem; border-top: 1px solid var(--border); text-align: center;
+        }
+        .footer-text { font-size: 14px; color: var(--text-tertiary); }
+        .footer-text a { color: var(--text-secondary); }
+
+        @media (max-width: 1024px) {
+            .article-layout { grid-template-columns: 1fr; }
+            .toc { display: none; }
+        }
+        @media (max-width: 768px) {
+            nav { display: none; }
+            .article-header { padding: 24px 1.5rem 0; }
+            .breadcrumb { padding: 100px 1.5rem 0; }
+            .article-layout { padding: 32px 1.5rem 80px; }
+            .article-content h2 { font-size: 24px; }
+            .article-content p, .article-content li { font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="grid-bg"></div>
+    <div class="gradient-mesh"></div>
+
+    <header>
+        <div class="header-inner">
+            <a href="../" class="logo">
+                <div class="logo-mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <span>Diagnis AI Lab</span>
+            </a>
+            <nav>
+                <a href="../why-ai.html" class="nav-link">Why AI?</a>
+                <a href="../team.html" class="nav-link">Team</a>
+                <a href="./" class="nav-link active">Blog</a>
+                <a href="../guide.html" class="nav-link">AI Guide</a>
+                <a href="../careers.html" class="nav-link">Careers</a>
+                <a href="mailto:research@diagnis.ai" class="nav-cta">Get Started</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="breadcrumb">
+            <a href="../">Home</a>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            <a href="./">Blog</a>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            <span>Context Problem</span>
+        </div>
+
+        <div class="article-header">
+            <div class="article-tag">Perspective</div>
+            <h1>Why Medical AI Fails in the Real World: The Context Problem</h1>
+            <p class="subtitle">A landmark Nature Medicine paper reveals why thousands of medical AI models never make it to clinical practice -- and proposes context switching as the defining paradigm for the next generation of clinical AI.</p>
+            <div class="article-meta">
+                <span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    February 9, 2026
+                </span>
+                <span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    8 min read
+                </span>
+                <span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    Nature Medicine, Feb 2026
+                </span>
+            </div>
+        </div>
+
+        <div class="article-layout">
+            <article class="article-content">
+                <h2 id="introduction">Introduction: The Deployment Gap</h2>
+                <p>Medical AI is one of the most promising frontiers in modern healthcare. With the ability to analyze vast datasets, detect subtle patterns in imaging, and generate clinical recommendations at unprecedented speed, AI models have consistently demonstrated impressive results in controlled research settings. Yet a paradox persists: despite thousands of medical AI models developed across academia and industry, <strong>remarkably few have successfully transitioned into real-world clinical practice</strong>.</p>
+                <p>A new Perspective paper published in <em>Nature Medicine</em> on February 3, 2026, led by Marinka Zitnik -- Associate Professor of Biomedical Informatics at Harvard Medical School and Associate Faculty at the Kempner Institute for the Study of Natural and Artificial Intelligence -- provides a compelling framework for understanding this deployment gap. The paper argues that <strong>contextual errors</strong> are a primary and underappreciated cause of clinical AI failure, and proposes <strong>context switching</strong> as the defining paradigm for building AI systems that can actually work in hospitals and clinics.</p>
+
+                <div class="citation">Zitnik, M. et al. "Scaling medical AI across clinical contexts." <em>Nature Medicine</em> (2026). DOI: 10.1038/s41591-025-04184-7</div>
+
+                <h2 id="contextual-errors">What Are Contextual Errors?</h2>
+                <p>Contextual errors occur when an AI model produces a response that appears medically reasonable in a general sense but fails to be <strong>accurate, relevant, or actionable for the specific clinical context</strong> in which it is deployed. Unlike outright mistakes -- where the model generates clearly incorrect information -- contextual errors are insidious because they may look correct on the surface.</p>
+
+                <blockquote><p>"This is not a minor fluke. It is a broad limitation of all the types of medical AI models that we are developing in the field." -- Marinka Zitnik, Harvard Medical School</p></blockquote>
+
+                <p>The paper identifies three primary dimensions along which context is routinely lost or ignored in medical AI systems:</p>
+                <ol>
+                    <li><strong>Medical specialty context</strong> -- Models trained on single-specialty data fail when patients present with multi-system conditions</li>
+                    <li><strong>Geographic context</strong> -- Disease prevalence, treatment availability, and approved protocols vary dramatically by region</li>
+                    <li><strong>Socioeconomic and cultural context</strong> -- Barriers such as transportation, childcare, and financial constraints are rarely captured in training data</li>
+                </ol>
+
+                <h2 id="specialty">The Specialty Silo Problem</h2>
+                <p>Consider a patient who arrives at the emergency department with concurrent neurological symptoms and respiratory distress. In standard clinical practice, this patient would be evaluated sequentially by specialists -- a neurologist and a pulmonologist -- each bringing domain-specific expertise. The critical clinical insight often emerges from the <strong>interaction</strong> between these specialty perspectives.</p>
+                <p>An AI model trained predominantly on pulmonology data may correctly identify the respiratory component but miss that the combination of symptoms points to a multisystem disease -- perhaps sarcoidosis, vasculitis, or a paraneoplastic syndrome. The model's recommendation is not wrong per se; it is <strong>incomplete in context</strong>.</p>
+                <p>This specialty silo problem becomes particularly dangerous in complex, multi-organ conditions where the diagnostic signal lives at the intersection of specialties rather than within any single one. Current medical AI architectures rarely model these cross-specialty interactions, in part because training datasets are overwhelmingly siloed by department.</p>
+
+                <h3>Implications for Foundation Models</h3>
+                <p>The rise of medical foundation models -- large-scale models pre-trained on diverse medical data -- offers a potential solution. Recent work on general-purpose pathology models (Chen et al., <em>Nature Medicine</em> 2024) and generalist diagnostic language models (Liu et al., <em>Nature Medicine</em> 2025) demonstrate that models trained across multiple specialties can develop richer clinical representations. However, Zitnik argues that pre-training breadth alone is insufficient; models must also learn to <strong>dynamically switch between specialty contexts</strong> at inference time.</p>
+
+                <h2 id="geography">Geographic Context: Same Question, Different Answers</h2>
+                <p>One of the paper's most striking examples involves geographic variation. If a medical AI model is presented with the same clinical question in Johannesburg, Boston, and Stockholm, and produces the same answer in all three locations, <strong>that answer is likely incorrect in at least two of those settings</strong>.</p>
+                <p>The reasoning is straightforward: disease prevalence varies by region (tuberculosis is far more common in South Africa than in Sweden), approved treatments differ across regulatory jurisdictions, available diagnostic infrastructure varies enormously, and even clinical guidelines may be locally adapted. A model that ignores these factors will generate recommendations that are technically defensible but practically useless -- or worse, harmful.</p>
+
+                <div class="callout">
+                    <div class="callout-title">Key Insight</div>
+                    <p>The authors envision AI systems that can incorporate geographic information to produce location-specific clinical recommendations. This capability would have significant implications for global health equity, enabling AI to be contextually relevant in low-resource settings rather than defaulting to protocols designed for tertiary academic centers in high-income countries.</p>
+                </div>
+
+                <p>This is not merely a theoretical concern. The proliferation of medical AI chatbots and diagnostic tools, many accessible globally via the internet, means that decontextualized medical recommendations are already reaching patients in settings where they may be inappropriate or dangerous.</p>
+
+                <h2 id="socioeconomic">The Hidden Layer: Socioeconomic and Cultural Factors</h2>
+                <p>Perhaps the most subtle form of contextual error involves socioeconomic factors that shape a patient's ability to act on medical recommendations. The paper describes a telling scenario: a patient presents to the emergency department with advanced symptoms after failing to follow up on a previous oncology referral.</p>
+                <p>A standard AI recommendation -- and, indeed, many clinicians' initial response -- would be to remind the patient to schedule the oncology appointment. But this ignores potential barriers: the patient may live far from the oncologist, lack reliable transportation, be unable to take time off work, or have childcare responsibilities that make a multi-hour clinic visit impossible.</p>
+                <p><strong>These constraints do not exist in the electronic health record.</strong> If they are absent from the training data, they will be absent from the model's reasoning. A truly context-aware system would recognize these barriers and offer practical alternatives -- telemedicine options, transportation assistance programs, or flexible scheduling -- rather than simply restating the medically obvious recommendation.</p>
+
+                <h2 id="solutions">A Three-Pronged Solution</h2>
+                <p>The paper proposes a structured approach to addressing contextual errors, operating at three levels of the AI development pipeline:</p>
+
+                <h3>1. Contextually Enriched Training Data</h3>
+                <p>Training datasets must be expanded to include contextual metadata that is currently omitted. This means capturing not just clinical variables but also geographic identifiers, institutional characteristics, specialty-specific protocols, and sociodemographic information. The challenge is significant -- many of these variables are sensitive and raise privacy concerns -- but the authors argue that de-identified contextual features can be incorporated without compromising patient privacy.</p>
+
+                <h3>2. Enhanced Computational Benchmarks</h3>
+                <p>Current evaluation benchmarks for medical AI are largely context-free. A model is typically tested on whether it produces the "correct" answer to a clinical question, without consideration of whether that answer is appropriate for a specific setting. Zitnik's team calls for new benchmark suites that evaluate performance <strong>across</strong> contexts -- testing whether the same model can produce appropriate recommendations for the same condition in different geographic, institutional, and socioeconomic settings.</p>
+
+                <h3>3. Context-Aware Model Architectures</h3>
+                <p>Finally, the structural design of AI models must evolve. Rather than treating context as an afterthought, it should be integrated into the model architecture itself. The authors propose mechanisms for <strong>real-time context switching</strong> -- the ability for a model to dynamically adjust its reasoning based on contextual signals provided at inference time. This might involve attention mechanisms that weight specialty-relevant knowledge differently depending on the clinical scenario, or conditioning layers that adapt output distributions based on geographic or institutional parameters.</p>
+
+                <h2 id="landscape">The Broader Landscape: 2024-2026 Medical AI Milestones</h2>
+                <p>The Zitnik paper arrives at a moment of rapid acceleration in medical AI. To appreciate its significance, it is worth surveying the recent landscape of foundational work that sets the stage:</p>
+                <ul>
+                    <li><strong>General-purpose pathology models</strong> -- Chen et al. (2024) developed a foundation model for computational pathology that demonstrates cross-task generalization across cancer types and tissue origins</li>
+                    <li><strong>LLMs encoding clinical knowledge</strong> -- Singhal et al. (2023) showed that large language models can achieve expert-level performance on medical licensing examinations, though real-world performance remains inconsistent</li>
+                    <li><strong>Multimodal pathology copilots</strong> -- Lu et al. (2024) demonstrated an AI system that integrates whole-slide images with clinical text for pathology decision support</li>
+                    <li><strong>Drug repurposing foundation models</strong> -- Huang et al. (2024) built a clinician-centered model that identifies novel therapeutic uses for existing drugs</li>
+                    <li><strong>LLM-nurse collaboration</strong> -- Wan et al. (2024) conducted a randomized controlled trial showing that LLMs can improve outpatient reception when used collaboratively with nursing staff</li>
+                    <li><strong>Generalist diagnostic models</strong> -- Liu et al. (2025) developed a language model for disease diagnosis assistance that generalizes across multiple condition categories</li>
+                </ul>
+                <p>Each of these advances pushes the technical frontier forward. But Zitnik's paper argues that without addressing the context problem, these increasingly powerful models will continue to underperform in the clinical settings where they are most needed.</p>
+
+                <h2 id="implications">Implications for Researchers and Developers</h2>
+                <p>For researchers developing medical AI models -- including teams like ours at Diagnis AI Lab -- the implications are both practical and philosophical.</p>
+                <p><strong>Practically</strong>, the paper suggests that model evaluation must expand beyond accuracy metrics on held-out test sets. Cross-context evaluation should become standard practice: Does the model perform equally well across different hospital systems? Different patient demographics? Different geographic regions? If performance degrades in certain contexts, that degradation must be documented and addressed before deployment.</p>
+                <p><strong>Philosophically</strong>, the paper challenges the assumption that medical AI development is primarily a scaling problem -- that better performance simply requires more data, more parameters, and more compute. Instead, it suggests that the gap between research performance and clinical utility is fundamentally a <strong>representation problem</strong>: our models fail not because they lack knowledge, but because they lack the contextual framework needed to apply that knowledge appropriately.</p>
+
+                <div class="callout">
+                    <div class="callout-title">For Academic Researchers</div>
+                    <p>If you are developing AI models for clinical research, consider these questions early in your pipeline: (1) Does your training data capture the contextual diversity of your target deployment environment? (2) Are your evaluation benchmarks context-stratified? (3) Can your model architecture accommodate contextual signals at inference time? Addressing these questions from the outset can prevent costly deployment failures downstream.</p>
+                </div>
+
+                <h2 id="trust">The Trust Dimension</h2>
+                <p>The paper also touches on what may be the most critical barrier to medical AI adoption: <strong>trust</strong>. Clinicians and patients must feel confident that AI recommendations are not merely plausible but genuinely tailored to their situation. A model that produces a recommendation that "sounds right" but does not account for the patient's actual circumstances will erode trust far more effectively than one that admits uncertainty.</p>
+                <p>Transparent, interpretable AI systems -- models that can articulate why they made a particular recommendation and what contextual factors they considered -- will be essential for building the clinician trust needed for sustained adoption. The push toward explainable AI in medicine is not merely an academic exercise; it is a prerequisite for real-world impact.</p>
+
+                <h2 id="conclusion">Conclusion: Context as the Next Frontier</h2>
+                <p>The Zitnik et al. paper makes a compelling case that <strong>context switching is the defining challenge for the next generation of medical AI</strong>. The field has made extraordinary progress in building models that encode medical knowledge; the next frontier is building models that can deploy that knowledge appropriately across the full diversity of clinical settings, patient populations, and healthcare systems.</p>
+                <p>For those of us working at the intersection of AI and medicine, this is both a humbling and energizing message. The path from bench to bedside for medical AI is not simply a matter of better algorithms or larger datasets. It requires a fundamental rethinking of how we design, train, evaluate, and deploy these systems -- with context at the center of every decision.</p>
+                <p>The good news is that the framework is now clear. The work begins in earnest.</p>
+
+                <div style="margin-top:48px; padding-top:24px; border-top:1px solid var(--border);">
+                    <h3 style="margin-top:0;">References</h3>
+                    <div class="citation">Zitnik, M. et al. "Scaling medical AI across clinical contexts." <em>Nature Medicine</em> (2026). DOI: 10.1038/s41591-025-04184-7</div>
+                    <div class="citation">Chen, R.J. et al. "Towards a general-purpose foundation model for computational pathology." <em>Nature Medicine</em> 30, 850-862 (2024).</div>
+                    <div class="citation">Singhal, K. et al. "Large language models encode clinical knowledge." <em>Nature</em> 620, 172-180 (2023).</div>
+                    <div class="citation">Lu, M.Y. et al. "A multimodal generative AI copilot for human pathology." <em>Nature</em> 634, 466-473 (2024).</div>
+                    <div class="citation">Liu, X. et al. "A generalist medical language model for disease diagnosis assistance." <em>Nature Medicine</em> 31, 932-942 (2025).</div>
+                    <div class="citation">Wan, P. et al. "Outpatient reception via collaboration between nurses and a large language model: a randomized controlled trial." <em>Nature Medicine</em> 30, 2878-2885 (2024).</div>
+                    <div class="citation">Huang, K. et al. "A foundation model for clinician-centered drug repurposing." <em>Nature Medicine</em> 30, 3601-3613 (2024).</div>
+                </div>
+
+                <div class="share-section">
+                    <div class="share-title">Share this article</div>
+                    <div class="share-buttons">
+                        <a class="share-btn" href="https://twitter.com/intent/tweet?url=https://cem2im.github.io/diagnis-research-labs/blog/scaling-medical-ai-across-clinical-contexts.html&text=Why%20Medical%20AI%20Fails%20in%20the%20Real%20World" target="_blank" rel="noopener" title="Share on X">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </a>
+                        <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https://cem2im.github.io/diagnis-research-labs/blog/scaling-medical-ai-across-clinical-contexts.html" target="_blank" rel="noopener" title="Share on LinkedIn">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        </a>
+                        <button class="share-btn" onclick="navigator.clipboard.writeText(window.location.href)" title="Copy link">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <aside class="toc">
+                <div class="toc-title">On this page</div>
+                <ul class="toc-list">
+                    <li><a href="#introduction">The Deployment Gap</a></li>
+                    <li><a href="#contextual-errors">Contextual Errors</a></li>
+                    <li><a href="#specialty">Specialty Silos</a></li>
+                    <li><a href="#geography">Geographic Context</a></li>
+                    <li><a href="#socioeconomic">Socioeconomic Factors</a></li>
+                    <li><a href="#solutions">Three-Pronged Solution</a></li>
+                    <li><a href="#landscape">2024-2026 Milestones</a></li>
+                    <li><a href="#implications">Implications</a></li>
+                    <li><a href="#trust">Trust Dimension</a></li>
+                    <li><a href="#conclusion">Conclusion</a></li>
+                </ul>
+            </aside>
+        </div>
+    </main>
+
+    <div class="related-section">
+        <div class="related-title">Related Articles</div>
+        <div class="related-empty">More articles coming soon. Stay tuned.</div>
+    </div>
+
+    <footer>
+        <p class="footer-text">2024 <a href="../">Diagnis AI Lab</a>. A division of Diagnis Medical AI.</p>
+    </footer>
+
+    <script>
+        // Reading progress bar
+        window.addEventListener('scroll', () => {
+            const h = document.documentElement;
+            const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+            document.getElementById('progressBar').style.width = pct + '%';
+        });
+
+        // TOC active state
+        const tocLinks = document.querySelectorAll('.toc-list a');
+        const headings = document.querySelectorAll('.article-content h2');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    tocLinks.forEach(l => l.classList.remove('active'));
+                    const active = document.querySelector('.toc-list a[href="#' + entry.target.id + '"]');
+                    if (active) active.classList.add('active');
+                }
+            });
+        }, { rootMargin: '-80px 0px -60% 0px', threshold: 0 });
+        headings.forEach(h => observer.observe(h));
+    </script>
+</body>
+</html>
